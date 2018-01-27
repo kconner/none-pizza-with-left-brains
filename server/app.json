@@ -1,0 +1,13 @@
+{
+    "name": "None Pizza with Left Brains",
+    "description": "Multiplayer Humans vs Zombies MOBA for GlobalGameJam 2018",
+    "repository": "https://github.com/kconner/none-pizza-with-left-brains",
+    "logo": "",
+    "keywords": ["node", "multiplayer", "globalgamejam"],
+    "env": {
+        "NPM_CONFIG_PRODUCTION": {
+            "description": "Leave as 'false' to install required devDependencies.",
+            "value": "false"
+        }
+    }
+}

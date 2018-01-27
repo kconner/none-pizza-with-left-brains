@@ -1,0 +1,29 @@
+{
+    "name": "none-pizza-with-left-brains-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
+        "bundle-colyseus-client":
+            "browserify ./node_modules/colyseus.js/lib/index.js -s Colyseus -o ./src/static/colyseus.js",
+        "build": "npm run bundle-colyseus-client && tsc"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@types/uws": "^0.13.1",
+        "colyseus": "^0.8.9",
+        "colyseus.js": "^0.8.2",
+        "express": "^4.16.2",
+        "nodemon": "^1.14.11",
+        "path": "^0.12.7",
+        "serve-index": "^1.9.1",
+        "uws": "^9.14.0"
+    },
+    "devDependencies": {
+        "browserify": "^15.2.0",
+        "ts-node": "^4.1.0",
+        "typescript": "^2.6.2"
+    }
+}
