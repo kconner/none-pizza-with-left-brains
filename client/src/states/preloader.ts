@@ -9,6 +9,8 @@ export default class Preloader extends AppState {
         this.game.load.baseURL = './assets/'
 
         this.game.load.image('thing', 'thing.png')
+
+        this.game.load.spritesheet('myguy', 'ninja_full.png', 32, 64);
     }
 
     public create(): void {

@@ -18,14 +18,17 @@ export default class Title extends AppState {
 
 
         this.game.stage.backgroundColor = '#4585e1'
-
         this.app().disconnect()
     }
 
     public create(): void {
         console.log('creating title')
 
-        this.thing = this.game.add.sprite(100, 200, 'thing')
+        //this.thing = this.game.add.sprite(100, 200, 'thing')
+        this.thing = this.game.add.sprite(100, 200, 'myguy');
+
+        this.thing.animations.add('left', [1, 2, 3, 4, 5, 6], 10, true);
+        this.thing.animations.add('attack', [20, 21, 22, 23], 10, true);
 
         this.app().connect('ws://127.0.0.1:2657')
 
@@ -42,9 +45,15 @@ export default class Title extends AppState {
 
                 if (change.path.axis === 'x') {
                     this.thing.position.x = change.value
-                } else {
+                    this.thing.animations.play("left")
+                } else if (change.path.axis === 'y') {
                     this.thing.position.y = change.value
+                    this.thing.animations.play("attack")
+                } else {
+                    this.thing.animations.stop()
                 }
+
+
             })
     }
 
