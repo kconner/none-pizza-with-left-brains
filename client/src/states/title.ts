@@ -5,6 +5,8 @@ export default class Title extends Phaser.State {
 
     private thing: Phaser.Sprite;
 
+    private synth: beepbox.Synth;
+
     private client: Colyseus.Client;
     private room: Colyseus.Room;
     private cursors: Phaser.CursorKeys;
@@ -31,11 +33,11 @@ export default class Title extends Phaser.State {
         // this.room.listen("heroes/:id", (change: any) => {
         //     if (change.operation === "add") {
         //         var dom = document.createElement("div");
-        //         dom.className = "player";
+        //         dom.className = "hero";
         //         dom.style.left = change.value.x + "px";
         //         dom.style.top = change.value.y + "px";
         //         dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-        //         dom.innerHTML = `Player '${change.path.id}'`;
+        //         dom.innerHTML = `Hero '${change.path.id}'`;
 
         //         heroes[change.path.id] = dom;
         //         document.body.appendChild(dom);
@@ -54,6 +56,10 @@ export default class Title extends Phaser.State {
                 this.thing.position.y = change.value;
             }
         });
+
+        this.synth = new beepbox.Synth("5sbk4l00e0ftaa7g0fj7i0r1w1100f0000d1110c0000h0000v2200o3320b4z8Ql6hkpUsiczhkp5hDxN8Od5hAl6u74z8Ql6hkpUsp24ZFzzQ1E39kxIceEtoV8s66138l1S0L1u2139l1H39McyaeOgKA0TxAU213jj0NM4x8i0o0c86ywz7keUtVxQk1E3hi6OEcB8Atl0q0Qmm6eCexg6wd50oczkhO8VcsEeAc26gG3E1q2U406hG3i6jw94ksf8i5Uo0dZY26kHHzxp2gAgM0o4d516ej7uegceGwd0q84czm6yj8Xa0Q1EIIctcvq0Q1EE3ihE8W1OgV8s46Icxk7o24110w0OdgqMOk392OEWhS1ANQQ4toUctBpzRxx1M0WNSk1I3ANMEXwS3I79xSzJ7q6QtEXgw0");
+        this.synth.play();
+        //... this.synth.pause();
     }
 
     public update(): void {
