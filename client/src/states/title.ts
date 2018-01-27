@@ -1,3 +1,4 @@
+
 import AppState from './appState'
 import Connection from '../connection'
 
@@ -11,6 +12,7 @@ export default class Title extends AppState {
 
     public preload(): void {
         console.log('preloading title')
+
 
         this.game.stage.backgroundColor = '#4585e1'
 
@@ -42,6 +44,7 @@ export default class Title extends AppState {
     }
 
     public update(): void {
+
         const motion: any = {}
         let shouldSend = false
 
