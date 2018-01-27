@@ -10,8 +10,6 @@ export default class Title extends AppState {
 
     private cursors: Phaser.CursorKeys
 
-    private eventProcessor: EventProcessor;
-
     public preload(): void {
         console.log('preloading title')
 
