@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --open",
     "build": "node_modules/webpack/bin/webpack.js && open dist/index.html",
-    "publish": "node_modules/ghpages/cli.js --path dist"
+    "publish": "node_modules/ghpages/cli.js --path dist",
+    "debug": "node --inspect index",
+    "dev": "node --inspect=localhost:9000"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +22,8 @@
     "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1"
+    "webpack-dev-server": "^2.11.1",
+    "write-file-webpack-plugin": "4.2.0"
   },
   "devDependencies": {
     "ghpages": "0.0.10"

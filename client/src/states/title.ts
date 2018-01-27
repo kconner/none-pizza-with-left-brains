@@ -1,5 +1,7 @@
 // import * as Assets from '../assets';
 import * as Colyseus from 'colyseus.js';
+import EventProcessor from './event_processor';
+ 
 
 export default class Title extends Phaser.State {
 
@@ -9,10 +11,13 @@ export default class Title extends Phaser.State {
     private room: Colyseus.Room;
     private cursors: Phaser.CursorKeys;
 
+    private eventProcessor: EventProcessor;
+
     public preload(): void {
         console.log('preloading title');
 
         this.game.stage.backgroundColor = '#4585e1';
+        this.eventProcessor = new EventProcessor();
     }
 
     public create(): void {
@@ -57,28 +62,7 @@ export default class Title extends Phaser.State {
     }
 
     public update(): void {
-        const motion: any = {};
-        let shouldSend = false;
-
-        if (this.cursors.left.isDown) {
-            motion.x = -1;
-            shouldSend = true;
-        } else if (this.cursors.right.isDown) {
-            motion.x = +1;
-            shouldSend = true;
-        }
-
-        if (this.cursors.up.isDown) {
-            motion.y = -1;
-            shouldSend = true;
-        } else if (this.cursors.down.isDown) {
-            motion.y = +1;
-            shouldSend = true;
-        }
-
-        if (shouldSend) {
-            this.room.send(motion)
-        }
+        this.eventProcessor.checkCursors(this.cursors, this.room);
     }
 
 }

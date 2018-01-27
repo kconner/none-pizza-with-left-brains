@@ -5,8 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "start": "nodemon --watch 'src/**/*.ts' --exec ts-node src/index.ts",
-        "bundle-colyseus-client":
-            "browserify ./node_modules/colyseus.js/lib/index.js -s Colyseus -o ./src/static/colyseus.js",
+        "bundle-colyseus-client": "browserify ./node_modules/colyseus.js/lib/index.js -s Colyseus -o ./src/static/colyseus.js",
         "build": "npm run bundle-colyseus-client && tsc"
     },
     "author": "",
