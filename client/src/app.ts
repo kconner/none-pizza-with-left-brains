@@ -6,14 +6,12 @@ import Controls from './controls'
 import Connection from './connection'
 
 export default class App extends Phaser.Game {
-    private _controls: Controls
+    private _controls: Controls = null
     private _connection: Connection = null
     private synth: beepbox.Synth
 
     constructor(config: Phaser.IGameConfig) {
         super(config)
-
-        this._controls = new Controls(this)
 
         this.state.add('preloader', Preloader)
         this.state.add('title', Title)
@@ -22,39 +20,43 @@ export default class App extends Phaser.Game {
         this.state.start('preloader')
     }
 
-    public controls() {
+    controls() {
+        if (!this._controls) {
+            this._controls = new Controls(this.input)
+        }
+
         return this._controls
     }
 
-    public connection() {
+    connection() {
         return this._connection
     }
 
-    public connect(serverURL: string) {
+    connect(serverURL: string) {
         this.disconnect()
         this._connection = new Connection(serverURL)
     }
 
-    public disconnect() {
+    disconnect() {
         if (this._connection) {
             this._connection.destroy()
             this._connection = null
         }
     }
 
-    public setSongAndPlay(song: string) {
+    setSongAndPlay(song: string) {
         this.pauseSong()
         this.synth = new beepbox.Synth(song)
         this.playSong()
     }
 
-    public playSong() {
+    playSong() {
         if (this.synth) {
             this.synth.play()
         }
     }
 
-    public pauseSong() {
+    pauseSong() {
         if (this.synth) {
             this.synth.pause()
         }
