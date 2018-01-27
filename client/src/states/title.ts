@@ -23,12 +23,12 @@ export default class Title extends Phaser.State {
         this.client = new Colyseus.Client('ws://' + '127.0.0.1:2657');
         this.room = this.client.join("GameRoom");
 
-        const players = {};
+        const heroes = {};
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
         // // listen to patches coming from the server
-        // this.room.listen("players/:id", (change: any) => {
+        // this.room.listen("heroes/:id", (change: any) => {
         //     if (change.operation === "add") {
         //         var dom = document.createElement("div");
         //         dom.className = "player";
@@ -37,15 +37,15 @@ export default class Title extends Phaser.State {
         //         dom.style.background = colors[Math.floor(Math.random() * colors.length)];
         //         dom.innerHTML = `Player '${change.path.id}'`;
 
-        //         players[change.path.id] = dom;
+        //         heroes[change.path.id] = dom;
         //         document.body.appendChild(dom);
         //     } else if (change.operation === "remove") {
-        //         document.body.removeChild(players[change.path.id]);
-        //         delete players[change.path.id];
+        //         document.body.removeChild(heroes[change.path.id]);
+        //         delete heroes[change.path.id];
         //     }
         // });
 
-        this.room.listen("players/:id/:axis", (change: any) => {
+        this.room.listen("heroes/:id/:axis", (change: any) => {
             console.log(change);
 
             if (change.path.axis === 'x') {
