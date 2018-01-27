@@ -4,7 +4,8 @@ module.exports = {
     entry: "./src/index.ts",
     output: {
         filename: "bundle.js",
-        path: __dirname + "/dist/static"
+        path: __dirname + "/dist/static",
+        publicPath: '/static/'
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -18,6 +19,18 @@ module.exports = {
             phaser: path.join(__dirname, 'node_modules/phaser-ce/build/custom/phaser-split.js'),
             p2: path.join(__dirname, 'node_modules/phaser-ce/build/custom/p2.js'),
             assets: path.join(__dirname, 'assets/')
+        }
+    },
+
+    devServer: {
+        contentBase: 'dist',
+        compress: true,
+        port: 9000,
+        inline: true,
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll: true,
+            ignored: /node_modules/
         }
     },
 
