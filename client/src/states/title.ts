@@ -31,11 +31,11 @@ export default class Title extends Phaser.State {
         // this.room.listen("heroes/:id", (change: any) => {
         //     if (change.operation === "add") {
         //         var dom = document.createElement("div");
-        //         dom.className = "player";
+        //         dom.className = "hero";
         //         dom.style.left = change.value.x + "px";
         //         dom.style.top = change.value.y + "px";
         //         dom.style.background = colors[Math.floor(Math.random() * colors.length)];
-        //         dom.innerHTML = `Player '${change.path.id}'`;
+        //         dom.innerHTML = `Hero '${change.path.id}'`;
 
         //         heroes[change.path.id] = dom;
         //         document.body.appendChild(dom);
