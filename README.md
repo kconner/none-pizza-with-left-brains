@@ -90,7 +90,12 @@ npm run publish
 - Gamepad controls
 
 - Day and night time cycle
+	- 30 seconds (12 hours) day
+	- 30 seconds (12 hours) night
 - Low visibility
+	- Zombie low vis during day
+	- Pizza low vis during night
+	- Increment with time or hard switch? 
 
 - Bases
 	- Zombies at left
