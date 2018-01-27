@@ -1,6 +1,7 @@
 
 import AppState from './appState'
 import Connection from '../connection'
+import EventProcessor from './eventProcessor';
 
 const titleSong =
     '5n31s0kbl00e09t6m0a7g0fj7i0r1w1110f0000d1111c0000h0000v0000o3210b018id38h4h4h4h4h4h4h4h4h8Ocz4h4h4i8ycP0h4h4p22Lzj7A2pr1B6u5ce0p63V09kPNINYU5K0JUPMIMVA6jekgVcwL83e01pzwyFxOocwwOj1OaOiGC7f2uPuOoehuiikMYe5dCZAM0zpylN5c22mj9785E11wOGOwkwF1ji6A58cGIE58agkQwEQwF1BlBll0G1jiC9mk2E6Rmllk2E5deQ0'
@@ -9,6 +10,8 @@ export default class Title extends AppState {
     private thing: Phaser.Sprite
 
     private cursors: Phaser.CursorKeys
+
+    private eventProcessor: EventProcessor
 
     public preload(): void {
         console.log('preloading title')
@@ -30,6 +33,8 @@ export default class Title extends AppState {
 
         this.app().setSongAndPlay(titleSong)
 
+        this.eventProcessor = new EventProcessor()
+
         this.app()
             .connection()
             .listen('heroes/:id/:axis', (change: any) => {
@@ -44,30 +49,6 @@ export default class Title extends AppState {
     }
 
     public update(): void {
-
-        const motion: any = {}
-        let shouldSend = false
-
-        if (this.cursors.left.isDown) {
-            motion.x = -1
-            shouldSend = true
-        } else if (this.cursors.right.isDown) {
-            motion.x = +1
-            shouldSend = true
-        }
-
-        if (this.cursors.up.isDown) {
-            motion.y = -1
-            shouldSend = true
-        } else if (this.cursors.down.isDown) {
-            motion.y = +1
-            shouldSend = true
-        }
-
-        if (shouldSend) {
-            this.app()
-                .connection()
-                .send(motion)
-        }
+        this.eventProcessor.checkCursors(this.cursors, this.app().connection())
     }
 }
