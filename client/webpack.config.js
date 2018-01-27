@@ -46,7 +46,7 @@ module.exports = {
             { test: /p2\.js$/, loader: 'expose-loader?p2' },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
+            // { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
         ]
     },
 };
