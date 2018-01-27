@@ -8,15 +8,19 @@ nvm use 9.4.0
 nvm install-latest-npm
 ```
 
-### Build
+### Client
+
+#### Build
 
 ```
+cd client
 npm run build
 ```
 
-### Publish to github.io
+#### Publish to github.io
 
 ```
+cd client
 npm run publish
 ```
 
