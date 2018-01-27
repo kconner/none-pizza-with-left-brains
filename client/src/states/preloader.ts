@@ -3,17 +3,16 @@ import AppState from './appState'
 export default class Preloader extends AppState {
     private thing: Phaser.Sprite
 
-    public preload(): void {
-        console.log('preloading preloader')
-
+    preload() {
         this.game.load.baseURL = './assets/'
 
         this.game.load.image('thing', 'thing.png')
     }
 
-    public create(): void {
-        console.log('creating preloader')
+    create() {
+        // TODO: We eventually want to start on the title screen.
+        // this.game.state.start('title')
 
-        this.game.state.start('title')
+        this.game.state.start('level')
     }
 }
