@@ -1,25 +1,27 @@
 import { EntityMap, nosync } from 'colyseus'
 
-import { Player } from './Player'
+import { Hero } from './Hero'
 
 export class GameState {
-    players: EntityMap<Player> = {}
+    heroes: EntityMap<Hero> = {}
 
     @nosync something = "This attribute won't be sent to the client-side"
 
-    createPlayer(id: string) {
-        this.players[id] = new Player()
+    createHero(id: string) {
+        this.heroes[id] = new Hero()
     }
 
-    removePlayer(id: string) {
-        delete this.players[id]
+    removeHero(id: string) {
+        delete this.heroes[id]
     }
 
-    movePlayer(id: string, movement: any) {
+    moveHero(id: string, movement: any) {
         if (movement.x) {
-            this.players[id].x += movement.x * 10
-        } else if (movement.y) {
-            this.players[id].y += movement.y * 10
+            this.heroes[id].x += movement.x * 10
+        }
+
+        if (movement.y) {
+            this.heroes[id].y += movement.y * 10
         }
     }
 }

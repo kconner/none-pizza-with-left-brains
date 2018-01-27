@@ -1,7 +1,5 @@
 import { Server } from 'colyseus'
-import * as path from 'path'
 import * as express from 'express'
-import * as serveIndex from 'serve-index'
 import { createServer } from 'http'
 
 import { GameRoom } from './rooms'
@@ -16,9 +14,6 @@ const gameServer = new Server({ server: httpServer })
 gameServer.register('GameRoom', GameRoom, {
     custom_options: 'this can be anything you want',
 })
-
-app.use(express.static(path.join(__dirname, 'static')))
-app.use('/', serveIndex(path.join(__dirname, 'static'), { icons: true }))
 
 gameServer.listen(port)
 

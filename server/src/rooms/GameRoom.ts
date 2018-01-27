@@ -1,6 +1,6 @@
 import { Room, EntityMap, Client, nosync } from 'colyseus'
 
-import { Player, GameState } from '../models'
+import { Hero, GameState } from '../models'
 
 export class GameRoom extends Room<GameState> {
     onInit(options) {
@@ -10,16 +10,18 @@ export class GameRoom extends Room<GameState> {
     }
 
     onJoin(client) {
-        this.state.createPlayer(client.sessionId)
+        console.log("add client: ", client.sessionId)
+
+        this.state.createHero(client.sessionId)
     }
 
     onLeave(client) {
-        this.state.removePlayer(client.sessionId)
+        this.state.removeHero(client.sessionId)
     }
 
     onMessage(client, data) {
         console.log('GameRoom.onMessage', client.sessionId, data)
-        this.state.movePlayer(client.sessionId, data)
+        this.state.moveHero(client.sessionId, data)
     }
 
     onDispose() {
