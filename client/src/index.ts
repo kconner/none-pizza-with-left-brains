@@ -1,6 +1,7 @@
 import 'p2';
 import 'pixi';
 import 'phaser';
+import * as Colyseus from 'colyseus.js';
 
 import * as helloworld from './hello';
 
