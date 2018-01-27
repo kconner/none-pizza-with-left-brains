@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/webpack/bin/webpack.js",
+    "build": "node_modules/webpack/bin/webpack.js ; open dist/index.html",
     "publish": "node_modules/ghpages/cli.js --path dist"
   },
   "author": "",
