@@ -11,12 +11,14 @@ nvm install-latest-npm
 ### Build
 
 ```
-node_modules/webpack/bin/webpack.js
+npm run build
 ```
 
-### Distribute
+### Publish to github.io
 
-TODO
+```
+npm run publish
+```
 
 ## Road Map
 
