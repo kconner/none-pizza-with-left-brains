@@ -1,4 +1,3 @@
-import { Keyboard } from 'phaser-ce'
 import { Actions } from './models'
 
 export default class Controls {
@@ -8,6 +7,10 @@ export default class Controls {
     constructor(input: Phaser.Input) {
         this.keyboard = input.keyboard
         this.cursorKeys = this.keyboard.createCursorKeys()
+    }
+
+    enterIsDown(): boolean {
+        return this.keyboard.isDown(Phaser.KeyCode.ENTER)
     }
 
     spacebarIsDown(): boolean {
