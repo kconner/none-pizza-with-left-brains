@@ -39,6 +39,7 @@ export default class Level extends AppState {
         connection.listen('heroes/:id', (change: any) => {
             switch (change.operation) {
                 case 'add': {
+                    console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
                     const sprite = this.game.add.sprite(change.value.x, change.value.y, 'thing')
                     this.spriteMap[change.path.id] = sprite
                     break
