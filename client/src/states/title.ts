@@ -1,4 +1,3 @@
-
 import AppState from './appState'
 
 const titleSong =
