@@ -7,8 +7,5 @@
         "target": "es5",
         "jsx": "react"
     },
-    "include": [
-        "./src/**/*",
-        "node_modules/phaser-ce/typescript/phaser.comments.d.ts",
-    ]
+    "include": ["./src/**/*", "node_modules/phaser-ce/typescript/phaser.comments.d.ts", "../types/*.ts"]
 }

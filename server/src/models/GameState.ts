@@ -15,13 +15,8 @@ export class GameState {
         delete this.heroes[id]
     }
 
-    moveHero(id: string, movement: any) {
-        if (movement.x) {
-            this.heroes[id].x += movement.x * 10
-        }
-
-        if (movement.y) {
-            this.heroes[id].y += movement.y * 10
-        }
+    moveHero(id: string, movement: Movement) {
+        this.heroes[id].x += movement.x * 10
+        this.heroes[id].y += movement.y * 10
     }
 }
