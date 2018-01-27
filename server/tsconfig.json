@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./build/",
+        "module": "commonjs",
+        "target": "es5",
+        "lib": ["es2015"],
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "strict": false,
+        "sourceMap": false
+    },
+    "include": ["src/**/*.ts"]
+}
