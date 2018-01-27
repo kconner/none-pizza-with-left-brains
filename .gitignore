@@ -1,5 +1,5 @@
 .DS_Store
 node_modules
 
-/client/dist/webpack
+/client/dist/static
 /client/build
