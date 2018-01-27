@@ -2,20 +2,28 @@ import Preloader from './states/preloader'
 import Title from './states/title'
 import Level from './states/level'
 
+import Controls from './controls'
 import Connection from './connection'
 
 export default class App extends Phaser.Game {
+    private _controls: Controls
     private _connection: Connection = null
     private synth: beepbox.Synth
 
     constructor(config: Phaser.IGameConfig) {
         super(config)
 
+        this._controls = new Controls(this)
+
         this.state.add('preloader', Preloader)
         this.state.add('title', Title)
         this.state.add('level', Level)
 
         this.state.start('preloader')
+    }
+
+    public controls() {
+        return this._controls
     }
 
     public connection() {
