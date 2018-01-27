@@ -10,6 +10,11 @@ nvm install-latest-npm
 
 ### Client
 
+```
+cd client
+npm install
+```
+
 #### Build
 
 ```

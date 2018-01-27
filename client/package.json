@@ -5,14 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/webpack/bin/webpack.js ; open dist/index.html",
+    "build": "node_modules/webpack/bin/webpack.js && open dist/index.html",
     "publish": "node_modules/ghpages/cli.js --path dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "awesome-typescript-loader": "^3.4.1",
-    "phaser": "^2.6.2",
+    "expose-loader": "^0.7.4",
+    "phaser-ce": "^2.10.0",
+    "source-map-loader": "^0.2.3",
     "typescript": "^2.6.2",
     "webpack": "^3.10.0"
   },
