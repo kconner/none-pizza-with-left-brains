@@ -1,4 +1,4 @@
-import { Player } from './Player'
+import { Hero } from './Hero'
 import { GameState } from './GameState'
 
-export { Player, GameState }
+export { Hero, GameState }
