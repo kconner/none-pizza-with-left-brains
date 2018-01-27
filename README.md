@@ -8,6 +8,16 @@ nvm use 9.4.0
 nvm install-latest-npm
 ```
 
+### Build
+
+```
+node_modules/webpack/bin/webpack.js
+```
+
+### Distribute
+
+TODO
+
 ## Road Map
 
 - Server (Colossus or whatever it's called)
