@@ -1,5 +1,13 @@
 # None Pizza with Left Brains
 
+## Setup
+
+```
+nvm install 9.4.0
+nvm use 9.4.0
+nvm install-latest-npm
+```
+
 ## Road Map
 
 - Server (Colossus or whatever it's called)
