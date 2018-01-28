@@ -14,8 +14,10 @@ interface World {
     height: number
 }
 interface Hero {
-    x: number
-    y: number
+    position: {
+        x: number
+        y: number
+    }
     facingDirection: FacingDirection
     activity: Activity
     hp: number

@@ -44,8 +44,8 @@ export class GameState {
 
         const normalizedDx = dx / length
         const normalizedDy = dy / length
-        hero.x = Math.max(0, Math.min(this.world.width, hero.x + normalizedDx * 12))
-        hero.y = Math.max(0, Math.min(this.world.height, hero.y + normalizedDy * 12))
+        hero.position.x = Math.max(0, Math.min(this.world.width, hero.position.x + normalizedDx * 12))
+        hero.position.y = Math.max(0, Math.min(this.world.height, hero.position.y + normalizedDy * 12))
         hero.activity = 'Walking'
     }
 
@@ -83,8 +83,8 @@ export class GameState {
                 continue
             }
 
-            const dx = opponent.x - hero.x
-            const dy = opponent.y - hero.y
+            const dx = opponent.position.x - hero.position.x
+            const dy = opponent.position.y - hero.position.y
             const distanceSquared = dx * dx + dy * dy
             if (doubleHeroRadiusSquared < distanceSquared) {
                 continue
