@@ -66,7 +66,10 @@ export default class Level extends AppState {
     create() {
         this.app().pauseSong()
 
-        this.app().connect('ws://127.0.0.1:2657', () => {
+        const anyWindow = window as any
+        const serverHost = anyWindow.queryParameters.serverhost || '127.0.0.1'
+        const serverURL = `ws://${serverHost}:2657`
+        this.app().connect(serverURL, () => {
             this.game.state.start('title')
         })
 
