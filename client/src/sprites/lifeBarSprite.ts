@@ -10,7 +10,7 @@ export default class LifeBarSprite extends AppSprite {
     constructor(game: Phaser.Game, x: number, y: number, maximum: number) {
         super(game, x, y, 'lifeBar')
 
-        this.width = 100
+        this.width = maximum
         this.height = 4
 
         this.anchor.x = 0.5
