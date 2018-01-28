@@ -13,6 +13,10 @@ export default class Connection {
         return this.client.id
     }
 
+    data(): GameState {
+        return this.room.data
+    }
+
     send(message: any) {
         this.room.send(message)
     }
