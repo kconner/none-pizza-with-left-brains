@@ -34,12 +34,14 @@ export class GameState {
         const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
         this.timeOfDay.dayCountdownInSeconds -= frameDuration
 
+        console.log(this.timeOfDay.dayCountdownInSeconds);
+
         if (this.timeOfDay.dayCountdownInSeconds <= 0) {
             // Dusk! Start counting down to next dusk.
             this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
             this.timeOfDay.dayOrNight = 'Night'
             // send message to client that it is nighttime
-        } else if (this.timeOfDay.dayCountdownInSeconds < 30) {
+        } else if (this.timeOfDay.dayCountdownInSeconds < TimeOfDay.lengthOfDayInSeconds / 2) {
             // Dawn!
             this.timeOfDay.dayOrNight = 'Day'
             // send message to client that it is daytime

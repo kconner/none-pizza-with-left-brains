@@ -23,6 +23,20 @@ export default class Level extends AppState {
 
         const connection = this.app().connection()
 
+        connection.listen('timeOfDay/dayOrNight', (change: any) => {
+            console.log(change)
+            console.log(change.value)
+            switch (change.value) {
+                case 'Night':
+                    this.game.stage.backgroundColor = '#4a4b4c'
+                    break
+                case 'Day':
+                    this.game.stage.backgroundColor = '#d7dee8'
+                    break
+            }
+        })
+
+
         connection.listen('heroes/:id/:attribute', (change: any) => {
             switch (change.path.attribute) {
                 case 'facingDirection':
