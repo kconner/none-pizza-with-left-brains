@@ -9,11 +9,21 @@ export class Base implements MapPositionable {
 
     hp: number = 500
     team: Team = 'Human'
+    spawnedFoodAt?: number = null
+    foodSpawnPoint: MapSpawnPoint
 
-    constructor(team: Team, mapBase: MapBase) {
+    constructor(team: Team, mapBase: MapBase, mapTeam: MapTeam) {
         this.team = team
         this.id = mapBase.id
         this.position.x = mapBase.position.x
         this.position.y = mapBase.position.y
+
+        const spawnPoints = mapTeam.spawnPoints.filter(spawnPoint => spawnPoint.id === mapBase.foodSpawnPointID)
+        if (spawnPoints.length !== 1) {
+            console.log(`Spawn point ${mapBase.foodSpawnPointID}`)
+            return
+        }
+
+        this.foodSpawnPoint = spawnPoints[0]
     }
 }

@@ -46,4 +46,16 @@ interface TeamEntity {
 
 interface House extends TeamEntity {}
 
-interface Base extends TeamEntity {}
+interface Base extends TeamEntity {
+    spawnedFoodAt?: number
+}
+
+interface Food {
+    id: string
+    position: {
+        x: number
+        y: number
+    }
+    team: Team
+    spawnedAt: number
+}

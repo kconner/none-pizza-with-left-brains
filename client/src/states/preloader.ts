@@ -4,7 +4,7 @@ import HeroSprite from '../sprites/heroSprite'
 import LifeBarSprite from '../sprites/lifeBarSprite'
 import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
-import HouseSprite from '../sprites/houseSprite';
+import HouseSprite from '../sprites/houseSprite'
 
 export enum Sounds {
     BASE_DESTROYED = 'base_destroyed',

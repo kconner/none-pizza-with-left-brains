@@ -34,6 +34,13 @@
                         "x": 2640,
                         "y": 1760
                     }
+                },
+                {
+                    "id": "human_food",
+                    "position": {
+                        "x": 3520,
+                        "y": 1100
+                    }
                 }
             ],
             "base": {
@@ -41,7 +48,8 @@
                 "position": {
                     "x": 3540,
                     "y": 1080
-                }
+                },
+                "foodSpawnPointID": "human_food"
             },
             "houses": [
                 {
@@ -76,6 +84,7 @@
                     "position": {
                         "x": 700,
                         "y": 1560
+                    "id": "zombie_food",
                     }
                 },
                 {
@@ -91,6 +100,13 @@
                         "x": 1200,
                         "y": 1560
                     }
+                },
+                {
+                    "id": "zombie_food",
+                    "position": {
+                        "x": 320,
+                        "y": 1100
+                    }
                 }
             ],
             "base": {
@@ -98,7 +114,8 @@
                 "position": {
                     "x": 300,
                     "y": 1080
-                }
+                },
+                "foodSpawnPointID": "zombie_food"
             },
             "houses": [
                 {
