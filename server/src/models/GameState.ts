@@ -492,6 +492,16 @@ export class GameState {
             const minion = minionSpawner.spawnNewMinion()
             this.minions[minion.id] = minion
         }
+
+        for (const baseId of Object.keys(this.bases)) {
+            const base = this.bases[baseId]
+            const minionSpawner = base.minionSpawner
+            if (Date.now() < minionSpawner.lastSpawn + 10000) {
+                continue
+            }
+            const minion = minionSpawner.spawnNewMinion()
+            this.minions[minion.id] = minion
+        }
     }
 
     private advanceMinionWalkers() {
