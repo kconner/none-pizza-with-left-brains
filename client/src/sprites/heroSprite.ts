@@ -44,7 +44,7 @@ export default class HeroSprite extends AppSprite {
     update() {
         super.update()
 
-        const factor = 0.25
+        const factor = 0.15
         this.position.x += factor * (this.destination.x - this.position.x)
         this.position.y += factor * (this.destination.y - this.position.y)
     }
