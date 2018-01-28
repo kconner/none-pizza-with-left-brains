@@ -1,6 +1,6 @@
 import { Room, EntityMap, Client, nosync } from 'colyseus'
 
-import { Hero, GameState } from '../models'
+import { Hero, TimeOfDay, GameState } from '../models'
 
 export class GameRoom extends Room<GameState> {
     onInit(options) {
@@ -8,6 +8,7 @@ export class GameRoom extends Room<GameState> {
 
         this.setState(new GameState())
         this.setPatchRate(16) // 60 fps
+        this.setSimulationInterval(() => this.state.advanceFrame())
     }
 
     onJoin(client) {
