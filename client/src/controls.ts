@@ -14,8 +14,8 @@ export default class Controls {
 
         input.gamepad.start()
         this.gamepad = input.gamepad.pad1
-        this.gamepad.onDownCallback = function (val: any) {
-            console.log("GAMEPAD: " + val)
+        this.gamepad.onDownCallback = function(val: any) {
+            console.log('GAMEPAD: ' + val)
         }
     }
 
@@ -28,14 +28,6 @@ export default class Controls {
             this.keyboard.isDown(Phaser.KeyCode.SPACEBAR) ||
             this.gamepad.isDown(Phaser.Gamepad.PS3XC_SQUARE) ||
             this.gamepad.isDown(Phaser.Gamepad.PS3XC_R2)
-        )
-    }
-
-    dodgeButtonIsDown(): boolean {
-        return (
-            this.keyboard.isDown(Phaser.KeyCode.SHIFT) ||
-            this.gamepad.isDown(Phaser.Gamepad.PS3XC_X) ||
-            this.gamepad.isDown(Phaser.Gamepad.PS3XC_L2)
         )
     }
 
