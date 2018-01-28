@@ -2,6 +2,7 @@ import AppState from './appState'
 
 import HeroSprite from '../sprites/heroSprite'
 import LifeBarSprite from '../sprites/lifeBarSprite'
+import FogSprite from '../sprites/fogSprite'
 
 export default class Preloader extends AppState {
     preload() {
@@ -9,6 +10,7 @@ export default class Preloader extends AppState {
 
         HeroSprite.loadAsset(this.game)
         LifeBarSprite.loadAsset(this.game)
+        FogSprite.loadAsset(this.game)
     }
 
     create() {
