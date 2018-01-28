@@ -1,6 +1,6 @@
 type Team = 'Human' | 'Zombie'
 type FacingDirection = 'Left' | 'Right'
-type Activity = 'Standing'
+type Activity = 'Standing' | 'Walking' | 'Dead'
 type DayOrNight = 'Day' | 'Night'
 interface TimeOfDay {
     lengthOfDayInSeconds: number

@@ -4,6 +4,7 @@ import { Animation } from 'phaser-ce';
 
 import AppState from './appState'
 import { Actions } from '../models'
+import { ArrowMotion } from '../controls'
 import { spawn } from 'child_process';
 
 const levelSong = ''
@@ -15,6 +16,8 @@ export default class Level extends AppState {
     private spriteMap: {
         [id: string]: Phaser.Sprite
     }
+
+    private lastArrowMotion: ArrowMotion | null = null
 
     private animationLoader: AnimationLoader
 
@@ -104,6 +107,26 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('heroes/:id/activity', (change: any) => {
+            const sprite = this.spriteMap[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            console.log(change.value)
+            switch (change.value) {
+                case 'Standing':
+                    // TODO: play stand animation
+                    break
+                case 'Walking':
+                    // TODO: play walk animation
+                    break
+                case 'Dead':
+                    // TODO: play die animation
+                    break
+            }
+        })
+
         connection.listen('heroes/:id', (change: any) => {
             switch (change.operation) {
                 case 'add': {
@@ -135,7 +158,12 @@ export default class Level extends AppState {
             this.app()
                 .connection()
                 .send(movement)
+        } else if (this.lastArrowMotion) {
+            this.app()
+                .connection()
+                .send(Actions.movement(0, 0))
         }
+        this.lastArrowMotion = arrowMotion
 
         if (
             this.app()

@@ -1,4 +1,4 @@
-interface ArrowMotion {
+export interface ArrowMotion {
     x: Direction
     y: Direction
 }
