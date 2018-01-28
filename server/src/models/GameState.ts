@@ -75,7 +75,7 @@ export class GameState {
         }
 
         // Hurt nearby heroes
-        const doubleHeroRadius = 60 * 2
+        const doubleHeroRadius = Hero.RADIUS * 2
         const doubleHeroRadiusSquared = doubleHeroRadius * doubleHeroRadius
         for (const heroID of Object.keys(this.heroes)) {
             if (heroID === id) {
@@ -116,10 +116,12 @@ export class GameState {
                 continue
             }
 
+            const heroHouseRadius = Hero.RADIUS + House.RADIUS
+            const heroHouseRadiusSquared = heroHouseRadius * heroHouseRadius
             const dx = opponentHouse.position.x - hero.position.x
             const dy = opponentHouse.position.y - hero.position.y
             const distanceSquared = dx * dx + dy * dy
-            if (doubleHeroRadiusSquared < distanceSquared) {
+            if (heroHouseRadiusSquared < distanceSquared) {
                 continue
             }
 

@@ -1,4 +1,7 @@
 export class House {
+
+    public static readonly RADIUS: number = 120
+
     position: {
         x: number
         y: number
