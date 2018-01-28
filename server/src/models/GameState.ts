@@ -23,6 +23,10 @@ export class GameState {
     moveHero(id: string, movement: Movement) {
         var hero = this.heroes[id]
 
+        if (hero.activity === 'Dead') {
+            return
+        }
+
         if (movement.x < 0) {
             hero.facingDirection = 'Left'
         } else if (movement.x > 0) {
@@ -33,6 +37,7 @@ export class GameState {
         const dy: number = movement.y
         const length = Math.sqrt(dx * dx + dy * dy)
         if (length === 0) {
+            hero.activity = 'Standing'
             return
         }
 
@@ -40,6 +45,7 @@ export class GameState {
         const normalizedDy = dy / length
         hero.x = Math.max(0, Math.min(this.world.width, hero.x + normalizedDx * 12))
         hero.y = Math.max(0, Math.min(this.world.height, hero.y + normalizedDy * 12))
+        hero.activity = 'Walking'
     }
 
     advanceFrame() {
@@ -67,6 +73,10 @@ export class GameState {
     attackWithHero(id: string) {
         const now = Date.now()
         var hero = this.heroes[id]
+
+        if (hero.activity === 'Dead') {
+            return
+        }
 
         if (!hero.attackedAt) {
             hero.attackedAt = now
