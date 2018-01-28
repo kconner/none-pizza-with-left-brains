@@ -3,7 +3,7 @@ import { spawn } from 'child_process'
 
 import AppState from './appState'
 import { Actions } from '../models'
-import { ArrowMotion } from '../controls'
+import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
 
 const levelSong = ''
@@ -16,7 +16,7 @@ export default class Level extends AppState {
         [id: string]: HeroSprite
     }
 
-    private lastArrowMotion: ArrowMotion | null = null
+    private lastArrowMotion: DirectionalMotion | null = null
 
     preload() {
         this.game.stage.backgroundColor = '#202020'
@@ -136,7 +136,7 @@ export default class Level extends AppState {
     update() {
         const arrowMotion = this.app()
             .controls()
-            .arrowMotion()
+            .directionalMotion()
 
         if (arrowMotion != null) {
             const movement = Actions.movement(arrowMotion.x, arrowMotion.y)
@@ -153,7 +153,7 @@ export default class Level extends AppState {
         if (
             this.app()
                 .controls()
-                .spacebarIsDown()
+                .attackButtonIsDown()
         ) {
             this.app()
                 .connection()
