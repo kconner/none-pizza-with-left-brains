@@ -1,10 +1,12 @@
 import { EntityMap, nosync } from 'colyseus'
 
 import { Constants } from '../config'
+import { World } from './World'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 
 export class GameState {
+    world = new World()
     heroes: EntityMap<Hero> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
