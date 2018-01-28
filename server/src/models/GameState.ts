@@ -103,7 +103,6 @@ export class GameState {
     }
 
     private createFood(team: Team, spawnPoint: MapSpawnPoint, spawnedAt: number) {
-        console.log(`spawning food for ${team}`)
         const food = new Food(team, spawnPoint, spawnedAt)
         this.foods[food.id] = food
     }
@@ -294,7 +293,6 @@ export class GameState {
 
         for (const houseId of Object.keys(this.houses)) {
             const opponentHouse = this.houses[houseId]
-            console.log('Checking house for attack: ' + opponentHouse)
             if (opponentHouse.hp <= 0) {
                 continue
             }
@@ -312,13 +310,11 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking house')
             opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
 
         for (const baseId of Object.keys(this.bases)) {
             const opponentBase = this.bases[baseId]
-            console.log('Checking base for attack: ' + opponentBase)
             if (opponentBase.hp <= 0) {
                 continue
             }
@@ -336,7 +332,6 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking base')
             opponentBase.hp = Math.max(0, opponentBase.hp - 25)
             if (opponentBase.hp === 0) {
                 this.gameEndedAt = Date.now()
@@ -346,7 +341,6 @@ export class GameState {
 
         for (const minionId of Object.keys(this.minions)) {
             const opponentMinion = this.minions[minionId]
-            console.log('Checking minion for attack: ' + opponentMinion)
             if (opponentMinion.hp <= 0) {
                 continue
             }
@@ -364,7 +358,6 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking minion')
             opponentMinion.hp = Math.max(0, opponentMinion.hp - 25)
 
             if (opponentMinion.hp <= 0) {
@@ -416,7 +409,6 @@ export class GameState {
                 continue
             }
 
-            console.log('respawning')
             hero.respawn()
         }
     }
@@ -519,11 +511,9 @@ export class GameState {
     }
 
     private minionAttack(minionId: string): void {
-
         const minion = this.minions[minionId]
 
-
-        const minionRadius = 60;
+        const minionRadius = 60
 
         const now = Date.now()
 
@@ -536,8 +526,6 @@ export class GameState {
         }
 
         for (const heroID of Object.keys(this.heroes)) {
-
-
             const opponent = this.heroes[heroID]
             if (opponent.activity === 'Dead') {
                 continue
@@ -566,7 +554,6 @@ export class GameState {
 
         for (const houseId of Object.keys(this.houses)) {
             const opponentHouse = this.houses[houseId]
-            console.log('Checking house for attack: ' + opponentHouse)
             if (opponentHouse.hp <= 0) {
                 continue
             }
@@ -584,13 +571,11 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking house')
             opponentHouse.hp = Math.max(0, opponentHouse.hp - 10)
         }
 
         for (const baseId of Object.keys(this.bases)) {
             const opponentBase = this.bases[baseId]
-            console.log('Checking base for attack: ' + opponentBase)
             if (opponentBase.hp <= 0) {
                 continue
             }
@@ -608,7 +593,6 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking base')
             opponentBase.hp = Math.max(0, opponentBase.hp - 10)
             if (opponentBase.hp === 0) {
                 this.gameEndedAt = Date.now()
@@ -618,7 +602,6 @@ export class GameState {
 
         for (const minionId of Object.keys(this.minions)) {
             const opponentMinion = this.minions[minionId]
-            console.log('Checking minion for attack: ' + opponentMinion)
             if (opponentMinion.hp <= 0) {
                 continue
             }
@@ -636,7 +619,6 @@ export class GameState {
                 continue
             }
 
-            console.log('Attacking minion')
             opponentMinion.hp = Math.max(0, opponentMinion.hp - 10)
 
             if (opponentMinion.hp <= 0) {

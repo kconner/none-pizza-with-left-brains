@@ -24,7 +24,6 @@ export class Base implements MapPositionable {
 
         const spawnPoints = mapTeam.spawnPoints.filter(spawnPoint => spawnPoint.id === mapBase.foodSpawnPointID)
         if (spawnPoints.length !== 1) {
-            console.log(`Spawn point ${mapBase.foodSpawnPointID}`)
             return
         }
 

@@ -5,11 +5,10 @@ enum BaseFrames {
     HUMAN = 0,
     HUMAN_DESTROYED = 1,
     ZOMBIE = 2,
-    ZOMBIE_DESTROYED = 3
+    ZOMBIE_DESTROYED = 3,
 }
 
 export default class BaseSprite extends AppSprite {
-
     public static readonly RADIUS: number = 240
 
     static loadAsset(game: Phaser.Game): void {
@@ -39,7 +38,6 @@ export default class BaseSprite extends AppSprite {
     }
 
     showHP(hp: number) {
-        console.log(hp)
         this.lifeBar.showHP(hp)
 
         if (hp <= 0) {
