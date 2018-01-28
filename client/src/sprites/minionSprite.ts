@@ -14,7 +14,6 @@ export default class MinionSprite extends AppSprite {
     constructor(game: Phaser.Game, id: string, minion: Minion, maxHp: number) {
         super(game, minion.position.x, minion.position.y, minion.team === 'Human' ? 'minion-human' : 'minion-zombie')
 
-
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
@@ -58,10 +57,10 @@ export default class MinionSprite extends AppSprite {
     showFacingDirection(facingDirection: FacingDirection) {
         switch (facingDirection) {
             case 'Left':
-                this.scale.x = -1
+                this.scale.x = -0.7
                 break
             case 'Right':
-                this.scale.x = 1
+                this.scale.x = 0.7
                 break
         }
     }
@@ -70,7 +69,4 @@ export default class MinionSprite extends AppSprite {
         console.log(hp)
         this.lifeBar.showHP(hp)
     }
-
-
-
 }
