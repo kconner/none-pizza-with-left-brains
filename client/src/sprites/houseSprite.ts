@@ -6,13 +6,13 @@ export default class HouseSprite extends AppSprite {
     public static readonly RADIUS: number = 120
 
     static loadAsset(game: Phaser.Game): void {
-        game.load.image('base', 'base.png')
+        game.load.image('house', 'house.png')
     }
 
     private readonly lifeBar: LifeBarSprite = null
 
     constructor(game: Phaser.Game, x: number, y: number, maxHp: number) {
-        super(game, x, y, 'base')
+        super(game, x, y, 'house')
 
         this.width = HouseSprite.RADIUS
         this.height = HouseSprite.RADIUS
