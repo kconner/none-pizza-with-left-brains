@@ -4,6 +4,7 @@ export class Minion {
 
     public static readonly RADIUS: number = 40
 
+    facingDirection: FacingDirection = 'Right'
     position = {
         x: 0,
         y: 0,
