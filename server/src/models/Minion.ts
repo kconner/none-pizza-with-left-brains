@@ -12,8 +12,11 @@ export class Minion {
     team: Team
     id: number = uuid()
     hp: number = 50
+<<<<<<< HEAD
 
     attackedAt?: number = null
+=======
+>>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
 
     constructor(team: Team, x: number, y: number) {
         this.position.x = x

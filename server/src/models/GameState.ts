@@ -507,6 +507,7 @@ export class GameState {
             myMove.y = (num > 2) ? -1 : ((num < 1) ? 1 : 0)
 
             this.moveMinion(minionId, myMove)
+<<<<<<< HEAD
 
             this.minionAttack(minionId)
         }
@@ -636,6 +637,8 @@ export class GameState {
             if (opponentMinion.hp <= 0) {
                 this.removeMinion(minionId)
             }
+=======
+>>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
         }
     }
 }

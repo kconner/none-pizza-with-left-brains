@@ -9,15 +9,19 @@ import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
+<<<<<<< HEAD
 import { Sounds } from './preloader';
 import MinionSprite from '../sprites/minionSprite'
 
+=======
+import { Sounds } from './preloader'
+import MinionSprite from '../sprites/minionSprite'
+>>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
 
 const daySong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
 const nightSong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330bd3gQd3gQd3gQd3gQd3gQd3gQd3gQd3gQ8y8y8y8y8y8p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
-// TODO: Play this when the game is over
 const outroSong =
     '5n31sbkbl00e03tdm2a7g0fj7i0r1w0111f2000d2111c5000h6060v2440o2140b4h404h4h4h0PcM0h4h4h44hk014h4h4g4h4h4h4h4h0p22YFK7Uiq8bh8QQExjjjiy7ddddddddddddddd8a8okxjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuNmcceOHVx0PlAgrcP2Jllwpd46baqkgFFFFVCCCCCCCCCCCCCCCA1j3w481cswNc5gcHa1i2I5ocHb1AUy3e3Mw19wPcA5EcHa1i2w58cDa1AVEcQ800'
 
@@ -80,14 +84,19 @@ export default class Level extends AppState {
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
             this.fogSprite().showPhase(change.value)
 
-            // TODO: Don't do anything with music based on time of day if the game is over already
-            switch (change.value) {
-                case 'Day':
-                    this.app().setSongAndPlay(daySong)
-                    break
-                case 'Night':
-                    this.app().setSongAndPlay(nightSong)
-                    break
+            if (
+                !this.app()
+                    .connection()
+                    .data().winningTeam
+            ) {
+                switch (change.value) {
+                    case 'Day':
+                        this.app().setSongAndPlay(daySong)
+                        break
+                    case 'Night':
+                        this.app().setSongAndPlay(nightSong)
+                        break
+                }
             }
 
             // TODO: Instead of setting the background color,
@@ -209,16 +218,28 @@ export default class Level extends AppState {
                 if (change.value <= 0) {
                     // You're dead; big shake.
                     this.game.camera.shake(0.02, 300)
-
-                    this.playSound(Sounds.HERO_DIES)
                 } else {
                     // You're hit / respawning; little shake.
                     this.game.camera.shake(0.01, 100)
+                }
+            }
 
-                    if (change.value.team == 'human') {
-                        this.playSound(Sounds.HUMAN_HERO_GETS_HIT)
-                    } else {
-                        this.playSound(Sounds.ZOMBIE_HERO_GETS_HIT)
+            if (change.value <= 0) {
+                // Death
+                this.playSound(Sounds.HERO_DIES)
+            } else {
+                // Hit
+                const heroes = this.app()
+                    .connection()
+                    .data().heroes
+                if (heroes) {
+                    const hero = heroes[change.path.id]
+                    if (hero) {
+                        if (hero.team === 'Human') {
+                            this.playSound(Sounds.HUMAN_HERO_GETS_HIT)
+                        } else {
+                            this.playSound(Sounds.ZOMBIE_HERO_GETS_HIT)
+                        }
                     }
                 }
             }
@@ -233,6 +254,7 @@ export default class Level extends AppState {
             sprite.showHP(change.value)
 
             if (change.value <= 0) {
+<<<<<<< HEAD
                 // Minion died; small shake.
                 this.game.camera.shake(0.02, 100)
 
@@ -245,12 +267,22 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.01, 50)
 
                 if (change.value.team == 'human') {
+=======
+                this.playSound(Sounds.MINION_DIES)
+                sprite.destroy()
+                delete this.minionSprites[change.path.id]
+            } else if (change.value < 50) {
+                if (change.value.team == 'Human') {
+>>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
                     this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
                 } else {
                     this.playSound(Sounds.ZOMBIE_MINION_GETS_HIT)
                 }
             }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
         })
 
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
@@ -374,12 +406,10 @@ export default class Level extends AppState {
                 }
                 case 'remove': {
                     console.info(`Listen.foods<${change.path.id}> Removed`)
-                    const food: Food = change.value
-                    console.log(food)
-                    const sprite = this.foodSprites[food.id]
+                    const sprite = this.foodSprites[change.path.id]
                     if (sprite) {
                         sprite.destroy
-                        delete this.foodSprites[food.id]
+                        delete this.foodSprites[change.path.id]
                     }
                     break
                 }
@@ -399,6 +429,7 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.02, 300)
                 this.playSound(Sounds.HOUSE_DESTRYOYED)
             } else {
+                console.log('house got hit again')
                 this.playSound(Sounds.HOUSE_GETS_HIT)
             }
         })
@@ -412,11 +443,16 @@ export default class Level extends AppState {
             sprite.showHP(change.value)
 
             if (change.value <= 0) {
-                // You're dead; big shake.
                 this.game.camera.shake(0.02, 300)
                 this.playSound(Sounds.BASE_DESTROYED)
             } else {
                 this.playSound(Sounds.BASE_GETS_HIT)
+            }
+        })
+
+        connection.listen('winningTeam', (change: Colyseus.DataChange) => {
+            if (change.value) {
+                this.app().setSongAndPlay(outroSong)
             }
         })
     }
