@@ -28,6 +28,10 @@ export class GameRoom extends Room<GameState> {
                 this.state.moveHero(client.id, movement)
                 break
 
+            case 'Attack':
+                this.state.attackWithHero(client.id)
+                break
+
             default:
                 console.log('GameRoom.onMessage', client.id, data)
                 break

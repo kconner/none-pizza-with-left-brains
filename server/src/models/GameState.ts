@@ -1,5 +1,6 @@
 import { EntityMap, nosync } from 'colyseus'
 
+import { Constants } from '../config'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 
@@ -49,5 +50,16 @@ export class GameState {
         }
 
         this.timeOfDay.previousFrameTimestamp = this.timeOfDay.currentFrameTimestamp
+    }
+
+    attackWithHero(id: string) {
+        const now = Date.now()
+        var hero = this.heroes[id]
+
+        if (!hero.attackedAt) {
+            hero.attackedAt = now
+        } else if (now - hero.attackedAt >= Constants.Timeouts.heroAttack) {
+            hero.attackedAt = now
+        }
     }
 }
