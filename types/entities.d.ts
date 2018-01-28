@@ -9,6 +9,10 @@ interface TimeOfDay {
     previousFrameTimestamp: number
     dayOrNight: DayOrNight
 }
+interface World {
+    width: number
+    height: number
+}
 interface Hero {
     x: number
     y: number
@@ -16,4 +20,5 @@ interface Hero {
     activity: Activity
     hp: number
     team: Team
+    attackedAt?: Date
 }

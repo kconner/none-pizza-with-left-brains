@@ -9,3 +9,7 @@ interface Movement extends ClientAction {
     x: Direction
     y: Direction
 }
+
+interface Attack extends ClientAction {
+    type: 'Attack'
+}

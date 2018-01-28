@@ -6,4 +6,5 @@ export class Hero {
     activity: Activity = 'Standing'
     hp: number = 100
     team: Team = 'Human'
+    attackedAt?: number = null
 }

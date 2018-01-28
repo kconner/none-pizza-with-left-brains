@@ -2,9 +2,11 @@ import { Server } from 'colyseus'
 import * as express from 'express'
 import { createServer } from 'http'
 
+import { Constants } from './config'
 import { GameRoom } from './rooms'
 
-const port = Number(process.env.PORT || 2657)
+const host = process.env.HOST || Constants.Connection.host
+const port = Number(process.env.PORT || Constants.Connection.port)
 
 // Create server stack
 const app = express()
@@ -15,6 +17,6 @@ gameServer.register('GameRoom', GameRoom, {
     custom_options: 'this can be anything you want',
 })
 
-gameServer.listen(port)
+gameServer.listen(port, host)
 
-console.log(`Listening on http://localhost:${port}`)
+console.log(`Listening on http://${host}:${port}`)

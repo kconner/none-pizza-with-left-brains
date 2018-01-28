@@ -1,5 +1,7 @@
-import AppState from './appState'
 import * as Colyseus from 'colyseus.js'
+
+import AppState from './appState'
+import { Actions } from '../models'
 
 const levelSong = ''
 const dayHexColor = 'd7dee8'
@@ -14,8 +16,6 @@ export default class Level extends AppState {
         this.game.stage.backgroundColor = '#202020'
 
         this.spriteMap = {}
-
-        this.game.world.setBounds(0, 0, 1920 * 3, 1280 * 3)
     }
 
     create() {
@@ -36,6 +36,13 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('world', (change: any) => {
+            if (!change.value) {
+                return
+            }
+
+            this.game.world.setBounds(0, 0, change.value.width, change.value.height)
+        })
 
         connection.listen('heroes/:id/:attribute', (change: any) => {
             switch (change.path.attribute) {
@@ -43,6 +50,10 @@ export default class Level extends AppState {
                     console.log('direction changed ', change.value)
                     break
             }
+        })
+
+        connection.listen('heroes/:id/attackedAt', (change: any) => {
+            console.log(`Hero<${change.path.id}>.attackedAt`, change.value)
         })
 
         connection.listen('heroes/:id/:axis', (change: any) => {
@@ -85,9 +96,20 @@ export default class Level extends AppState {
             .arrowMotion()
 
         if (arrowMotion != null) {
+            const movement = Actions.movement(arrowMotion.x, arrowMotion.y)
             this.app()
                 .connection()
-                .send(arrowMotion)
+                .send(movement)
+        }
+
+        if (
+            this.app()
+                .controls()
+                .spacebarIsDown()
+        ) {
+            this.app()
+                .connection()
+                .send(Actions.attack())
         }
 
         this.moveCamera()
