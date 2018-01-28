@@ -210,8 +210,7 @@ export default class Level extends AppState {
                 // You're dead; big shake.
                 this.game.camera.shake(0.02, 300)
             } else {
-                // You're hit / respawning; little shake.
-                //this.game.camera.shake(0.01, 100)
+                //TODO play attack sfx here
             }
         })
     }
