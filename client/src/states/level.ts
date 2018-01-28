@@ -5,6 +5,7 @@ import AppState from './appState'
 import { Actions } from '../models'
 import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
+import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 
 const levelSong = ''
@@ -13,6 +14,8 @@ const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
+    private _fogSprite: FogSprite
+
     private heroSprites: {
         [id: string]: HeroSprite
     }
@@ -24,7 +27,7 @@ export default class Level extends AppState {
     private lastArrowMotion: DirectionalMotion | null = null
 
     preload() {
-        this.game.stage.backgroundColor = '#202020'
+        this.game.stage.backgroundColor = '#86C351'
 
         this.heroSprites = {}
         this.baseSprites = {}
@@ -38,14 +41,18 @@ export default class Level extends AppState {
         const connection = this.app().connection()
 
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
-            switch (change.value) {
-                case 'Night':
-                    this.game.stage.backgroundColor = nightHexColor
-                    break
-                case 'Day':
-                    this.game.stage.backgroundColor = dayHexColor
-                    break
-            }
+            this.fogSprite().showPhase(change.value)
+
+            // TODO: Instead of setting the background color,
+            // tint the background sprite
+            // switch (change.value) {
+            //     case 'Night':
+            //         this.game.stage.backgroundColor = nightHexColor
+            //         break
+            //     case 'Day':
+            //         this.game.stage.backgroundColor = dayHexColor
+            //         break
+            // }
         })
 
         connection.listen('map', (change: Colyseus.DataChange) => {
@@ -136,6 +143,18 @@ export default class Level extends AppState {
                     const sprite = new HeroSprite(this.game, change.path.id, change.value)
                     this.heroSprites[change.path.id] = sprite
                     this.game.add.existing(sprite)
+
+                    console.log(change.path.id)
+                    console.log(this.clientHeroSpriteID())
+                    if (change.path.id === this.clientHeroSpriteID()) {
+                        const fogSprite = this.fogSprite()
+                        fogSprite.setTeam(change.value.team)
+                        fogSprite.showPhase(
+                            this.app()
+                                .connection()
+                                .data().timeOfDay.dayOrNight
+                        )
+                    }
                     break
                 }
                 case 'remove': {
@@ -176,7 +195,16 @@ export default class Level extends AppState {
                 .send(Actions.attack())
         }
 
-        this.moveCamera()
+        this.moveCameraAndFog()
+    }
+
+    private fogSprite(): FogSprite {
+        if (!this._fogSprite) {
+            this._fogSprite = new FogSprite(this.game, 0, 0)
+            this.game.add.existing(this._fogSprite)
+        }
+
+        return this._fogSprite
     }
 
     private clientHeroSpriteID(): string | null {
@@ -185,7 +213,7 @@ export default class Level extends AppState {
             .id()
     }
 
-    private moveCamera() {
+    private moveCameraAndFog() {
         const heroSpriteID = this.clientHeroSpriteID()
         if (!heroSpriteID) {
             return
@@ -198,9 +226,13 @@ export default class Level extends AppState {
 
         const wantedCameraX = heroSprite.position.x - this.game.width / 2
         const wantedCameraY = heroSprite.position.y - this.game.height / 2
-
         const factor = 0.07
         this.game.camera.x += factor * (wantedCameraX - this.game.camera.x)
         this.game.camera.y += factor * (wantedCameraY - this.game.camera.y)
+
+        const fogSprite = this.fogSprite()
+        fogSprite.x = heroSprite.x
+        fogSprite.y = heroSprite.y
+        fogSprite.bringToTop()
     }
 }

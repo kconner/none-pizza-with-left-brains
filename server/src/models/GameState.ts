@@ -4,20 +4,82 @@ import { Constants } from '../config'
 import { Hood01 } from '../maps'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
+import { House } from './House'
+import { open } from 'fs';
 
 export class GameState {
     map = Hood01
     heroes: EntityMap<Hero> = {}
+    houses: EntityMap<House> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
-    @nosync something = "This attribute won't be sent to the client-side"
+
+    @nosync humanHeroCount = 0
+    @nosync zombieHeroCount = 0
+
+    get totalHeroCount() {
+        return this.humanHeroCount + this.zombieHeroCount
+    }
 
     createHero(id: string) {
-        const team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
-        this.heroes[id] = new Hero(team)
+        // Limit game heros to maximum team size * 2 teams
+        if (this.totalHeroCount === this.map.maximumTeamSize * 2) {
+            return
+        }
+
+        let team: Team
+        if (this.humanHeroCount == this.zombieHeroCount) {
+            team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
+        } else if (this.humanHeroCount > this.zombieHeroCount) {
+            team = 'Zombie'
+        } else {
+            team = 'Human'
+        }
+
+        const spawnPoints = this.map.teams[team].spawnPoints.filter(spawnPoint => spawnPoint.id.startsWith('hero'))
+        let spawnPoint
+
+        switch (team) {
+            case 'Human':
+                if (this.humanHeroCount < spawnPoints.length) {
+                    spawnPoint = spawnPoints[this.humanHeroCount]
+                    this.humanHeroCount += 1
+                }
+                break
+
+            case 'Zombie':
+                if (this.zombieHeroCount < spawnPoints.length) {
+                    spawnPoint = spawnPoints[this.zombieHeroCount]
+                    this.zombieHeroCount += 1
+                }
+                break
+        }
+
+        if (spawnPoint) {
+            this.heroes[id] = new Hero(team, spawnPoint)
+        } else {
+            console.error(`Map is missing enough spawn points for defined team size (${this.map.maximumTeamSize}.`)
+        }
+    }
+
+    createHouses(id: string) {
+        const team = Object.keys(this.houses).length % 2 === 0 ? 'Human' : 'Zombie'
+        this.houses[id] = new House(team)
     }
 
     removeHero(id: string) {
+        const hero = this.heroes[id]
+
+        switch (hero.team) {
+            case 'Human':
+                this.humanHeroCount -= 1
+                break
+
+            case 'Zombie':
+                this.zombieHeroCount -= 1
+                break
+        }
+
         delete this.heroes[id]
     }
 
@@ -67,7 +129,7 @@ export class GameState {
         }
 
         // Hurt nearby heroes
-        const doubleHeroRadius = 60 * 2
+        const doubleHeroRadius = Hero.RADIUS * 2
         const doubleHeroRadiusSquared = doubleHeroRadius * doubleHeroRadius
         for (const heroID of Object.keys(this.heroes)) {
             if (heroID === id) {
@@ -96,6 +158,28 @@ export class GameState {
                 opponent.activity = 'Dead'
                 opponent.diedAt = now
             }
+        }
+
+        for (const houseId of Object.keys(this.houses)) {
+            const opponentHouse = this.houses[houseId]
+            if (opponentHouse.hp <= 0) {
+                continue
+            }
+
+            if (opponentHouse.team == hero.team) {
+                continue
+            }
+
+            const heroHouseRadius = Hero.RADIUS + House.RADIUS
+            const heroHouseRadiusSquared = heroHouseRadius * heroHouseRadius
+            const dx = opponentHouse.position.x - hero.position.x
+            const dy = opponentHouse.position.y - hero.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroHouseRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
     }
 

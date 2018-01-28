@@ -1,4 +1,6 @@
 export class Hero {
+
+    public static readonly RADIUS: number = 60
     position: {
         x: number
         y: number
@@ -10,16 +12,19 @@ export class Hero {
     team: Team = 'Human'
     attackedAt?: number = null
     diedAt?: number = null
+    spawnPoint: SpawnPoint
 
-    constructor(team: Team) {
+    constructor(team: Team, spawnPoint: SpawnPoint) {
         this.team = team
+        this.spawnPoint = spawnPoint
+        this.position.x = spawnPoint.position.x
+        this.position.y = spawnPoint.position.y
         this.respawn()
     }
 
     respawn() {
-        // TODO: Spawn near your team's base instead
-        this.position.x = Math.floor(Math.random() * 400)
-        this.position.y = Math.floor(Math.random() * 400)
+        this.position.x = this.spawnPoint.position.x
+        this.position.y = this.spawnPoint.position.y
         this.activity = 'Standing'
         this.hp = 100
         this.facingDirection = this.team === 'Human' ? 'Left' : 'Right'

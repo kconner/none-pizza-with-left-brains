@@ -17,10 +17,10 @@ export default class LifeBarSprite extends AppSprite {
         this.anchor.y = 0
 
         this.maximum = maximum
-        this.setHP(maximum)
+        this.showHP(maximum)
     }
 
-    setHP(hp: number) {
+    showHP(hp: number) {
         this.width = hp * 0.5
 
         const fraction = hp / this.maximum
