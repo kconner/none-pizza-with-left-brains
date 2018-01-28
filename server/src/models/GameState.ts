@@ -10,14 +10,68 @@ export class GameState {
     heroes: EntityMap<Hero> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
-    @nosync something = "This attribute won't be sent to the client-side"
+
+    @nosync humanHeroCount = 0
+    @nosync zombieHeroCount = 0
+
+    get totalHeroCount() {
+        return this.humanHeroCount + this.zombieHeroCount
+    }
 
     createHero(id: string) {
-        const team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
-        this.heroes[id] = new Hero(team)
+        // Limit game heros to maximum team size * 2 teams
+        if (this.totalHeroCount === this.map.maximumTeamSize * 2) {
+            return
+        }
+
+        let team: Team
+        if (this.humanHeroCount == this.zombieHeroCount) {
+            team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
+        } else if (this.humanHeroCount > this.zombieHeroCount) {
+            team = 'Zombie'
+        } else {
+            team = 'Human'
+        }
+
+        const spawnPoints = this.map.teams[team].spawnPoints.filter(spawnPoint => spawnPoint.id.startsWith('hero'))
+        let spawnPoint
+
+        switch (team) {
+            case 'Human':
+                if (this.humanHeroCount < spawnPoints.length) {
+                    spawnPoint = spawnPoints[this.humanHeroCount]
+                    this.humanHeroCount += 1
+                }
+                break
+
+            case 'Zombie':
+                if (this.zombieHeroCount < spawnPoints.length) {
+                    spawnPoint = spawnPoints[this.zombieHeroCount]
+                    this.zombieHeroCount += 1
+                }
+                break
+        }
+
+        if (spawnPoint) {
+            this.heroes[id] = new Hero(team, spawnPoint)
+        } else {
+            console.error(`Map is missing enough spawn points for defined team size (${this.map.maximumTeamSize}.`)
+        }
     }
 
     removeHero(id: string) {
+        const hero = this.heroes[id]
+
+        switch (hero.team) {
+            case 'Human':
+                this.humanHeroCount -= 1
+                break
+
+            case 'Zombie':
+                this.zombieHeroCount -= 1
+                break
+        }
+
         delete this.heroes[id]
     }
 

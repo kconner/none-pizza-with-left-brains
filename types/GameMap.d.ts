@@ -9,11 +9,11 @@ interface SpawnPoint {
 interface GameTeam {
     spawnPoints: SpawnPoint[]
 }
-
 interface GameMap {
     size: {
         width: number
         height: number
     }
+    maximumTeamSize: number
     teams: { [id: string]: GameTeam }
 }
