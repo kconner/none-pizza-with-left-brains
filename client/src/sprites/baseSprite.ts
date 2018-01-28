@@ -8,8 +8,8 @@ export default class BaseSprite extends AppSprite {
     constructor(game: Phaser.Game, x: number, y: number) {
         super(game, x, y, 'base')
 
-        this.width = 80
-        this.height = 120
+        this.width = 240
+        this.height = 240
 
         this.anchor.x = 0.5
         this.anchor.y = 0.5
