@@ -52,7 +52,7 @@ export class GameState {
             this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
             this.timeOfDay.dayOrNight = 'Night'
             // send message to client that it is nighttime
-        } else if (this.timeOfDay.dayCountdownInSeconds < 30) {
+        } else if (this.timeOfDay.dayCountdownInSeconds < TimeOfDay.lengthOfDayInSeconds / 2) {
             // Dawn!
             this.timeOfDay.dayOrNight = 'Day'
             // send message to client that it is daytime

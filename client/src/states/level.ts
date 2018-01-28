@@ -4,6 +4,8 @@ import AppState from './appState'
 import { Actions } from '../models'
 
 const levelSong = ''
+const dayHexColor = 'd7dee8'
+const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
     private spriteMap: {
@@ -22,6 +24,17 @@ export default class Level extends AppState {
         this.app().connect('ws://127.0.0.1:2657')
 
         const connection = this.app().connection()
+
+        connection.listen('timeOfDay/dayOrNight', (change: any) => {
+            switch (change.value) {
+                case 'Night':
+                    this.game.stage.backgroundColor = nightHexColor
+                    break
+                case 'Day':
+                    this.game.stage.backgroundColor = dayHexColor
+                    break
+            }
+        })
 
         connection.listen('world', (change: any) => {
             if (!change.value) {
