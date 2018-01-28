@@ -1,12 +1,12 @@
 import AppState from './appState'
 
 export default class Preloader extends AppState {
-    private thing: Phaser.Sprite
+
 
     preload() {
         this.game.load.baseURL = './assets/'
 
-        this.game.load.image('thing', 'thing.png')
+
     }
 
     create() {
