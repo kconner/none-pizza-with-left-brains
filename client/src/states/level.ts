@@ -7,6 +7,9 @@ import { Actions } from '../models'
 import { spawn } from 'child_process';
 
 const levelSong = ''
+const dayHexColor = 'd7dee8'
+const nightHexColor = '4a4b4c'
+
 
 export default class Level extends AppState {
     private spriteMap: {
@@ -33,6 +36,24 @@ export default class Level extends AppState {
 
         const connection = this.app().connection()
 
+        connection.listen('timeOfDay/dayOrNight', (change: any) => {
+            switch (change.value) {
+                case 'Night':
+                    this.game.stage.backgroundColor = nightHexColor
+                    break
+                case 'Day':
+                    this.game.stage.backgroundColor = dayHexColor
+                    break
+            }
+        })
+
+        connection.listen('world', (change: any) => {
+            if (!change.value) {
+                return
+            }
+
+            this.game.world.setBounds(0, 0, change.value.width, change.value.height)
+        })
 
         connection.listen('heroes/:id/:attribute', (change: any) => {
 
@@ -67,6 +88,7 @@ export default class Level extends AppState {
                     if (hero.facingDirection == 'Left') {
                         if (sprite.animations.currentAnim.complete) {
                             sprite.animations.play(AnimationLoader.ANIM_LEFT_WALK)
+                            //sprite.animations.currentAnim.onUpdate
                         }
                     } else {
 

@@ -1,10 +1,12 @@
 import { EntityMap, nosync } from 'colyseus'
 
 import { Constants } from '../config'
+import { World } from './World'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 
 export class GameState {
+    world = new World()
     heroes: EntityMap<Hero> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
@@ -26,8 +28,18 @@ export class GameState {
         } else if (movement.x > 0) {
             hero.facingDirection = 'Right'
         }
-        hero.x += movement.x * 10
-        hero.y += movement.y * 10
+
+        const dx: number = movement.x
+        const dy: number = movement.y
+        const length = Math.sqrt(dx * dx + dy * dy)
+        if (length === 0) {
+            return
+        }
+
+        const normalizedDx = dx / length
+        const normalizedDy = dy / length
+        hero.x = Math.max(0, Math.min(this.world.width, hero.x + normalizedDx * 12))
+        hero.y = Math.max(0, Math.min(this.world.height, hero.y + normalizedDy * 12))
     }
 
     advanceFrame() {
@@ -40,7 +52,7 @@ export class GameState {
             this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
             this.timeOfDay.dayOrNight = 'Night'
             // send message to client that it is nighttime
-        } else if (this.timeOfDay.dayCountdownInSeconds < 30) {
+        } else if (this.timeOfDay.dayCountdownInSeconds < TimeOfDay.lengthOfDayInSeconds / 2) {
             // Dawn!
             this.timeOfDay.dayOrNight = 'Day'
             // send message to client that it is daytime
