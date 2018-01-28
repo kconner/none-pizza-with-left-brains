@@ -100,6 +100,16 @@ export default class Level extends AppState {
             }
 
             sprite.showHP(change.value)
+
+            if (change.path.id === this.clientHeroSpriteID()) {
+                if (change.value <= 0) {
+                    // You're dead; big shake.
+                    this.game.camera.shake(0.02, 300)
+                } else {
+                    // You're hit / respawning; little shake.
+                    this.game.camera.shake(0.01, 100)
+                }
+            }
         })
 
         connection.listen('heroes/:id', (change: any) => {
@@ -153,10 +163,14 @@ export default class Level extends AppState {
         this.moveCamera()
     }
 
-    private moveCamera() {
-        const heroSpriteID = this.app()
+    private clientHeroSpriteID(): string | null {
+        return this.app()
             .connection()
             .id()
+    }
+
+    private moveCamera() {
+        const heroSpriteID = this.clientHeroSpriteID()
         if (!heroSpriteID) {
             return
         }
