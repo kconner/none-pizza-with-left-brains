@@ -169,6 +169,7 @@ export default class Level extends AppState {
                     const sprite = this.heroSprites[change.path.id]
                     if (sprite) {
                         sprite.destroy()
+                        delete this.heroSprites[change.path.id]
                     }
                     break
                 }
