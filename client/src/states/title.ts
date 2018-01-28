@@ -18,7 +18,7 @@ export default class Title extends AppState {
 
     update() {
         const controls = this.app().controls()
-        if (controls.startButtonIsDown() || controls.attackButtonIsDown() || controls.dodgeButtonIsDown()) {
+        if (controls.startButtonIsDown() || controls.attackButtonIsDown()) {
             this.game.state.start('level')
         }
     }

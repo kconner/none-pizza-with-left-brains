@@ -19,7 +19,9 @@ export default class Connection {
     }
 
     send(message: any) {
-        this.room.send(message)
+        if (this.room.connection) {
+            this.room.send(message)
+        }
     }
 
     listen(segments: string, callback: (change: any) => void) {
