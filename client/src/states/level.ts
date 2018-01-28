@@ -100,6 +100,21 @@ export default class Level extends AppState {
             }
 
             sprite.showHP(change.value)
+
+            if (
+                change.path.id ===
+                this.app()
+                    .connection()
+                    .id()
+            ) {
+                if (change.value <= 0) {
+                    // You're dead; big shake.
+                    this.game.camera.shake(0.02, 300)
+                } else {
+                    // You're hit / respawning; little shake.
+                    this.game.camera.shake(0.01, 100)
+                }
+            }
         })
 
         connection.listen('heroes/:id', (change: any) => {
