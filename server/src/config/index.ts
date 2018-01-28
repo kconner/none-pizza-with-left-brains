@@ -6,5 +6,6 @@ export namespace Constants {
 
     export namespace Timeouts {
         export const heroAttack = 750
+        export const endOfGame = 5000
     }
 }
