@@ -9,14 +9,8 @@ import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
-<<<<<<< HEAD
-import { Sounds } from './preloader';
-import MinionSprite from '../sprites/minionSprite'
-
-=======
 import { Sounds } from './preloader'
 import MinionSprite from '../sprites/minionSprite'
->>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
 
 const daySong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
@@ -254,7 +248,6 @@ export default class Level extends AppState {
             sprite.showHP(change.value)
 
             if (change.value <= 0) {
-<<<<<<< HEAD
                 // Minion died; small shake.
                 this.game.camera.shake(0.02, 100)
 
@@ -267,22 +260,11 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.01, 50)
 
                 if (change.value.team == 'human') {
-=======
-                this.playSound(Sounds.MINION_DIES)
-                sprite.destroy()
-                delete this.minionSprites[change.path.id]
-            } else if (change.value < 50) {
-                if (change.value.team == 'Human') {
->>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
                     this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
                 } else {
                     this.playSound(Sounds.ZOMBIE_MINION_GETS_HIT)
                 }
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
         })
 
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {

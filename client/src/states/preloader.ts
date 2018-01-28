@@ -27,10 +27,7 @@ export default class Preloader extends AppState {
     preload() {
         this.game.load.baseURL = './assets/'
 
-<<<<<<< HEAD
-=======
         this.game.load.image('Title2', 'Title2.png')
->>>>>>> 8d9e33f27e59290308913e501428959e559a1fcf
         this.game.load.image('Pizza-Zombie-Game-Background', 'Pizza-Zombie-Game-Background.png')
 
         HeroSprite.loadAsset(this.game)
