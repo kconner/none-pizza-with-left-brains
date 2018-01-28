@@ -1,11 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>Hello Webpack!</title>
-    </head>
-    <body>
-        <script src="https://www.beepbox.co/beepbox_synth.js"></script>
-        <script src="./static/bundle.js"></script>
-    </body>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>None Pizza with Left Brains</title>
+</head>
+
+<body>
+    <script>
+        window.queryParameters = ((search) => {
+            if (!search) {
+                return {};
+            }
+
+            var query = {};
+            for (const paramater of search) {
+                var components = paramater.split('=', 2);
+                if (components.length == 1) {
+                    query[components[0]] = "";
+                } else {
+                    query[components[0]] = decodeURIComponent(components[1].replace(/\+/g, " "));
+                }
+            }
+            return query;
+        })(window.location.search.substr(1).split('&'));
+    </script>
+    <script src="https://www.beepbox.co/beepbox_synth.js"></script>
+    <script src="./static/bundle.js"></script>
+    <div id='server-host-form-continer'>
+        <form action="/">
+            Server Host:
+            <input type="text" name="serverhost" id="serverhost" />
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+
 </html>
