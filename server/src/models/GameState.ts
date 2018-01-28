@@ -200,6 +200,30 @@ export class GameState {
             console.log('Attacking house')
             opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
+
+        for (const baseId of Object.keys(this.bases)) {
+            const opponentBase = this.bases[baseId]
+            console.log('Checking base for attack: ' + opponentBase)
+            if (opponentBase.hp <= 0) {
+                continue
+            }
+
+            if (opponentBase.team == hero.team) {
+                continue
+            }
+
+            const heroBaseRadius = Hero.RADIUS + Base.RADIUS
+            const heroBaseRadiusSquared = heroBaseRadius * heroBaseRadius
+            const dx = opponentBase.position.x - hero.position.x
+            const dy = opponentBase.position.y - hero.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroBaseRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            console.log('Attacking base')
+            opponentBase.hp = Math.max(0, opponentBase.hp - 25)
+        }
     }
 
     advanceFrame() {

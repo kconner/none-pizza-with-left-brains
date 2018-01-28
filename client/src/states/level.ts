@@ -244,6 +244,22 @@ export default class Level extends AppState {
                 //TODO play attack sfx here
             }
         })
+
+        connection.listen('bases/:id/hp', (change: Colyseus.DataChange) => {
+            const sprite = this.baseSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
+
+            if (change.value <= 0) {
+                // You're dead; big shake. Game over here?
+                this.game.camera.shake(0.02, 300)
+            } else {
+                //TODO play attack sfx here
+            }
+        })
     }
 
     update() {
