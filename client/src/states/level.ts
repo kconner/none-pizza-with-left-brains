@@ -4,6 +4,7 @@ import { Animation } from 'phaser-ce';
 
 import AppState from './appState'
 import { Actions } from '../models'
+import { spawn } from 'child_process';
 
 const levelSong = ''
 
@@ -64,12 +65,19 @@ export default class Level extends AppState {
                 sprite.position.x = change.value
                 if (hero != null) {
                     if (hero.facingDirection == 'Left') {
-                        sprite.animations.play(AnimationLoader.ANIM_LEFT_WALK)
+                        if (sprite.animations.currentAnim.complete) {
+                            sprite.animations.play(AnimationLoader.ANIM_LEFT_WALK)
+                        }
                     } else {
-                        sprite.animations.play(AnimationLoader.ANIM_RIGHT_WALK)
+
+                        if (sprite.animations.currentAnim.complete) {
+                            sprite.animations.play(AnimationLoader.ANIM_RIGHT_WALK)
+                        }
                     }
                 }
             } else {
+                sprite.animations.stop()
+                sprite.animations.frame = 18
                 sprite.position.y = change.value
             }
         })
