@@ -15,6 +15,7 @@ interface MapBase extends MapPositionable {
 
 interface MapHouse extends MapPositionable {
     id: string
+    spawnPointId: string
 }
 
 interface MapTeam {

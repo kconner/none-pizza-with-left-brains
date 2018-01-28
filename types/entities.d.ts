@@ -26,6 +26,14 @@ interface Hero {
     diedAt?: Date
 }
 
+interface Minion {
+    position: {
+        x: number
+        y: number
+    }
+    team: Team
+}
+
 interface TeamEntity {
     id: string
     position: {
