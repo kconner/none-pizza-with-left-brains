@@ -1,3 +1,5 @@
+import { MinionSpawner } from './MinionSpawner'
+
 export class House implements MapPositionable {
     public static readonly RADIUS: number = 120
 
@@ -9,11 +11,13 @@ export class House implements MapPositionable {
 
     hp: number = 500
     team: Team = 'Human'
+    minionSpawner: MinionSpawner
 
-    constructor(team: Team, mapHouse: MapHouse) {
+    constructor(team: Team, mapHouse: MapHouse, minionSpawnPoint: MapSpawnPoint) {
         this.team = team
         this.id = mapHouse.id
         this.position.x = mapHouse.position.x
         this.position.y = mapHouse.position.y
+        this.minionSpawner = new MinionSpawner(team, minionSpawnPoint)
     }
 }

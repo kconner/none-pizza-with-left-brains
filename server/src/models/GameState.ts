@@ -6,12 +6,15 @@ import { TimeOfDay } from './TimeOfDay'
 import { Base } from './Base'
 import { Hero } from './Hero'
 import { House } from './House'
+import { Minion } from './Minion'
+import { open } from 'fs'
 
 export class GameState {
     map = Hood01
     heroes: EntityMap<Hero> = {}
     houses: EntityMap<House> = {}
     bases: EntityMap<Base> = {}
+    minions: EntityMap<Minion> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
 
@@ -82,7 +85,17 @@ export class GameState {
     private createHousesForTeam(team: Team) {
         for (const mapHouse of this.map.teams[team].houses) {
             console.info(`GameState.createHousesForTeam<${team}>`, mapHouse)
-            this.houses[mapHouse.id] = new House(team, mapHouse)
+
+            // find spawn point based on spawnPointId from mapHouse
+            const spawnPoints = this.map.teams[team].spawnPoints.filter(spawnPoint =>
+                spawnPoint.id.startsWith(mapHouse.spawnPointId)
+            )
+            if (spawnPoints.length > 0) {
+                // add a new house
+                this.houses[mapHouse.id] = new House(team, mapHouse, spawnPoints[0])
+            } else {
+                console.error('Could not find spawn point for house ', mapHouse)
+            }
         }
     }
 
@@ -243,6 +256,7 @@ export class GameState {
     advanceFrame() {
         this.advanceTimeOfDay()
         this.advanceRespawnTimers()
+        this.advanceMinionSpawners()
     }
 
     private advanceTimeOfDay() {
@@ -291,6 +305,18 @@ export class GameState {
 
         if (Date.now() - this.gameEndedAt >= Constants.Timeouts.endOfGame) {
             return true
+        }
+    }
+
+    private advanceMinionSpawners() {
+        for (const houseID of Object.keys(this.houses)) {
+            const house = this.houses[houseID]
+            const minionSpawner = house.minionSpawner
+            if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds) {
+                continue
+            }
+            const minion = minionSpawner.spawnNewMinion()
+            this.minions[minion.id] = minion
         }
     }
 }
