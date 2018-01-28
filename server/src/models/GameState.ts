@@ -507,7 +507,6 @@ export class GameState {
             myMove.y = (num > 2) ? -1 : ((num < 1) ? 1 : 0)
 
             this.moveMinion(minionId, myMove)
-
             this.minionAttack(minionId)
         }
     }
@@ -541,7 +540,7 @@ export class GameState {
                 continue
             }
 
-            const radius = minionRadius + Hero.RADIUS
+            const radius = Minion.RADIUS + Hero.RADIUS
             const radiusSquared = radius * radius
             const dx = opponent.position.x - minion.position.x
             const dy = opponent.position.y - minion.position.y
@@ -550,7 +549,7 @@ export class GameState {
                 continue
             }
 
-            opponent.hp = Math.max(0, opponent.hp - 25)
+            opponent.hp = Math.max(0, opponent.hp - 10)
 
             if (opponent.hp === 0) {
                 opponent.activity = 'Dead'
@@ -579,7 +578,7 @@ export class GameState {
             }
 
             console.log('Attacking house')
-            opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
+            opponentHouse.hp = Math.max(0, opponentHouse.hp - 10)
         }
 
         for (const baseId of Object.keys(this.bases)) {
@@ -603,7 +602,7 @@ export class GameState {
             }
 
             console.log('Attacking base')
-            opponentBase.hp = Math.max(0, opponentBase.hp - 25)
+            opponentBase.hp = Math.max(0, opponentBase.hp - 10)
             if (opponentBase.hp === 0) {
                 this.gameEndedAt = Date.now()
                 this.winningTeam = minion.team
@@ -631,7 +630,7 @@ export class GameState {
             }
 
             console.log('Attacking minion')
-            opponentMinion.hp = Math.max(0, opponentMinion.hp - 25)
+            opponentMinion.hp = Math.max(0, opponentMinion.hp - 10)
 
             if (opponentMinion.hp <= 0) {
                 this.removeMinion(minionId)
