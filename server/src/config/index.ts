@@ -5,6 +5,6 @@ export namespace Constants {
     }
 
     export namespace Timeouts {
-        export const heroAttack = 2000
+        export const heroAttack = 750
     }
 }
