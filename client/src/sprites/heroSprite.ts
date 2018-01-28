@@ -9,8 +9,9 @@ enum HeroAnimation {
 }
 
 export default class HeroSprite extends AppSprite {
-    readonly id: string
-    readonly lifeBar: LifeBarSprite = null
+    private readonly id: string
+    private readonly lifeBar: LifeBarSprite = null
+    private destination: { x: number; y: number } = { x: 0, y: 0 }
 
     static loadAsset(game: Phaser.Game): void {
         game.load.spritesheet('hero-human', 'hero-human-spritesheet.png', 80, 120)
@@ -23,10 +24,8 @@ export default class HeroSprite extends AppSprite {
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
-        const stand = this.animations.add(HeroAnimation.stand, [0, 1, 2, 3, 3, 2, 1, 0], 15, false)
-        stand.loop = true
-        const walk = this.animations.add(HeroAnimation.walk, [4, 5, 6, 7, 8, 9, 10, 11], 15, false)
-        walk.loop = true
+        this.animations.add(HeroAnimation.stand, [0, 1, 2, 3, 3, 2, 1, 0], 15, true)
+        this.animations.add(HeroAnimation.walk, [4, 5, 6, 7, 8, 9, 10, 11], 15, true)
         this.animations.add(HeroAnimation.attack, [12, 13, 14, 15], 15, false)
         this.animations.add(HeroAnimation.die, [15], 10, false)
 
@@ -42,12 +41,28 @@ export default class HeroSprite extends AppSprite {
         this.showActivity(hero.activity)
     }
 
+    update() {
+        super.update()
+
+        const factor = 0.25
+        this.position.x += factor * (this.destination.x - this.position.x)
+        this.position.y += factor * (this.destination.y - this.position.y)
+    }
+
     showX(x: number) {
-        this.position.x = x
+        this.destination.x = x
+
+        if (150 < Math.abs(this.destination.x - this.position.x)) {
+            this.position.x = x
+        }
     }
 
     showY(y: number) {
-        this.position.y = y
+        this.destination.y = y
+
+        if (150 < Math.abs(this.destination.y - this.position.y)) {
+            this.position.y = y
+        }
     }
 
     showFacingDirection(facingDirection: FacingDirection) {

@@ -21,7 +21,6 @@ export default class LifeBarSprite extends AppSprite {
     }
 
     setHP(hp: number) {
-        // TODO: Set this fraction when the subject's health changes
         this.width = hp * 0.5
 
         const fraction = hp / this.maximum
@@ -32,13 +31,5 @@ export default class LifeBarSprite extends AppSprite {
         } else {
             this.tint = 0x00ff44
         }
-
-        // if (fraction < 0.333) {
-        //     // TODO: Greenish
-        // } else if (fraction < 0.666) {
-        //     // TODO: Amber
-        // } else {
-        //     // TODO: Blood for the blood gods
-        // }
     }
 }

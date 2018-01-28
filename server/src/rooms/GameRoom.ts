@@ -7,7 +7,6 @@ export class GameRoom extends Room<GameState> {
         console.log('GameRoom.onInit', options)
 
         this.setState(new GameState())
-        this.setPatchRate(16) // 60 fps
         this.setSimulationInterval(() => this.state.advanceFrame())
     }
 
