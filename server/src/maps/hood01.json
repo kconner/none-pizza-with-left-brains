@@ -27,6 +27,13 @@
                         "x": 2640,
                         "y": 400
                     }
+                },
+                {
+                    "id": "human_house_02_spawn",
+                    "position": {
+                        "x": 2640,
+                        "y": 1760
+                    }
                 }
             ],
             "base": {
@@ -51,7 +58,7 @@
                         "x": 2840,
                         "y": 1760
                     },
-                    "spawnPointId": "human_house_01_spawn"
+                    "spawnPointId": "human_house_02_spawn"
                 }
             ]
         },
@@ -74,8 +81,15 @@
                 {
                     "id": "zombie_house_01_spawn",
                     "position": {
-                        "x": 2640,
-                        "y": 400
+                        "x": 1200,
+                        "y": 600
+                    }
+                },
+                {
+                    "id": "zombie_house_02_spawn",
+                    "position": {
+                        "x": 1200,
+                        "y": 1560
                     }
                 }
             ],
@@ -101,7 +115,7 @@
                         "x": 1000,
                         "y": 1560
                     },
-                    "spawnPointId": "zombie_house_01_spawn"
+                    "spawnPointId": "zombie_house_02_spawn"
                 }
             ]
         }
