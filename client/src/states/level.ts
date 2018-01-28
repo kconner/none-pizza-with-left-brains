@@ -21,9 +21,15 @@ export default class Level extends AppState {
 
         const connection = this.app().connection()
 
-        connection.listen('heroes/:id/:axis', (change: any) => {
-            console.log(change)
+        connection.listen('heroes/:id/:attribute', (change: any) => {
+            switch (change.path.attribute) {
+                case 'facingDirection':
+                    console.log('direction changed ', change.value)
+                    break
+            }
+        })
 
+        connection.listen('heroes/:id/:axis', (change: any) => {
             const sprite = this.spriteMap[change.path.id]
             if (!sprite) {
                 return
