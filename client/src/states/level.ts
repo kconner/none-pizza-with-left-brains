@@ -67,7 +67,7 @@ export default class Level extends AppState {
             // TODO: load base information (id, position) from map
             var i: number
             for (i = 0; i < 2; i++) {
-                const sprite = new BaseSprite(this.game, i * 800 + 800, 400)
+                const sprite = new BaseSprite(this.game, i * 800 + 800, 400, 1000)
                 this.baseSprites[i] = sprite
                 this.game.add.existing(sprite)
             }
@@ -140,7 +140,7 @@ export default class Level extends AppState {
                 case 'add': {
                     console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
 
-                    const sprite = new HeroSprite(this.game, change.path.id, change.value)
+                    const sprite = new HeroSprite(this.game, change.path.id, change.value, 100)
                     this.heroSprites[change.path.id] = sprite
                     this.game.add.existing(sprite)
 

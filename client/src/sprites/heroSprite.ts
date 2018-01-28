@@ -18,7 +18,7 @@ export default class HeroSprite extends AppSprite {
         game.load.spritesheet('hero-zombie', 'hero-zombie-spritesheet.png', 80, 120)
     }
 
-    constructor(game: Phaser.Game, id: string, hero: Hero) {
+    constructor(game: Phaser.Game, id: string, hero: Hero, maxHp: number) {
         super(game, hero.position.x, hero.position.y, hero.team === 'Human' ? 'hero-human' : 'hero-zombie')
 
         this.anchor.x = 0.5
@@ -29,7 +29,7 @@ export default class HeroSprite extends AppSprite {
         this.animations.add(HeroAnimation.attack, [12, 13, 14, 15], 15, false)
         this.animations.add(HeroAnimation.die, [16, 17, 18, 19, 20], 10, false)
 
-        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, 100)
+        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, maxHp)
         this.addChild(this.lifeBar)
 
         this.id = id
