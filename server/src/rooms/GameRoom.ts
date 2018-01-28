@@ -7,7 +7,15 @@ export class GameRoom extends Room<GameState> {
         console.log('GameRoom.onInit', options)
 
         this.setState(new GameState())
-        this.setSimulationInterval(() => this.state.advanceFrame())
+        this.setSimulationInterval(() => {
+            if (this.state.isGameEnded()) {
+                this.disconnect().catch(error => {
+                    console.error('GameRoom.disconnect', error)
+                })
+            } else {
+                this.state.advanceFrame()
+            }
+        })
     }
 
     onJoin(client) {

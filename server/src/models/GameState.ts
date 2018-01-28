@@ -15,6 +15,9 @@ export class GameState {
 
     timeOfDay: TimeOfDay = new TimeOfDay()
 
+    winningTeam?: Team = null
+    gameEndedAt?: number = null
+
     @nosync humanHeroCount = 0
     @nosync zombieHeroCount = 0
 
@@ -100,6 +103,10 @@ export class GameState {
     }
 
     moveHero(id: string, movement: Movement) {
+        if (this.gameEndedAt) {
+            return
+        }
+
         var hero = this.heroes[id]
 
         if (hero.activity === 'Dead') {
@@ -128,7 +135,10 @@ export class GameState {
     }
 
     attackWithHero(id: string) {
-        console.log('Attack! ' + id)
+        if (this.gameEndedAt) {
+            return
+        }
+
         const now = Date.now()
         var hero = this.heroes[id]
 
@@ -223,6 +233,10 @@ export class GameState {
 
             console.log('Attacking base')
             opponentBase.hp = Math.max(0, opponentBase.hp - 25)
+            if (opponentBase.hp === 0) {
+                this.gameEndedAt = Date.now()
+                this.winningTeam = hero.team
+            }
         }
     }
 
@@ -267,6 +281,16 @@ export class GameState {
 
             console.log('respawning')
             hero.respawn()
+        }
+    }
+
+    public isGameEnded(): boolean {
+        if (!this.gameEndedAt) {
+            return false
+        }
+
+        if (Date.now() - this.gameEndedAt >= Constants.Timeouts.endOfGame) {
+            return true
         }
     }
 }
