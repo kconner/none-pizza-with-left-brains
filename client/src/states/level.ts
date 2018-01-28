@@ -23,6 +23,8 @@ const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
+    private backgroundSprite: Phaser.Sprite
+
     private _fogSprite: FogSprite
 
     private heroSprites: {
@@ -63,6 +65,9 @@ export default class Level extends AppState {
             this.game.state.start('title')
         })
 
+        this.backgroundSprite = this.game.add.sprite(0, 0, 'Pizza-Zombie-Game-Background')
+        this.backgroundSprite.sendToBack()
+
         const connection = this.app().connection()
 
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
@@ -97,6 +102,8 @@ export default class Level extends AppState {
 
             const map = change.value as GameMap
             this.game.world.setBounds(0, 0, map.size.width, map.size.height)
+            this.backgroundSprite.width = map.size.width
+            this.backgroundSprite.height = map.size.height
         })
 
         connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
