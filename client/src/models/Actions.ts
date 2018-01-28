@@ -5,3 +5,7 @@ export const movement = (x: Direction = 0, y: Direction = 0): Movement => {
         y: y,
     }
 }
+
+export const attack = (): Attack => {
+    return { type: 'Attack' }
+}

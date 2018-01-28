@@ -1,4 +1,7 @@
-import { Actions } from './models'
+interface ArrowMotion {
+    x: Direction
+    y: Direction
+}
 
 export default class Controls {
     private keyboard: Phaser.Keyboard
@@ -17,8 +20,8 @@ export default class Controls {
         return this.keyboard.isDown(Phaser.KeyCode.SPACEBAR)
     }
 
-    arrowMotion(): Movement | null {
-        const motion = Actions.movement()
+    arrowMotion(): ArrowMotion | null {
+        const motion: ArrowMotion = { x: 0, y: 0 }
         let valid = false
 
         if (this.cursorKeys.left.isDown) {

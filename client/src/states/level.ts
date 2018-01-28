@@ -1,5 +1,7 @@
-import AppState from './appState'
 import * as Colyseus from 'colyseus.js'
+
+import AppState from './appState'
+import { Actions } from '../models'
 
 const levelSong = ''
 
@@ -29,6 +31,10 @@ export default class Level extends AppState {
                     console.log('direction changed ', change.value)
                     break
             }
+        })
+
+        connection.listen('heroes/:id/attackedAt', (change: any) => {
+            console.log(`Hero<${change.path.id}>.attackedAt`, change.value)
         })
 
         connection.listen('heroes/:id/:axis', (change: any) => {
@@ -71,9 +77,20 @@ export default class Level extends AppState {
             .arrowMotion()
 
         if (arrowMotion != null) {
+            const movement = Actions.movement(arrowMotion.x, arrowMotion.y)
             this.app()
                 .connection()
-                .send(arrowMotion)
+                .send(movement)
+        }
+
+        if (
+            this.app()
+                .controls()
+                .spacebarIsDown()
+        ) {
+            this.app()
+                .connection()
+                .send(Actions.attack())
         }
 
         this.moveCamera()

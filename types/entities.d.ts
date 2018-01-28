@@ -9,4 +9,5 @@ interface Hero {
     activity: Activity
     hp: number
     team: Team
+    attackedAt?: Date
 }
