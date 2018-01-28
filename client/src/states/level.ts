@@ -25,6 +25,8 @@ const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
+    private backgroundSprite: Phaser.Sprite
+
     private _fogSprite: FogSprite
 
     private heroSprites: {
@@ -70,6 +72,9 @@ export default class Level extends AppState {
             this.game.state.start('title')
         })
 
+        this.backgroundSprite = this.game.add.sprite(0, 0, 'Pizza-Zombie-Game-Background')
+        this.backgroundSprite.sendToBack()
+
         const connection = this.app().connection()
 
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
@@ -104,6 +109,8 @@ export default class Level extends AppState {
 
             const map = change.value as GameMap
             this.game.world.setBounds(0, 0, map.size.width, map.size.height)
+            this.backgroundSprite.width = map.size.width
+            this.backgroundSprite.height = map.size.height
         })
 
         connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
@@ -145,6 +152,31 @@ export default class Level extends AppState {
                     sprite.showY(change.value)
                     break
             }
+        })
+
+        connection.listen('minions/:id/position/:axis', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.showX(change.value)
+                    break
+                case 'y':
+                    sprite.showY(change.value)
+                    break
+            }
+        })
+
+        connection.listen('minions/:id/facingDirection', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showFacingDirection(change.value)
         })
 
         connection.listen('heroes/:id/facingDirection', (change: Colyseus.DataChange) => {
@@ -205,6 +237,8 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.02, 100)
 
                 this.playSound(Sounds.MINION_DIES)
+                sprite.destroy()
+                delete this.minionSprites[change.path.id]
 
             } else if (change.value < 50) {
                 // Minion hit / respawning; little shake.

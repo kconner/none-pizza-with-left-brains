@@ -8,7 +8,6 @@ import { Hero } from './Hero'
 import { House } from './House'
 import { Minion } from './Minion'
 import { Food } from './Food'
-import { open } from 'fs'
 
 export class GameState {
     map = Hood01
