@@ -180,7 +180,7 @@ export default class Level extends AppState {
                 case 'add': {
                     console.info(`Listen.houses<${change.path.id}> Added`)
                     const house: House = change.value
-                    const sprite = new HouseSprite(this.game, house.position.x, house.position.y, house.hp)
+                    const sprite = new HouseSprite(this.game, house.position.x, house.position.y, house.hp, house.team)
                     this.houseSprites[house.id] = sprite
                     this.game.add.existing(sprite)
                     break
@@ -195,6 +195,23 @@ export default class Level extends AppState {
                     }
                     break
                 }
+            }
+        })
+
+        connection.listen('houses/:id/hp', (change: Colyseus.DataChange) => {
+            const sprite = this.houseSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
+
+            if (change.value <= 0) {
+                // You're dead; big shake.
+                this.game.camera.shake(0.02, 300)
+            } else {
+                // You're hit / respawning; little shake.
+                //this.game.camera.shake(0.01, 100)
             }
         })
     }
