@@ -5,6 +5,7 @@ import AppState from './appState'
 import { Actions } from '../models'
 import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
+import BaseSprite from '../sprites/baseSprite'
 
 const levelSong = ''
 
@@ -16,12 +17,17 @@ export default class Level extends AppState {
         [id: string]: HeroSprite
     }
 
+    private baseSprites: {
+        [id: string]: BaseSprite
+    }
+
     private lastArrowMotion: DirectionalMotion | null = null
 
     preload() {
         this.game.stage.backgroundColor = '#202020'
 
         this.heroSprites = {}
+        this.baseSprites = {}
     }
 
     create() {
@@ -49,6 +55,15 @@ export default class Level extends AppState {
 
             const map = change.value as GameMap
             this.game.world.setBounds(0, 0, map.size.width, map.size.height)
+
+            // Load bases
+            // TODO: load base information (id, position) from map
+            var i: number
+            for (i = 0; i < 2; i++) {
+                const sprite = new BaseSprite(this.game, i * 800 + 800, 400)
+                this.baseSprites[i] = sprite
+                this.game.add.existing(sprite)
+            }
         })
 
         connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
