@@ -1,32 +1,27 @@
 import * as Colyseus from 'colyseus.js'
-import AnimationLoader from '../animationLoader'
-import { Animation } from 'phaser-ce'
+import { spawn } from 'child_process'
 
 import AppState from './appState'
 import { Actions } from '../models'
 import { ArrowMotion } from '../controls'
-import { spawn } from 'child_process'
+import HeroSprite from '../sprites/heroSprite'
 
 const levelSong = ''
+
 const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
-    private spriteMap: {
-        [id: string]: Phaser.Sprite
+    private heroSprites: {
+        [id: string]: HeroSprite
     }
 
     private lastArrowMotion: ArrowMotion | null = null
 
-    private animationLoader: AnimationLoader
-
     preload() {
         this.game.stage.backgroundColor = '#202020'
 
-        this.spriteMap = {}
-
-        this.animationLoader = new AnimationLoader()
-        this.animationLoader.loadSprite(this.app())
+        this.heroSprites = {}
     }
 
     create() {
@@ -56,90 +51,69 @@ export default class Level extends AppState {
         })
 
         connection.listen('heroes/:id/attackedAt', (change: any) => {
-            // TODO: Play attack animation, interrupting any other animation
-            // If it ends, play standing animation
-            const sprite = this.spriteMap[change.path.id]
+            const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
             }
 
-            sprite.animations.play('Attack')
-            sprite.animations.currentAnim.onComplete.addOnce(() => {
-                const gameState = this.app()
-                    .connection()
-                    .data()
-                if (!gameState || !gameState.heroes) {
-                    return
-                }
-
-                const hero = gameState.heroes[change.path.id]
-                if (!hero) {
-                    return
-                }
-
-                this.animateHeroForActivity(change.path.id, hero.activity)
-            })
+            sprite.showAttacking()
         })
 
         connection.listen('heroes/:id/position/:axis', (change: any) => {
-            const sprite = this.spriteMap[change.path.id]
-
+            const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
             }
 
             switch (change.path.axis) {
                 case 'x':
-                    sprite.position.x = change.value
+                    sprite.showX(change.value)
                     break
                 case 'y':
-                    sprite.position.y = change.value
+                    sprite.showY(change.value)
                     break
             }
         })
 
         connection.listen('heroes/:id/facingDirection', (change: any) => {
-            const sprite = this.spriteMap[change.path.id]
+            const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
             }
 
-            switch (change.value) {
-                case 'Left':
-                    sprite.scale.x = -1
-                    break
-                case 'Right':
-                    sprite.scale.x = 1
-                    break
-            }
+            sprite.showFacingDirection(change.value)
         })
 
         connection.listen('heroes/:id/activity', (change: any) => {
-            this.animateHeroForActivity(change.path.id, change.value)
-        })
-
-        connection.listen('heroes/:id/hp', (change: any) => {
-            const sprite = this.spriteMap[change.path.id]
+            const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
             }
 
-            console.log(change.value)
-            // TODO: Update life bar
+            sprite.showActivity(change.value)
+        })
+
+        connection.listen('heroes/:id/hp', (change: any) => {
+            const sprite = this.heroSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
         })
 
         connection.listen('heroes/:id', (change: any) => {
             switch (change.operation) {
                 case 'add': {
                     console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
-                    const sprite = this.animationLoader.loadAnimations(this.app())
-                    sprite.anchor.x = 0.5
-                    sprite.anchor.y = 0.5
-                    this.spriteMap[change.path.id] = sprite
+
+                    const sprite = new HeroSprite(this.game, change.path.id, change.value)
+                    this.heroSprites[change.path.id] = sprite
+                    this.game.add.existing(sprite)
                     break
                 }
                 case 'remove': {
-                    const sprite = this.spriteMap[change.path.id]
+                    const sprite = this.heroSprites[change.path.id]
                     if (sprite) {
                         sprite.destroy()
                     }
@@ -147,26 +121,6 @@ export default class Level extends AppState {
                 }
             }
         })
-    }
-
-    private animateHeroForActivity(heroID: string, activity: Activity) {
-        const sprite = this.spriteMap[heroID]
-        if (!sprite) {
-            return
-        }
-
-        console.log(activity)
-        switch (activity) {
-            case 'Standing':
-                sprite.animations.play('Stand')
-                break
-            case 'Walking':
-                sprite.animations.play('Walk')
-                break
-            case 'Dead':
-                sprite.animations.play('Die')
-                break
-        }
     }
 
     update() {
@@ -207,7 +161,7 @@ export default class Level extends AppState {
             return
         }
 
-        const heroSprite = this.spriteMap[heroSpriteID]
+        const heroSprite = this.heroSprites[heroSpriteID]
         if (!heroSprite) {
             return
         }
