@@ -16,7 +16,14 @@ export class GameState {
     }
 
     moveHero(id: string, movement: Movement) {
-        this.heroes[id].x += movement.x * 10
-        this.heroes[id].y += movement.y * 10
+        var hero = this.heroes[id]
+
+        if (movement.x < 0) {
+            hero.facingDirection = 'Left'
+        } else if (movement.x > 0) {
+            hero.facingDirection = 'Right'
+        }
+        hero.x += movement.x * 10
+        hero.y += movement.y * 10
     }
 }
