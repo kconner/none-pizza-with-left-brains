@@ -1,16 +1,15 @@
 import * as Colyseus from 'colyseus.js'
-import AnimationLoader from '../animationLoader';
-import { Animation } from 'phaser-ce';
+import AnimationLoader from '../animationLoader'
+import { Animation } from 'phaser-ce'
 
 import AppState from './appState'
 import { Actions } from '../models'
 import { ArrowMotion } from '../controls'
-import { spawn } from 'child_process';
+import { spawn } from 'child_process'
 
 const levelSong = ''
 const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
-
 
 export default class Level extends AppState {
     private spriteMap: {
@@ -59,8 +58,6 @@ export default class Level extends AppState {
         })
 
         connection.listen('heroes/:id/:attribute', (change: any) => {
-
-
             switch (change.path.attribute) {
                 case 'facingDirection':
                     console.log('direction changed ', change.value)
@@ -75,15 +72,15 @@ export default class Level extends AppState {
         connection.listen('heroes/:id/:axis', (change: any) => {
             const sprite = this.spriteMap[change.path.id]
 
-            const gameState = connection.data()
-
-            const hero = gameState.heroes[change.path.id]
-
-            console.log(gameState)
-            console.log(change)
             if (!sprite) {
                 return
             }
+
+            const gameState = connection.data()
+            if (!gameState || !gameState.heroes) {
+                return
+            }
+            const hero = gameState.heroes[change.path.id]
 
             if (change.path.axis === 'x') {
                 sprite.position.x = change.value
@@ -94,7 +91,6 @@ export default class Level extends AppState {
                             //sprite.animations.currentAnim.onUpdate
                         }
                     } else {
-
                         if (sprite.animations.currentAnim.complete) {
                             sprite.animations.play(AnimationLoader.ANIM_RIGHT_WALK)
                         }
@@ -125,6 +121,16 @@ export default class Level extends AppState {
                     // TODO: play die animation
                     break
             }
+        })
+
+        connection.listen('heroes/:id/hp', (change: any) => {
+            const sprite = this.spriteMap[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            console.log(change.value)
+            // TODO: Update life bar
         })
 
         connection.listen('heroes/:id', (change: any) => {
