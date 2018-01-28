@@ -1,12 +1,14 @@
 import AppState from './appState'
 
+import HeroSprite from '../sprites/heroSprite'
+import LifeBarSprite from '../sprites/lifeBarSprite'
+
 export default class Preloader extends AppState {
-
-
     preload() {
         this.game.load.baseURL = './assets/'
 
-
+        HeroSprite.loadAsset(this.game)
+        LifeBarSprite.loadAsset(this.game)
     }
 
     create() {
