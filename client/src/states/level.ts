@@ -299,12 +299,10 @@ export default class Level extends AppState {
                 }
                 case 'remove': {
                     console.info(`Listen.foods<${change.path.id}> Removed`)
-                    const food: Food = change.value
-                    console.log(food)
-                    const sprite = this.foodSprites[food.id]
+                    const sprite = this.foodSprites[change.path.id]
                     if (sprite) {
                         sprite.destroy
-                        delete this.foodSprites[food.id]
+                        delete this.foodSprites[change.path.id]
                     }
                     break
                 }
@@ -324,6 +322,7 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.02, 300)
                 this.playSound(Sounds.HOUSE_DESTRYOYED)
             } else {
+                console.log('house got hit again')
                 this.playSound(Sounds.HOUSE_GETS_HIT)
             }
         })
