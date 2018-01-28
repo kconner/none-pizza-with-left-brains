@@ -338,7 +338,7 @@ export default class Level extends AppState {
                     const base: Base = change.value
                     const sprite = this.baseSprites[base.id]
                     if (sprite) {
-                        sprite.destroy
+                        sprite.destroy()
                         delete this.baseSprites[base.id]
                     }
                     break
@@ -361,7 +361,7 @@ export default class Level extends AppState {
                     const house: House = change.value
                     const sprite = this.houseSprites[house.id]
                     if (sprite) {
-                        sprite.destroy
+                        sprite.destroy()
                         delete this.houseSprites[house.id]
                     }
                     break
@@ -383,7 +383,7 @@ export default class Level extends AppState {
                     console.info(`Listen.foods<${change.path.id}> Removed`)
                     const sprite = this.foodSprites[change.path.id]
                     if (sprite) {
-                        sprite.destroy
+                        sprite.destroy()
                         delete this.foodSprites[change.path.id]
                     }
                     break

@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 export class Food implements MapPositionable {
     public static readonly RADIUS: number = 25
 
@@ -10,8 +12,8 @@ export class Food implements MapPositionable {
     team: Team = 'Human'
     spawnedAt: number
 
-    constructor(id: string, team: Team, spawnPoint: MapSpawnPoint, spawnedAt: number) {
-        this.id = id
+    constructor(team: Team, spawnPoint: MapSpawnPoint, spawnedAt: number) {
+        this.id = uuid()
         this.team = team
         this.position.x = spawnPoint.position.x
         this.position.y = spawnPoint.position.y

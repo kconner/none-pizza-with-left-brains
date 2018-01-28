@@ -8,8 +8,7 @@ import { Hero } from './Hero'
 import { House } from './House'
 import { Minion } from './Minion'
 import { Food } from './Food'
-import { Actions } from '../models'
-
+import * as Actions from '../models/Actions'
 
 export class GameState {
     map = Hood01
@@ -105,8 +104,8 @@ export class GameState {
 
     private createFood(team: Team, spawnPoint: MapSpawnPoint, spawnedAt: number) {
         console.log(`spawning food for ${team}`)
-        const foodID = team
-        this.foods[foodID] = new Food(foodID, team, spawnPoint, spawnedAt)
+        const food = new Food(team, spawnPoint, spawnedAt)
+        this.foods[food.id] = food
     }
 
     removeHero(id: string) {
@@ -151,7 +150,6 @@ export class GameState {
         const normalizedDy = dy / length
         minion.position.x = Math.max(0, Math.min(this.map.size.width, minion.position.x + normalizedDx * 12))
         minion.position.y = Math.max(0, Math.min(this.map.size.height, minion.position.y + normalizedDy * 12))
-
     }
 
     moveHero(id: string, movement: Movement) {
@@ -498,13 +496,12 @@ export class GameState {
 
     private advanceMinionWalkers() {
         for (const minionId of Object.keys(this.minions)) {
-
             let myMove: Movement = Actions.movement()
-            let num: number = (Math.random() * 3);
+            let num: number = Math.random() * 3
 
-            myMove.x = (num > 2) ? -1 : ((num < 1) ? 1 : 0)
-            num = (Math.random() * 3);
-            myMove.y = (num > 2) ? -1 : ((num < 1) ? 1 : 0)
+            myMove.x = num > 2 ? -1 : num < 1 ? 1 : 0
+            num = Math.random() * 3
+            myMove.y = num > 2 ? -1 : num < 1 ? 1 : 0
 
             this.moveMinion(minionId, myMove)
             this.minionAttack(minionId)
