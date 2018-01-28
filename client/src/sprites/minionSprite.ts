@@ -57,6 +57,7 @@ export default class MinionSprite extends AppSprite {
     showFacingDirection(facingDirection: FacingDirection) {
         switch (facingDirection) {
             case 'Left':
+
                 this.scale.x = -0.7
                 break
             case 'Right':

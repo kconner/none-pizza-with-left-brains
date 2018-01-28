@@ -507,6 +507,134 @@ export class GameState {
             myMove.y = (num > 2) ? -1 : ((num < 1) ? 1 : 0)
 
             this.moveMinion(minionId, myMove)
+            this.minionAttack(minionId)
+        }
+    }
+
+    private minionAttack(minionId: string): void {
+
+        const minion = this.minions[minionId]
+
+
+        const minionRadius = 60;
+
+        const now = Date.now()
+
+        if (!minion.attackedAt) {
+            minion.attackedAt = now
+        } else if (now - minion.attackedAt >= Constants.Timeouts.heroAttack) {
+            minion.attackedAt = now
+        } else {
+            return
+        }
+
+        for (const heroID of Object.keys(this.heroes)) {
+
+
+            const opponent = this.heroes[heroID]
+            if (opponent.activity === 'Dead') {
+                continue
+            }
+
+            if (opponent.team === minion.team) {
+                continue
+            }
+
+            const radius = minionRadius + Hero.RADIUS
+            const radiusSquared = radius * radius
+            const dx = opponent.position.x - minion.position.x
+            const dy = opponent.position.y - minion.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (radiusSquared < distanceSquared) {
+                continue
+            }
+
+            opponent.hp = Math.max(0, opponent.hp - 25)
+
+            if (opponent.hp === 0) {
+                opponent.activity = 'Dead'
+                opponent.diedAt = now
+            }
+        }
+
+        for (const houseId of Object.keys(this.houses)) {
+            const opponentHouse = this.houses[houseId]
+            console.log('Checking house for attack: ' + opponentHouse)
+            if (opponentHouse.hp <= 0) {
+                continue
+            }
+
+            if (opponentHouse.team == minion.team) {
+                continue
+            }
+
+            const minionHouseRadius = Minion.RADIUS + House.RADIUS
+            const heroHouseRadiusSquared = minionHouseRadius * minionHouseRadius
+            const dx = opponentHouse.position.x - minion.position.x
+            const dy = opponentHouse.position.y - minion.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroHouseRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            console.log('Attacking house')
+            opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
+        }
+
+        for (const baseId of Object.keys(this.bases)) {
+            const opponentBase = this.bases[baseId]
+            console.log('Checking base for attack: ' + opponentBase)
+            if (opponentBase.hp <= 0) {
+                continue
+            }
+
+            if (opponentBase.team == minion.team) {
+                continue
+            }
+
+            const heroBaseRadius = Minion.RADIUS + Base.RADIUS
+            const heroBaseRadiusSquared = heroBaseRadius * heroBaseRadius
+            const dx = opponentBase.position.x - minion.position.x
+            const dy = opponentBase.position.y - minion.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroBaseRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            console.log('Attacking base')
+            opponentBase.hp = Math.max(0, opponentBase.hp - 25)
+            if (opponentBase.hp === 0) {
+                this.gameEndedAt = Date.now()
+                this.winningTeam = minion.team
+            }
+        }
+
+        for (const minionId of Object.keys(this.minions)) {
+            const opponentMinion = this.minions[minionId]
+            console.log('Checking minion for attack: ' + opponentMinion)
+            if (opponentMinion.hp <= 0) {
+                continue
+            }
+
+            if (opponentMinion.team == minion.team) {
+                continue
+            }
+
+            const heroMinionRadius = Minion.RADIUS + Minion.RADIUS
+            const heroMinionRadiusSquared = heroMinionRadius * heroMinionRadius
+            const dx = opponentMinion.position.x - minion.position.x
+            const dy = opponentMinion.position.y - minion.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroMinionRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            console.log('Attacking minion')
+            opponentMinion.hp = Math.max(0, opponentMinion.hp - 25)
+
+            if (opponentMinion.hp <= 0) {
+                this.removeMinion(minionId)
+            }
         }
     }
 }
