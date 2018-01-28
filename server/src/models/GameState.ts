@@ -5,7 +5,7 @@ import { Hood01 } from '../maps'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 import { House } from './House'
-import { open } from 'fs';
+import { open } from 'fs'
 
 export class GameState {
     map = Hood01
@@ -16,6 +16,11 @@ export class GameState {
 
     @nosync humanHeroCount = 0
     @nosync zombieHeroCount = 0
+
+    constructor() {
+        this.createHousesForTeam('Human')
+        this.createHousesForTeam('Zombie')
+    }
 
     get totalHeroCount() {
         return this.humanHeroCount + this.zombieHeroCount
@@ -62,9 +67,11 @@ export class GameState {
         }
     }
 
-    createHouses(id: string) {
-        const team = Object.keys(this.houses).length % 2 === 0 ? 'Human' : 'Zombie'
-        this.houses[id] = new House(team)
+    private createHousesForTeam(team: Team) {
+        for (const mapHouse of this.map.teams[team].houses) {
+            console.info(`GameState.createHousesForTeam<${team}>`, mapHouse)
+            this.houses[mapHouse.id] = new House(team, mapHouse)
+        }
     }
 
     removeHero(id: string) {

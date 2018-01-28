@@ -21,6 +21,28 @@
                         "y": 1560
                     }
                 }
+            ],
+            "base": {
+                "position": {
+                    "x": 3540,
+                    "y": 1080
+                }
+            },
+            "houses": [
+                {
+                    "id": "human_house_01",
+                    "position": {
+                        "x": 2840,
+                        "y": 400
+                    }
+                },
+                {
+                    "id": "human_house_02",
+                    "position": {
+                        "x": 2840,
+                        "y": 1760
+                    }
+                }
             ]
         },
         "Zombie": {
@@ -36,6 +58,28 @@
                     "id": "hero_02",
                     "position": {
                         "x": 700,
+                        "y": 1560
+                    }
+                }
+            ],
+            "base": {
+                "position": {
+                    "x": 300,
+                    "y": 1080
+                }
+            },
+            "houses": [
+                {
+                    "id": "zombie_house_01",
+                    "position": {
+                        "x": 1000,
+                        "y": 600
+                    }
+                },
+                {
+                    "id": "zombie_house_02",
+                    "position": {
+                        "x": 1000,
                         "y": 1560
                     }
                 }

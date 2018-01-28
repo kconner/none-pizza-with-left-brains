@@ -1,5 +1,4 @@
-export class Hero {
-
+export class Hero implements MapPositionable {
     public static readonly RADIUS: number = 60
     position: {
         x: number
@@ -12,9 +11,9 @@ export class Hero {
     team: Team = 'Human'
     attackedAt?: number = null
     diedAt?: number = null
-    spawnPoint: SpawnPoint
+    spawnPoint: MapSpawnPoint
 
-    constructor(team: Team, spawnPoint: SpawnPoint) {
+    constructor(team: Team, spawnPoint: MapSpawnPoint) {
         this.team = team
         this.spawnPoint = spawnPoint
         this.position.x = spawnPoint.position.x
