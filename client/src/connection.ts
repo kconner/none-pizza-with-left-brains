@@ -9,6 +9,10 @@ export default class Connection {
         this.room = this.client.join('GameRoom')
     }
 
+    id(): string {
+        return this.client.id
+    }
+
     send(message: any) {
         this.room.send(message)
     }

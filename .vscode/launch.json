@@ -10,11 +10,8 @@
             "request": "launch",
             "cwd": "${workspaceFolder}/client",
             "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run",
-                "build"
-            ],
-            "port":9000
+            "runtimeArgs": ["run", "build"],
+            "port": 9000
         },
         {
             "name": "Data browser",
@@ -23,6 +20,6 @@
             "url": "http://127.0.0.1:9000/",
             "sourceMaps": true,
             "webRoot": "${workspaceFolder}/client"
-}
+        }
     ]
 }
