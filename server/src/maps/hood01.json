@@ -3,18 +3,19 @@
         "width": 3840,
         "height": 2160
     },
+    "maximumTeamSize": 2,
     "teams": {
-        "humans": {
+        "Human": {
             "spawnPoints": [
                 {
-                    "id": "player_01",
+                    "id": "hero_01",
                     "position": {
                         "x": 3140,
                         "y": 600
                     }
                 },
                 {
-                    "id": "player_02",
+                    "id": "hero_02",
                     "position": {
                         "x": 3140,
                         "y": 1560
@@ -22,17 +23,17 @@
                 }
             ]
         },
-        "zombies": {
+        "Zombie": {
             "spawnPoints": [
                 {
-                    "id": "player_01",
+                    "id": "hero_01",
                     "position": {
                         "x": 700,
                         "y": 600
                     }
                 },
                 {
-                    "id": "player_02",
+                    "id": "hero_02",
                     "position": {
                         "x": 700,
                         "y": 1560
