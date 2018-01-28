@@ -8,11 +8,7 @@ export class GameRoom extends Room<GameState> {
 
         this.setState(new GameState())
         this.setPatchRate(16) // 60 fps
-        this.setSimulationInterval(() => this.update());
-    }
-
-    update() {
-        this.state.tickTock();
+        this.setSimulationInterval(() => this.state.advanceFrame())
     }
 
     onJoin(client) {

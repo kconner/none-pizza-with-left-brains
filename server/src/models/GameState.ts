@@ -28,31 +28,26 @@ export class GameState {
         hero.x += movement.x * 10
         hero.y += movement.y * 10
     }
-    tickTock() {
-        this.timeOfDay.realTime = Date.now() / 1000;
-        this.timeOfDay.hour -= (this.timeOfDay.realTime - this.timeOfDay.lastTimeUpdated);
 
-        /*console.log("realTime " + this.timeOfDay.realTime);
-        console.log("lastTimeUpdated " + this.timeOfDay.lastTimeUpdated);
+    advanceFrame() {
+        this.timeOfDay.currentFrameTimestamp = Date.now() / 1000
+        const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
+        this.timeOfDay.dayCountdownInSeconds -= frameDuration
 
-        console.log("realTime - lastTimeUpdated")
-
-
-        console.log("Current hour " + this.timeOfDay.hour);
-        console.log();*/
-
-        if (this.timeOfDay.hour <= 0) {
-            this.timeOfDay.hour = this.timeOfDay.lengthOfDay;
-            this.timeOfDay.dayOrNight = 'Night';
-            // send message to client that it is nighttime 
-        } else if (this.timeOfDay.hour < 30) {
-            this.timeOfDay.dayOrNight = 'Day';
-            // daytime
-            // send message to client that it is daytime 
+        if (this.timeOfDay.dayCountdownInSeconds <= 0) {
+            // Dusk! Start counting down to next dusk.
+            this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
+            this.timeOfDay.dayOrNight = 'Night'
+            // send message to client that it is nighttime
+        } else if (this.timeOfDay.dayCountdownInSeconds < 30) {
+            // Dawn!
+            this.timeOfDay.dayOrNight = 'Day'
+            // send message to client that it is daytime
         } else {
             // no changes needed (yet)
-            // this will contain gradual change to lighting 
+            // this will contain gradual change to lighting
         }
-        this.timeOfDay.lastTimeUpdated = this.timeOfDay.realTime;
-    };
+
+        this.timeOfDay.previousFrameTimestamp = this.timeOfDay.currentFrameTimestamp
+    }
 }
