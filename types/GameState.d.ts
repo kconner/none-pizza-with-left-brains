@@ -1,7 +1,5 @@
 interface GameState {
-    timeOfDay: {
-        timeOfDay: TimeOfDay
-    }
+    timeOfDay: TimeOfDay
     heroes: {
         [id: string]: Hero
     }
