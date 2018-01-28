@@ -396,7 +396,7 @@ export class GameState {
 
             if (!base.spawnedFoodAt) {
                 base.spawnedFoodAt = now
-            } else if (now - base.spawnedFoodAt >= Constants.Timeouts.heroAttack) {
+            } else if (now - base.spawnedFoodAt >= Constants.Timeouts.foodSpawn) {
                 base.spawnedFoodAt = now
             } else {
                 continue
