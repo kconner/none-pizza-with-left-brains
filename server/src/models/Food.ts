@@ -14,7 +14,7 @@ export class Food implements MapPositionable {
         this.id = id
         this.team = team
         this.position.x = spawnPoint.position.x
-        this.position.y = spawnPoint.position.x
+        this.position.y = spawnPoint.position.y
         this.spawnedAt = spawnedAt
     }
 }
