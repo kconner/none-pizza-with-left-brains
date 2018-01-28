@@ -6,7 +6,7 @@ import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
-import MinionSprite from '../sprites/minionSprite';
+import MinionSprite from '../sprites/minionSprite'
 
 export enum Sounds {
     BASE_DESTROYED = 'base_destroyed',
@@ -28,7 +28,7 @@ export default class Preloader extends AppState {
         this.game.load.baseURL = './assets/'
 
         this.game.load.image('Title2', 'Title2.png')
-        this.game.load.image('Pizza-Zombie-Game-Background', 'Pizza-Zombie-Game-Background.png')
+        this.game.load.image('Pizza-Zombie-Game-Background', 'Pizza-Zombie-Game-Background.jpg')
 
         HeroSprite.loadAsset(this.game)
         LifeBarSprite.loadAsset(this.game)
