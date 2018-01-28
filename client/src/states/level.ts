@@ -14,8 +14,6 @@ export default class Level extends AppState {
         this.game.stage.backgroundColor = '#202020'
 
         this.spriteMap = {}
-
-        this.game.world.setBounds(0, 0, 1920 * 3, 1280 * 3)
     }
 
     create() {
@@ -24,6 +22,14 @@ export default class Level extends AppState {
         this.app().connect('ws://127.0.0.1:2657')
 
         const connection = this.app().connection()
+
+        connection.listen('world', (change: any) => {
+            if (!change.value) {
+                return
+            }
+
+            this.game.world.setBounds(0, 0, change.value.width, change.value.height)
+        })
 
         connection.listen('heroes/:id/:attribute', (change: any) => {
             switch (change.path.attribute) {
