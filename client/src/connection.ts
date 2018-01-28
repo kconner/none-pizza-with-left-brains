@@ -10,7 +10,7 @@ export default class Connection {
     }
 
     id(): string {
-        return this.client.id
+        return this.room.sessionId
     }
 
     data(): GameState {

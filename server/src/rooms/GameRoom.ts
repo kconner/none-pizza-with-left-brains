@@ -12,28 +12,28 @@ export class GameRoom extends Room<GameState> {
     }
 
     onJoin(client) {
-        console.log('add client: ', client.id)
+        console.log('add client: ', client.sessionId)
 
-        this.state.createHero(client.id)
+        this.state.createHero(client.sessionId)
     }
 
     onLeave(client) {
-        this.state.removeHero(client.id)
+        this.state.removeHero(client.sessionId)
     }
 
     onMessage(client, data: ClientAction) {
         switch (data.type) {
             case 'Movement':
                 const movement = data as Movement
-                this.state.moveHero(client.id, movement)
+                this.state.moveHero(client.sessionId, movement)
                 break
 
             case 'Attack':
-                this.state.attackWithHero(client.id)
+                this.state.attackWithHero(client.sessionId)
                 break
 
             default:
-                console.log('GameRoom.onMessage', client.id, data)
+                console.log('GameRoom.onMessage', client.sessionId, data)
                 break
         }
     }

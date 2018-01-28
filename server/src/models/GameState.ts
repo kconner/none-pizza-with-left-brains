@@ -13,7 +13,8 @@ export class GameState {
     @nosync something = "This attribute won't be sent to the client-side"
 
     createHero(id: string) {
-        this.heroes[id] = new Hero()
+        const team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
+        this.heroes[id] = new Hero(team)
     }
 
     removeHero(id: string) {
@@ -48,7 +49,62 @@ export class GameState {
         hero.activity = 'Walking'
     }
 
+    attackWithHero(id: string) {
+        const now = Date.now()
+        var hero = this.heroes[id]
+
+        if (hero.activity === 'Dead') {
+            return
+        }
+
+        // Determine if we are attacking or cannot right now
+        if (!hero.attackedAt) {
+            hero.attackedAt = now
+        } else if (now - hero.attackedAt >= Constants.Timeouts.heroAttack) {
+            hero.attackedAt = now
+        } else {
+            return
+        }
+
+        // Hurt nearby heroes
+        const doubleHeroRadius = 60 * 2
+        const doubleHeroRadiusSquared = doubleHeroRadius * doubleHeroRadius
+        for (const heroID of Object.keys(this.heroes)) {
+            if (heroID === id) {
+                continue
+            }
+
+            const opponent = this.heroes[heroID]
+            if (opponent.activity === 'Dead') {
+                continue
+            }
+
+            if (opponent.team === hero.team) {
+                continue
+            }
+
+            const dx = opponent.x - hero.x
+            const dy = opponent.y - hero.y
+            const distanceSquared = dx * dx + dy * dy
+            if (doubleHeroRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            opponent.hp = Math.max(0, opponent.hp - 25)
+
+            if (opponent.hp === 0) {
+                opponent.activity = 'Dead'
+                opponent.diedAt = now
+            }
+        }
+    }
+
     advanceFrame() {
+        this.advanceTimeOfDay()
+        this.advanceRespawnTimers()
+    }
+
+    private advanceTimeOfDay() {
         this.timeOfDay.currentFrameTimestamp = Date.now() / 1000
         const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
         this.timeOfDay.dayCountdownInSeconds -= frameDuration
@@ -70,18 +126,20 @@ export class GameState {
         this.timeOfDay.previousFrameTimestamp = this.timeOfDay.currentFrameTimestamp
     }
 
-    attackWithHero(id: string) {
-        const now = Date.now()
-        var hero = this.heroes[id]
+    private advanceRespawnTimers() {
+        for (const heroID of Object.keys(this.heroes)) {
+            const hero = this.heroes[heroID]
+            if (hero.activity !== 'Dead') {
+                continue
+            }
 
-        if (hero.activity === 'Dead') {
-            return
-        }
+            // Don't respawn until they have been dead for three seconds
+            if (Date.now() < hero.diedAt + 3000) {
+                continue
+            }
 
-        if (!hero.attackedAt) {
-            hero.attackedAt = now
-        } else if (now - hero.attackedAt >= Constants.Timeouts.heroAttack) {
-            hero.attackedAt = now
+            console.log('respawning')
+            hero.respawn()
         }
     }
 }
