@@ -1,3 +1,5 @@
+import { MinionSpawner } from './MinionSpawner'
+
 export class Base implements MapPositionable {
     public static readonly RADIUS: number = 120
 
@@ -12,6 +14,8 @@ export class Base implements MapPositionable {
     spawnedFoodAt?: number = null
     foodSpawnPoint: MapSpawnPoint
 
+    minionSpawner: MinionSpawner
+
     constructor(team: Team, mapBase: MapBase, mapTeam: MapTeam) {
         this.team = team
         this.id = mapBase.id
@@ -25,5 +29,7 @@ export class Base implements MapPositionable {
         }
 
         this.foodSpawnPoint = spawnPoints[0]
+
+        this.minionSpawner = new MinionSpawner(team, spawnPoints[0])
     }
 }
