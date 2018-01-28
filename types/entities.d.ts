@@ -24,6 +24,7 @@ interface Hero {
     team: Team
     attackedAt?: Date
     diedAt?: Date
+    carriedFoodID?: string
 }
 
 interface Minion {

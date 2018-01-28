@@ -1,5 +1,5 @@
 export class Food implements MapPositionable {
-    public static readonly RADIUS: number = 120
+    public static readonly RADIUS: number = 25
 
     id: string
     position = {

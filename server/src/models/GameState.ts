@@ -154,6 +154,61 @@ export class GameState {
         hero.position.x = Math.max(0, Math.min(this.map.size.width, hero.position.x + normalizedDx * 12))
         hero.position.y = Math.max(0, Math.min(this.map.size.height, hero.position.y + normalizedDy * 12))
         hero.activity = 'Walking'
+
+        if (!hero.carriedFoodID) {
+            for (const foodID of Object.keys(this.foods)) {
+                const food = this.foods[foodID]
+                if (food.team !== hero.team) {
+                    continue
+                }
+
+                const heroFoodRadius = Hero.RADIUS + Food.RADIUS
+                const heroFoodRadiusSquared = heroFoodRadius * heroFoodRadius
+                const dx = food.position.x - hero.position.x
+                const dy = food.position.y - hero.position.y
+                const distanceSquared = dx * dx + dy * dy
+                if (heroFoodRadiusSquared < distanceSquared) {
+                    continue
+                }
+
+                hero.carriedFoodID = foodID
+                break
+            }
+        }
+
+        if (hero.carriedFoodID) {
+            const food = this.foods[hero.carriedFoodID]
+            food.position.x = hero.position.x
+            food.position.y = hero.position.y - 110
+
+            for (const houseID of Object.keys(this.houses)) {
+                const house = this.houses[houseID]
+                if (house.team !== hero.team) {
+                    continue
+                }
+
+                if (house.hp <= 0) {
+                    continue
+                }
+
+                if (500 <= house.hp) {
+                    continue
+                }
+
+                const heroHouseRadius = Hero.RADIUS + House.RADIUS
+                const heroHouseRadiusSquared = heroHouseRadius * heroHouseRadius
+                const dx = house.position.x - hero.position.x
+                const dy = house.position.y - hero.position.y
+                const distanceSquared = dx * dx + dy * dy
+                if (heroHouseRadiusSquared < distanceSquared) {
+                    continue
+                }
+
+                house.hp = Math.min(500, house.hp + 150)
+                delete this.foods[hero.carriedFoodID]
+                hero.carriedFoodID = null
+            }
+        }
     }
 
     attackWithHero(id: string) {
@@ -366,7 +421,7 @@ export class GameState {
 
             if (!base.spawnedFoodAt) {
                 base.spawnedFoodAt = now
-            } else if (now - base.spawnedFoodAt >= Constants.Timeouts.heroAttack) {
+            } else if (now - base.spawnedFoodAt >= Constants.Timeouts.foodSpawn) {
                 base.spawnedFoodAt = now
             } else {
                 continue
