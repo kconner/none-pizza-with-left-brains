@@ -7,7 +7,7 @@ import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
 import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
-import HouseSprite from '../sprites/houseSprite';
+import HouseSprite from '../sprites/houseSprite'
 
 const levelSong = ''
 
@@ -77,13 +77,6 @@ export default class Level extends AppState {
             for (i = 0; i < 2; i++) {
                 const sprite = new BaseSprite(this.game, i * 800 + 800, 400, 1000)
                 this.baseSprites[i] = sprite
-                this.game.add.existing(sprite)
-            }
-
-            var houseNum: number
-            for (houseNum = 0; houseNum < 4; houseNum++) {
-                const sprite = new HouseSprite(this.game, houseNum * 800 + 800, 700, 1000)
-                this.houseSprites[houseNum] = sprite
                 this.game.add.existing(sprite)
             }
         })
@@ -176,6 +169,29 @@ export default class Level extends AppState {
                     const sprite = this.heroSprites[change.path.id]
                     if (sprite) {
                         sprite.destroy()
+                    }
+                    break
+                }
+            }
+        })
+
+        connection.listen('houses/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    console.info(`Listen.houses<${change.path.id}> Added`)
+                    const house: House = change.value
+                    const sprite = new HouseSprite(this.game, house.position.x, house.position.y, house.hp)
+                    this.houseSprites[house.id] = sprite
+                    this.game.add.existing(sprite)
+                    break
+                }
+                case 'remove': {
+                    console.info(`Listen.houses<${change.path.id}> Removed`)
+                    const house: House = change.value
+                    const sprite = this.houseSprites[house.id]
+                    if (sprite) {
+                        sprite.destroy
+                        delete this.houseSprites[house.id]
                     }
                     break
                 }

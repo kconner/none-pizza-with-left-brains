@@ -1,13 +1,24 @@
-interface SpawnPoint {
-    id: string
+interface MapPositionable {
     position: {
         x: number
         y: number
     }
 }
 
-interface GameTeam {
-    spawnPoints: SpawnPoint[]
+interface MapSpawnPoint extends MapPositionable {
+    id: string
+}
+
+interface MapBase extends MapPositionable {}
+
+interface MapHouse extends MapPositionable {
+    id: string
+}
+
+interface MapTeam {
+    spawnPoints: MapSpawnPoint[]
+    base: MapBase
+    houses: MapHouse[]
 }
 interface GameMap {
     size: {
@@ -15,5 +26,5 @@ interface GameMap {
         height: number
     }
     maximumTeamSize: number
-    teams: { [id: string]: GameTeam }
+    teams: { [id: string]: MapTeam }
 }

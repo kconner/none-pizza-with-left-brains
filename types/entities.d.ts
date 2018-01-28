@@ -25,3 +25,13 @@ interface Hero {
     attackedAt?: Date
     diedAt?: Date
 }
+
+interface House {
+    id: string
+    position: {
+        x: number
+        y: number
+    }
+    hp: number
+    team: Team
+}
