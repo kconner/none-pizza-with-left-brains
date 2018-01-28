@@ -8,6 +8,7 @@ import HeroSprite from '../sprites/heroSprite'
 import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
+import { Sounds } from './preloader';
 
 const daySong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
@@ -35,6 +36,10 @@ export default class Level extends AppState {
         [id: string]: HouseSprite
     }
 
+    private soundFx: {
+        [id: string]: Phaser.Sound
+    }
+
     private lastArrowMotion: DirectionalMotion | null = null
 
     preload() {
@@ -51,6 +56,8 @@ export default class Level extends AppState {
         this.app().connect('ws://127.0.0.1:2657', () => {
             this.game.state.start('title')
         })
+
+
 
         const connection = this.app().connection()
 
@@ -143,9 +150,18 @@ export default class Level extends AppState {
                 if (change.value <= 0) {
                     // You're dead; big shake.
                     this.game.camera.shake(0.02, 300)
+
+                    this.playSound(Sounds.HERO_DIES)
+
                 } else {
                     // You're hit / respawning; little shake.
                     this.game.camera.shake(0.01, 100)
+
+                    if (change.value.team == 'human') {
+                        this.playSound(Sounds.HUMAN_HERO_GETS_HIT)
+                    } else {
+                        this.playSound(Sounds.ZOMBIE_HERO_GETS_HIT)
+                    }
                 }
             }
         })
@@ -188,7 +204,7 @@ export default class Level extends AppState {
                 case 'add': {
                     console.info(`Listen.bases<${change.path.id}> Added`)
                     const base: Base = change.value
-                    const sprite = new BaseSprite(this.game, base.position.x, base.position.y, base.hp)
+                    const sprite = new BaseSprite(this.game, base.position.x, base.position.y, base.hp, base.team)
                     this.baseSprites[base.id] = sprite
                     this.game.add.existing(sprite)
                     break
@@ -240,8 +256,9 @@ export default class Level extends AppState {
             if (change.value <= 0) {
                 // You're dead; big shake.
                 this.game.camera.shake(0.02, 300)
+                this.playSound(Sounds.HOUSE_DESTRYOYED)
             } else {
-                //TODO play attack sfx here
+                this.playSound(Sounds.HOUSE_GETS_HIT)
             }
         })
 
@@ -254,10 +271,11 @@ export default class Level extends AppState {
             sprite.showHP(change.value)
 
             if (change.value <= 0) {
-                // You're dead; big shake. Game over here?
+                // You're dead; big shake.
                 this.game.camera.shake(0.02, 300)
+                this.playSound(Sounds.BASE_DESTROYED)
             } else {
-                //TODO play attack sfx here
+                this.playSound(Sounds.BASE_GETS_HIT)
             }
         })
     }
@@ -328,5 +346,11 @@ export default class Level extends AppState {
         fogSprite.x = heroSprite.x
         fogSprite.y = heroSprite.y
         fogSprite.bringToTop()
+    }
+
+    private playSound(sound: Sounds) {
+        const sfx = (this.game.add.audio(sound))
+        sfx.volume = 5
+        sfx.play()
     }
 }
