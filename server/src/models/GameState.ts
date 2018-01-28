@@ -34,8 +34,6 @@ export class GameState {
         const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
         this.timeOfDay.dayCountdownInSeconds -= frameDuration
 
-        console.log(this.timeOfDay.dayCountdownInSeconds);
-
         if (this.timeOfDay.dayCountdownInSeconds <= 0) {
             // Dusk! Start counting down to next dusk.
             this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds

@@ -2,6 +2,8 @@ import AppState from './appState'
 import * as Colyseus from 'colyseus.js'
 
 const levelSong = ''
+const dayHexColor = 'd7dee8'
+const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
     private spriteMap: {
@@ -24,14 +26,12 @@ export default class Level extends AppState {
         const connection = this.app().connection()
 
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
-            console.log(change)
-            console.log(change.value)
             switch (change.value) {
                 case 'Night':
-                    this.game.stage.backgroundColor = '#4a4b4c'
+                    this.game.stage.backgroundColor = nightHexColor
                     break
                 case 'Day':
-                    this.game.stage.backgroundColor = '#d7dee8'
+                    this.game.stage.backgroundColor = dayHexColor
                     break
             }
         })
