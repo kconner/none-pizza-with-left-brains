@@ -4,9 +4,10 @@ export default class Connection {
     private client: Colyseus.Client
     private room: Colyseus.Room
 
-    constructor(serverURL: string) {
+    constructor(serverURL: string, onDisconnect: () => void) {
         this.client = new Colyseus.Client(serverURL)
         this.room = this.client.join('GameRoom')
+        this.room.onLeave.addOnce(onDisconnect)
     }
 
     id(): string {

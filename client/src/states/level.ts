@@ -36,7 +36,9 @@ export default class Level extends AppState {
     create() {
         this.app().setSongAndPlay(levelSong)
 
-        this.app().connect('ws://127.0.0.1:2657')
+        this.app().connect('ws://127.0.0.1:2657', () => {
+            this.game.state.start('title')
+        })
 
         const connection = this.app().connection()
 

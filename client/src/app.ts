@@ -32,9 +32,9 @@ export default class App extends Phaser.Game {
         return this._connection
     }
 
-    connect(serverURL: string) {
+    connect(serverURL: string, onDisconnect: () => void) {
         this.disconnect()
-        this._connection = new Connection(serverURL)
+        this._connection = new Connection(serverURL, onDisconnect)
     }
 
     disconnect() {
