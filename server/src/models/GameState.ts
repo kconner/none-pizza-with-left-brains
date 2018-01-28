@@ -364,6 +364,15 @@ export class GameState {
     private advanceMinionSpawners() {
         for (const houseID of Object.keys(this.houses)) {
             const house = this.houses[houseID]
+            if (
+                !(
+                    (house.team === 'Human' && this.timeOfDay.dayOrNight === 'Day') ||
+                    (house.team === 'Zombie' && this.timeOfDay.dayOrNight === 'Night')
+                )
+            ) {
+                continue
+            }
+
             const minionSpawner = house.minionSpawner
             if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds) {
                 continue
