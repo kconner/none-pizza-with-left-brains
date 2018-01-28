@@ -263,14 +263,10 @@ export default class Level extends AppState {
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
-                    console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
-
                     const sprite = new HeroSprite(this.game, change.path.id, change.value, 100)
                     this.heroSprites[change.path.id] = sprite
                     this.game.add.existing(sprite)
 
-                    console.log(change.path.id)
-                    console.log(this.clientHeroSpriteID())
                     if (change.path.id === this.clientHeroSpriteID()) {
                         const fogSprite = this.fogSprite()
                         fogSprite.setTeam(change.value.team)
@@ -296,13 +292,9 @@ export default class Level extends AppState {
         connection.listen('minions/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
-                    console.log('add minion of team ' + change.value.team + ' facing ' + change.value.facingDirection)
-
                     const sprite = new MinionSprite(this.game, change.path.id, change.value, 50)
                     this.minionSprites[change.path.id] = sprite
                     this.game.add.existing(sprite)
-
-                    console.log(change.path.id)
 
                     if (change.value.team == 'human') {
                         this.playSound(Sounds.HUMAN_MINION_SPAWN)
@@ -404,7 +396,6 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.02, 300)
                 this.playSound(Sounds.HOUSE_DESTRYOYED)
             } else {
-                console.log('house got hit again')
                 this.playSound(Sounds.HOUSE_GETS_HIT)
             }
         })

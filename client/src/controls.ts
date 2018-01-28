@@ -14,9 +14,6 @@ export default class Controls {
 
         input.gamepad.start()
         this.gamepad = input.gamepad.pad1
-        this.gamepad.onDownCallback = function(val: any) {
-            console.log('GAMEPAD: ' + val)
-        }
     }
 
     startButtonIsDown(): boolean {

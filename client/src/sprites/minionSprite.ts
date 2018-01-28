@@ -66,7 +66,6 @@ export default class MinionSprite extends AppSprite {
     }
 
     showHP(hp: number) {
-        console.log(hp)
         this.lifeBar.showHP(hp)
     }
 }
