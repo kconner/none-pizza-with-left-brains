@@ -6,6 +6,7 @@ import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 import { House } from './House'
 import { open } from 'fs'
+import { connect } from 'tls';
 
 export class GameState {
     map = Hood01
@@ -119,6 +120,8 @@ export class GameState {
     }
 
     attackWithHero(id: string) {
+
+        console.log("Attack! " + id)
         const now = Date.now()
         var hero = this.heroes[id]
 
@@ -169,6 +172,7 @@ export class GameState {
 
         for (const houseId of Object.keys(this.houses)) {
             const opponentHouse = this.houses[houseId]
+            console.log("Checking house for attack: " + opponentHouse)
             if (opponentHouse.hp <= 0) {
                 continue
             }
@@ -186,6 +190,7 @@ export class GameState {
                 continue
             }
 
+            console.log("Attacking house")
             opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
     }
