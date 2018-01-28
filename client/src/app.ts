@@ -4,6 +4,7 @@ import Level from './states/level'
 
 import Controls from './controls'
 import Connection from './connection'
+import AnimationLoader from './animationLoader';
 
 export default class App extends Phaser.Game {
     private _controls: Controls = null
