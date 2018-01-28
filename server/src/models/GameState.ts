@@ -88,9 +88,6 @@ export class GameState {
     private createHousesForTeam(team: Team) {
         for (const mapHouse of this.map.teams[team].houses) {
             console.info(`GameState.createHousesForTeam<${team}>`, mapHouse)
-            this.houses[mapHouse.id] = new House(team, mapHouse)
-        }
-    }
 
             // find spawn point based on spawnPointId from mapHouse
             const spawnPoints = this.map.teams[team].spawnPoints.filter(spawnPoint =>
