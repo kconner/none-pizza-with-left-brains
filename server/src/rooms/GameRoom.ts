@@ -7,27 +7,28 @@ export class GameRoom extends Room<GameState> {
         console.log('GameRoom.onInit', options)
 
         this.setState(new GameState())
+        this.setPatchRate(16) // 60 fps
     }
 
     onJoin(client) {
-        console.log('add client: ', client.sessionId)
+        console.log('add client: ', client.id)
 
-        this.state.createHero(client.sessionId)
+        this.state.createHero(client.id)
     }
 
     onLeave(client) {
-        this.state.removeHero(client.sessionId)
+        this.state.removeHero(client.id)
     }
 
     onMessage(client, data: ClientAction) {
         switch (data.type) {
             case 'Movement':
                 const movement = data as Movement
-                this.state.moveHero(client.sessionId, movement)
+                this.state.moveHero(client.id, movement)
                 break
 
             default:
-                console.log('GameRoom.onMessage', client.sessionId, data)
+                console.log('GameRoom.onMessage', client.id, data)
                 break
         }
     }

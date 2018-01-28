@@ -15,7 +15,11 @@ export default class Title extends AppState {
     }
 
     update() {
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
+        if (
+            this.app()
+                .controls()
+                .enterIsDown()
+        ) {
             this.game.state.start('level')
         }
     }

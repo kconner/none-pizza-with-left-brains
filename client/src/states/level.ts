@@ -12,6 +12,8 @@ export default class Level extends AppState {
         this.game.stage.backgroundColor = '#202020'
 
         this.spriteMap = {}
+
+        this.game.world.setBounds(0, 0, 1920 * 3, 1280 * 3)
     }
 
     create() {
@@ -47,6 +49,8 @@ export default class Level extends AppState {
                 case 'add': {
                     console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
                     const sprite = this.game.add.sprite(change.value.x, change.value.y, 'thing')
+                    sprite.anchor.x = 0.5
+                    sprite.anchor.y = 0.5
                     this.spriteMap[change.path.id] = sprite
                     break
                 }
@@ -71,5 +75,28 @@ export default class Level extends AppState {
                 .connection()
                 .send(arrowMotion)
         }
+
+        this.moveCamera()
+    }
+
+    private moveCamera() {
+        const heroSpriteID = this.app()
+            .connection()
+            .id()
+        if (!heroSpriteID) {
+            return
+        }
+
+        const heroSprite = this.spriteMap[heroSpriteID]
+        if (!heroSprite) {
+            return
+        }
+
+        const wantedCameraX = heroSprite.position.x - this.game.width / 2
+        const wantedCameraY = heroSprite.position.y - this.game.height / 2
+
+        const factor = 0.07
+        this.game.camera.x += factor * (wantedCameraX - this.game.camera.x)
+        this.game.camera.y += factor * (wantedCameraY - this.game.camera.y)
     }
 }
