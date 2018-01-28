@@ -13,26 +13,22 @@ export default class HeroSprite extends AppSprite {
     readonly lifeBar: LifeBarSprite = null
 
     static loadAsset(game: Phaser.Game): void {
-        // TODO: Load both Human and Zombie sheets
-        game.load.spritesheet('myguy', 'walker.png', 48, 92)
+        game.load.spritesheet('hero-human', 'hero-human-spritesheet.png', 80, 120)
+        game.load.spritesheet('hero-zombie', 'hero-zombie-spritesheet.png', 80, 120)
     }
 
     constructor(game: Phaser.Game, id: string, hero: Hero) {
-        // TODO: Pick a sheet based on the team
-        super(game, hero.position.x, hero.position.y, 'myguy')
-
-        // this.width = 80
-        // this.height = 120
+        super(game, hero.position.x, hero.position.y, hero.team === 'Human' ? 'hero-human' : 'hero-zombie')
 
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
-        const stand = this.animations.add(HeroAnimation.stand, [54, 55], 3, false)
+        const stand = this.animations.add(HeroAnimation.stand, [0, 1, 2, 3, 3, 2, 1, 0], 15, false)
         stand.loop = true
-        const walk = this.animations.add(HeroAnimation.walk, [54, 55, 56, 57, 58, 59, 60, 61, 62], 10, false)
+        const walk = this.animations.add(HeroAnimation.walk, [4, 5, 6, 7, 8, 9, 10, 11], 15, false)
         walk.loop = true
-        this.animations.add(HeroAnimation.attack, [16, 32, 59, 29, 23], 10, false)
-        this.animations.add(HeroAnimation.die, [0, 9, 18, 27, 36], 10, false)
+        this.animations.add(HeroAnimation.attack, [12, 13, 14, 15], 15, false)
+        this.animations.add(HeroAnimation.die, [15], 10, false)
 
         this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, 100)
         this.addChild(this.lifeBar)
