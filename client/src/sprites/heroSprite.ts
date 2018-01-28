@@ -78,7 +78,7 @@ export default class HeroSprite extends AppSprite {
 
     showHP(hp: number) {
         console.log(hp)
-        this.lifeBar.setHP(hp)
+        this.lifeBar.showHP(hp)
     }
 
     showActivity(activity: Activity) {
