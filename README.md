@@ -53,35 +53,35 @@ npm run publish
 	- Add and remove objects based on the game state
 	- Update objects based on object game state changes
 
-- Music (Beepbox)
+~~- Music (Beepbox)
 	- Play any song and loop it
 	- Put in a good song later
-	- Test separate beepboxes for sound effects
+	- Test separate beepboxes for sound effects~~
 
-- Player existence
+~~- Player existence
 	- State: Position
 	- State: Facing direction
 	- State: Activity (standing)
 	- Animation or single frame
-	- Clients are assigned to a Player
-- Player walking
+	- Clients are assigned to a Player~~
+~~- Player walking
 	- Keyboard controls
 	- Action: Move
 	- Action: Stop moving
 	- State: Activity (walking)
 	- Animation
 	- Center the camera on the player
-	- Server stops you from leaving the game board
-- Player HP
+	- Server stops you from leaving the game board~~
+~~- Player HP
 	- State: HP value
 	- State: Activity (dead)
 	- Draw a life bar?
-	- Animation or single frame for death
-- Player attacking
+	- Animation or single frame for death~~
+~~- Player attacking
 	- Action: Attack
 	- State: Last attack time
 	- State: Activity (attacking)
-	- Animation
+	- Animation~~
 - Player respawning
 	- State: Time of death
 	- Server action: Respawn (timed)
@@ -92,19 +92,19 @@ npm run publish
 ~~- Day and night time cycle
 	- 30 seconds (12 hours) day
 	- 30 seconds (12 hours) night~~
-- Low visibility
+~~- Low visibility
 	- Zombie low vis during day
-	- Pizza low vis during night
+	- Pizza low vis during night~~
 	- Increment with time or hard switch? 
 
-- Bases
-	- Zombies at left
+~~- Bases
+	- Zombies at left~~
 - Win condition
 
-- Houses
+~~- Houses
 - House HP
 - House destruction
-- House health HUD
+- House health HUD~~
 
 - Bases produce pizza/brains during night/day
 - Pick up and carry pizza/brains
