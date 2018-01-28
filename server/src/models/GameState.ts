@@ -486,7 +486,7 @@ export class GameState {
             }
 
             const minionSpawner = house.minionSpawner
-            if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds) {
+            if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - (house.hp * 5)) {
                 continue
             }
             const minion = minionSpawner.spawnNewMinion()
@@ -496,7 +496,7 @@ export class GameState {
         for (const baseId of Object.keys(this.bases)) {
             const base = this.bases[baseId]
             const minionSpawner = base.minionSpawner
-            if (Date.now() < minionSpawner.lastSpawn + 10000) {
+            if (Date.now() < minionSpawner.lastSpawn + 10000 - (base.hp * 10)) {
                 continue
             }
             const minion = minionSpawner.spawnNewMinion()
