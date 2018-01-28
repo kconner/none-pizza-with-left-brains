@@ -27,7 +27,7 @@ export default class HeroSprite extends AppSprite {
         this.animations.add(HeroAnimation.stand, [0, 1, 2, 3, 3, 2, 1, 0], 15, true)
         this.animations.add(HeroAnimation.walk, [4, 5, 6, 7, 8, 9, 10, 11], 15, true)
         this.animations.add(HeroAnimation.attack, [12, 13, 14, 15], 15, false)
-        this.animations.add(HeroAnimation.die, [15], 10, false)
+        this.animations.add(HeroAnimation.die, [16, 17, 18, 19, 20], 10, false)
 
         this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, 100)
         this.addChild(this.lifeBar)
