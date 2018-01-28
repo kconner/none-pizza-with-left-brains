@@ -32,7 +32,7 @@ export default class FoodSprite extends AppSprite {
     showX(x: number) {
         this.destination.x = x
 
-        if (150 < Math.abs(this.destination.x - this.position.x)) {
+        if (250 < Math.abs(this.destination.x - this.position.x)) {
             this.position.x = x
         }
     }
@@ -40,7 +40,7 @@ export default class FoodSprite extends AppSprite {
     showY(y: number) {
         this.destination.y = y
 
-        if (150 < Math.abs(this.destination.y - this.position.y)) {
+        if (250 < Math.abs(this.destination.y - this.position.y)) {
             this.position.y = y
         }
     }
