@@ -1,6 +1,6 @@
 interface GameState {
     timeOfDay: TimeOfDay
-    world: World
+    map: GameMap
     heroes: {
         [id: string]: Hero
     }

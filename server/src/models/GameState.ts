@@ -1,12 +1,12 @@
 import { EntityMap, nosync } from 'colyseus'
 
 import { Constants } from '../config'
-import { World } from './World'
+import { Hood01 } from '../maps'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
 
 export class GameState {
-    world = new World()
+    map = Hood01
     heroes: EntityMap<Hero> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
@@ -44,8 +44,8 @@ export class GameState {
 
         const normalizedDx = dx / length
         const normalizedDy = dy / length
-        hero.position.x = Math.max(0, Math.min(this.world.width, hero.position.x + normalizedDx * 12))
-        hero.position.y = Math.max(0, Math.min(this.world.height, hero.position.y + normalizedDy * 12))
+        hero.position.x = Math.max(0, Math.min(this.map.size.width, hero.position.x + normalizedDx * 12))
+        hero.position.y = Math.max(0, Math.min(this.map.size.height, hero.position.y + normalizedDy * 12))
         hero.activity = 'Walking'
     }
 

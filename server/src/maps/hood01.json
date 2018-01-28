@@ -1,0 +1,44 @@
+{
+    "size": {
+        "width": 3840,
+        "height": 2160
+    },
+    "teams": {
+        "humans": {
+            "spawnPoints": [
+                {
+                    "id": "player_01",
+                    "position": {
+                        "x": 3140,
+                        "y": 600
+                    }
+                },
+                {
+                    "id": "player_02",
+                    "position": {
+                        "x": 3140,
+                        "y": 1560
+                    }
+                }
+            ]
+        },
+        "zombies": {
+            "spawnPoints": [
+                {
+                    "id": "player_01",
+                    "position": {
+                        "x": 700,
+                        "y": 600
+                    }
+                },
+                {
+                    "id": "player_02",
+                    "position": {
+                        "x": 700,
+                        "y": 1560
+                    }
+                }
+            ]
+        }
+    }
+}
