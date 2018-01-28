@@ -214,6 +214,33 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('minions/:id/hp', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
+
+            if (change.value <= 0) {
+                // Minion died; small shake.
+                this.game.camera.shake(0.02, 100)
+
+                this.playSound(Sounds.MINION_DIES)
+
+            } else if (change.value < 50) {
+                // Minion hit / respawning; little shake.
+                this.game.camera.shake(0.01, 50)
+
+                if (change.value.team == 'human') {
+                    this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
+                } else {
+                    this.playSound(Sounds.ZOMBIE_MINION_GETS_HIT)
+                }
+            }
+
+        })
+
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
@@ -257,6 +284,12 @@ export default class Level extends AppState {
                     this.game.add.existing(sprite)
 
                     console.log(change.path.id)
+
+                    if (change.value.team == 'human') {
+                        this.playSound(Sounds.HUMAN_MINION_SPAWN)
+                    } else {
+                        this.playSound(Sounds.ZOMBIE_MINION_SPAWN)
+                    }
 
                     break
                 }
