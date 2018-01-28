@@ -3,6 +3,7 @@ import AppState from './appState'
 import HeroSprite from '../sprites/heroSprite'
 import LifeBarSprite from '../sprites/lifeBarSprite'
 import FogSprite from '../sprites/fogSprite'
+import BaseSprite from '../sprites/baseSprite'
 
 export default class Preloader extends AppState {
     preload() {
