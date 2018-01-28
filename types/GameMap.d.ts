@@ -11,6 +11,7 @@ interface MapSpawnPoint extends MapPositionable {
 
 interface MapBase extends MapPositionable {
     id: string
+    foodSpawnPointID: string
 }
 
 interface MapHouse extends MapPositionable {

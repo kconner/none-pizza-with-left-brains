@@ -8,6 +8,7 @@ import HeroSprite from '../sprites/heroSprite'
 import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
+import FoodSprite from '../sprites/foodSprite'
 import { Sounds } from './preloader';
 
 const daySong =
@@ -36,6 +37,10 @@ export default class Level extends AppState {
         [id: string]: HouseSprite
     }
 
+    private foodSprites: {
+        [id: string]: FoodSprite
+    }
+
     private soundFx: {
         [id: string]: Phaser.Sound
     }
@@ -48,6 +53,7 @@ export default class Level extends AppState {
         this.heroSprites = {}
         this.baseSprites = {}
         this.houseSprites = {}
+        this.foodSprites = {}
     }
 
     create() {
@@ -245,6 +251,29 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('foods/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    console.info(`Listen.foods<${change.path.id}> Added`)
+                    const food: Food = change.value
+                    const sprite = new FoodSprite(this.game, food)
+                    this.foodSprites[food.id] = sprite
+                    this.game.add.existing(sprite)
+                    break
+                }
+                case 'remove': {
+                    console.info(`Listen.foods<${change.path.id}> Removed`)
+                    const food: Food = change.value
+                    const sprite = this.foodSprites[food.id]
+                    if (sprite) {
+                        sprite.destroy
+                        delete this.foodSprites[food.id]
+                    }
+                    break
+                }
+            }
+        })
+
         connection.listen('houses/:id/hp', (change: Colyseus.DataChange) => {
             const sprite = this.houseSprites[change.path.id]
             if (!sprite) {
@@ -308,6 +337,7 @@ export default class Level extends AppState {
         }
 
         this.moveCameraAndFog()
+        this.orderSprites()
     }
 
     private fogSprite(): FogSprite {
@@ -345,7 +375,15 @@ export default class Level extends AppState {
         const fogSprite = this.fogSprite()
         fogSprite.x = heroSprite.x
         fogSprite.y = heroSprite.y
-        fogSprite.bringToTop()
+    }
+
+    private orderSprites() {
+        for (const foodID of Object.keys(this.foodSprites)) {
+            const sprite = this.foodSprites[foodID]
+            sprite.bringToTop()
+        }
+
+        this.fogSprite().bringToTop()
     }
 
     private playSound(sound: Sounds) {

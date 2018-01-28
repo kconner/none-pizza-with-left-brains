@@ -7,6 +7,7 @@ import { Base } from './Base'
 import { Hero } from './Hero'
 import { House } from './House'
 import { Minion } from './Minion'
+import { Food } from './Food'
 import { open } from 'fs'
 
 export class GameState {
@@ -15,6 +16,7 @@ export class GameState {
     houses: EntityMap<House> = {}
     bases: EntityMap<Base> = {}
     minions: EntityMap<Minion> = {}
+    foods: EntityMap<Food> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
 
@@ -78,13 +80,17 @@ export class GameState {
     }
 
     private createBaseForTeam(team: Team) {
+        const teamBase = this.map.teams[team]
         const mapBase = this.map.teams[team].base
-        this.bases[mapBase.id] = new Base(team, mapBase)
+        this.bases[mapBase.id] = new Base(team, mapBase, teamBase)
     }
 
     private createHousesForTeam(team: Team) {
         for (const mapHouse of this.map.teams[team].houses) {
             console.info(`GameState.createHousesForTeam<${team}>`, mapHouse)
+            this.houses[mapHouse.id] = new House(team, mapHouse)
+        }
+    }
 
             // find spawn point based on spawnPointId from mapHouse
             const spawnPoints = this.map.teams[team].spawnPoints.filter(spawnPoint =>
@@ -97,6 +103,12 @@ export class GameState {
                 console.error('Could not find spawn point for house ', mapHouse)
             }
         }
+    }
+
+    private createFood(team: Team, spawnPoint: MapSpawnPoint, spawnedAt: number) {
+        console.log(`spawning food for ${team}`)
+        const foodID = team
+        this.foods[foodID] = new Food(foodID, team, spawnPoint, spawnedAt)
     }
 
     removeHero(id: string) {
@@ -257,6 +269,8 @@ export class GameState {
         this.advanceTimeOfDay()
         this.advanceRespawnTimers()
         this.advanceMinionSpawners()
+        this.advanceFoodExpirationTimers()
+        this.advanceFoodSpawnTimers()
     }
 
     private advanceTimeOfDay() {
@@ -295,6 +309,48 @@ export class GameState {
 
             console.log('respawning')
             hero.respawn()
+        }
+    }
+
+    private advanceFoodExpirationTimers() {
+        // TODO
+    }
+
+    private advanceFoodSpawnTimers() {
+        const now = Date.now()
+        for (const baseID of Object.keys(this.bases)) {
+            const base = this.bases[baseID]
+            if (
+                !(
+                    (base.team === 'Human' && this.timeOfDay.dayOrNight === 'Night') ||
+                    (base.team === 'Zombie' && this.timeOfDay.dayOrNight === 'Day')
+                )
+            ) {
+                continue
+            }
+
+            let foodExistsForThisTeam = false
+            for (const foodID of Object.keys(this.foods)) {
+                const food = this.foods[foodID]
+                if (food.team === base.team) {
+                    foodExistsForThisTeam = true
+                    break
+                }
+            }
+
+            if (foodExistsForThisTeam) {
+                continue
+            }
+
+            if (!base.spawnedFoodAt) {
+                base.spawnedFoodAt = now
+            } else if (now - base.spawnedFoodAt >= Constants.Timeouts.heroAttack) {
+                base.spawnedFoodAt = now
+            } else {
+                continue
+            }
+
+            this.createFood(base.team, base.foodSpawnPoint, now)
         }
     }
 
