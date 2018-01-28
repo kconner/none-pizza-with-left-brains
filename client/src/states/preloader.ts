@@ -6,6 +6,7 @@ import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
+import MinionSprite from '../sprites/minionSprite';
 
 export enum Sounds {
     BASE_DESTROYED = 'base_destroyed',
@@ -35,6 +36,7 @@ export default class Preloader extends AppState {
         BaseSprite.loadAsset(this.game)
         HouseSprite.loadAsset(this.game)
         FoodSprite.loadAssets(this.game)
+        MinionSprite.loadAsset(this.game)
 
         this.loadSounds()
     }
