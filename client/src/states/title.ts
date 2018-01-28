@@ -12,6 +12,8 @@ export default class Title extends AppState {
 
     create() {
         this.app().setSongAndPlay(titleSong)
+
+        this.game.add.sprite(0, 0, 'Title2')
     }
 
     update() {
