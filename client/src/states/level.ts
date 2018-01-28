@@ -7,6 +7,7 @@ import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
 import FogSprite from '../sprites/fogSprite'
 import BaseSprite from '../sprites/baseSprite'
+import HouseSprite from '../sprites/houseSprite';
 
 const levelSong = ''
 
@@ -22,6 +23,10 @@ export default class Level extends AppState {
 
     private baseSprites: {
         [id: string]: BaseSprite
+    }
+
+    private houseSprites: {
+        [id: string]: HouseSprite
     }
 
     private lastArrowMotion: DirectionalMotion | null = null
@@ -69,6 +74,13 @@ export default class Level extends AppState {
             for (i = 0; i < 2; i++) {
                 const sprite = new BaseSprite(this.game, i * 800 + 800, 400, 1000)
                 this.baseSprites[i] = sprite
+                this.game.add.existing(sprite)
+            }
+
+            var houseNum: number
+            for (houseNum = 0; i < 4; houseNum++) {
+                const sprite = new HouseSprite(this.game, houseNum * 800 + 800, 700, 1000)
+                this.houseSprites[houseNum] = sprite
                 this.game.add.existing(sprite)
             }
         })
