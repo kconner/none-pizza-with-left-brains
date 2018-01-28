@@ -4,10 +4,13 @@ import { Constants } from '../config'
 import { World } from './World'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
+import { House } from './House'
+import { open } from 'fs';
 
 export class GameState {
     world = new World()
     heroes: EntityMap<Hero> = {}
+    houses: EntityMap<House> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
     @nosync something = "This attribute won't be sent to the client-side"
@@ -15,6 +18,11 @@ export class GameState {
     createHero(id: string) {
         const team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
         this.heroes[id] = new Hero(team)
+    }
+
+    createHouses(id: string) {
+        const team = Object.keys(this.houses).length % 2 === 0 ? 'Human' : 'Zombie'
+        this.houses[id] = new House(team)
     }
 
     removeHero(id: string) {
@@ -96,6 +104,26 @@ export class GameState {
                 opponent.activity = 'Dead'
                 opponent.diedAt = now
             }
+        }
+
+        for (const houseId of Object.keys(this.houses)) {
+            const opponentHouse = this.houses[houseId]
+            if (opponentHouse.hp <= 0) {
+                continue
+            }
+
+            if (opponentHouse.team == hero.team) {
+                continue
+            }
+
+            const dx = opponentHouse.position.x - hero.position.x
+            const dy = opponentHouse.position.y - hero.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (doubleHeroRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
     }
 
