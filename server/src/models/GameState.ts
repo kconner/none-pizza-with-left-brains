@@ -179,7 +179,35 @@ export class GameState {
         if (hero.carriedFoodID) {
             const food = this.foods[hero.carriedFoodID]
             food.position.x = hero.position.x
-            food.position.y = hero.position.y - 100
+            food.position.y = hero.position.y - 110
+
+            for (const houseID of Object.keys(this.houses)) {
+                const house = this.houses[houseID]
+                if (house.team !== hero.team) {
+                    continue
+                }
+
+                if (house.hp <= 0) {
+                    continue
+                }
+
+                if (500 <= house.hp) {
+                    continue
+                }
+
+                const heroHouseRadius = Hero.RADIUS + House.RADIUS
+                const heroHouseRadiusSquared = heroHouseRadius * heroHouseRadius
+                const dx = house.position.x - hero.position.x
+                const dy = house.position.y - hero.position.y
+                const distanceSquared = dx * dx + dy * dy
+                if (heroHouseRadiusSquared < distanceSquared) {
+                    continue
+                }
+
+                house.hp = Math.min(500, house.hp + 150)
+                delete this.foods[hero.carriedFoodID]
+                hero.carriedFoodID = null
+            }
         }
     }
 

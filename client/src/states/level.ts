@@ -277,6 +277,7 @@ export default class Level extends AppState {
                 case 'remove': {
                     console.info(`Listen.foods<${change.path.id}> Removed`)
                     const food: Food = change.value
+                    console.log(food)
                     const sprite = this.foodSprites[food.id]
                     if (sprite) {
                         sprite.destroy
