@@ -10,6 +10,7 @@ import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
 import { Sounds } from './preloader'
+import MinionSprite from '../sprites/minionSprite'
 
 const daySong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
@@ -28,6 +29,10 @@ export default class Level extends AppState {
 
     private heroSprites: {
         [id: string]: HeroSprite
+    }
+
+    private minionSprites: {
+        [id: string]: MinionSprite
     }
 
     private baseSprites: {
@@ -55,6 +60,7 @@ export default class Level extends AppState {
         this.baseSprites = {}
         this.houseSprites = {}
         this.foodSprites = {}
+        this.minionSprites = {}
     }
 
     create() {
@@ -151,6 +157,31 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('minions/:id/position/:axis', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.showX(change.value)
+                    break
+                case 'y':
+                    sprite.showY(change.value)
+                    break
+            }
+        })
+
+        connection.listen('minions/:id/facingDirection', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showFacingDirection(change.value)
+        })
+
         connection.listen('heroes/:id/facingDirection', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
@@ -208,6 +239,27 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('minions/:id/hp', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
+
+            if (change.value <= 0) {
+                this.playSound(Sounds.MINION_DIES)
+                sprite.destroy()
+                delete this.minionSprites[change.path.id]
+            } else if (change.value < 50) {
+                if (change.value.team == 'Human') {
+                    this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
+                } else {
+                    this.playSound(Sounds.ZOMBIE_MINION_GETS_HIT)
+                }
+            }
+        })
+
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
@@ -235,6 +287,36 @@ export default class Level extends AppState {
                     if (sprite) {
                         sprite.destroy()
                         delete this.heroSprites[change.path.id]
+                    }
+                    break
+                }
+            }
+        })
+
+        connection.listen('minions/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    console.log('add minion of team ' + change.value.team + ' facing ' + change.value.facingDirection)
+
+                    const sprite = new MinionSprite(this.game, change.path.id, change.value, 50)
+                    this.minionSprites[change.path.id] = sprite
+                    this.game.add.existing(sprite)
+
+                    console.log(change.path.id)
+
+                    if (change.value.team == 'human') {
+                        this.playSound(Sounds.HUMAN_MINION_SPAWN)
+                    } else {
+                        this.playSound(Sounds.ZOMBIE_MINION_SPAWN)
+                    }
+
+                    break
+                }
+                case 'remove': {
+                    const sprite = this.minionSprites[change.path.id]
+                    if (sprite) {
+                        sprite.destroy()
+                        delete this.minionSprites[change.path.id]
                     }
                     break
                 }
