@@ -42,15 +42,16 @@ export default class Level extends AppState {
             }
         })
 
-        connection.listen('world', (change: any) => {
+        connection.listen('map', (change: Colyseus.DataChange) => {
             if (!change.value) {
                 return
             }
 
-            this.game.world.setBounds(0, 0, change.value.width, change.value.height)
+            const map = change.value as GameMap
+            this.game.world.setBounds(0, 0, map.size.width, map.size.height)
         })
 
-        connection.listen('heroes/:id/attackedAt', (change: any) => {
+        connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
@@ -59,7 +60,7 @@ export default class Level extends AppState {
             sprite.showAttacking()
         })
 
-        connection.listen('heroes/:id/position/:axis', (change: any) => {
+        connection.listen('heroes/:id/position/:axis', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
@@ -75,7 +76,7 @@ export default class Level extends AppState {
             }
         })
 
-        connection.listen('heroes/:id/facingDirection', (change: any) => {
+        connection.listen('heroes/:id/facingDirection', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
@@ -84,7 +85,7 @@ export default class Level extends AppState {
             sprite.showFacingDirection(change.value)
         })
 
-        connection.listen('heroes/:id/activity', (change: any) => {
+        connection.listen('heroes/:id/activity', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
@@ -93,7 +94,7 @@ export default class Level extends AppState {
             sprite.showActivity(change.value)
         })
 
-        connection.listen('heroes/:id/hp', (change: any) => {
+        connection.listen('heroes/:id/hp', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
                 return
@@ -112,7 +113,7 @@ export default class Level extends AppState {
             }
         })
 
-        connection.listen('heroes/:id', (change: any) => {
+        connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
                     console.log('add hero of team ' + change.value.team + ' facing ' + change.value.facingDirection)
