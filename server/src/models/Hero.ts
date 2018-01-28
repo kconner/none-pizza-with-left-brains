@@ -11,6 +11,8 @@ export class Hero implements MapPositionable {
     team: Team = 'Human'
     attackedAt?: number = null
     diedAt?: number = null
+    carriedFoodID?: string
+
     spawnPoint: MapSpawnPoint
 
     constructor(team: Team, spawnPoint: MapSpawnPoint) {
@@ -27,5 +29,6 @@ export class Hero implements MapPositionable {
         this.activity = 'Standing'
         this.hp = 100
         this.facingDirection = this.team === 'Human' ? 'Left' : 'Right'
+        this.carriedFoodID = null
     }
 }
