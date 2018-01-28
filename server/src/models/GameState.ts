@@ -466,33 +466,35 @@ export class GameState {
     }
 
     private advanceMinionSpawners() {
-        for (const houseID of Object.keys(this.houses)) {
-            const house = this.houses[houseID]
-            if (
-                !(
-                    (house.team === 'Human' && this.timeOfDay.dayOrNight === 'Day') ||
-                    (house.team === 'Zombie' && this.timeOfDay.dayOrNight === 'Night')
-                )
-            ) {
-                continue
+        if (Object.keys(this.minions).length < 40) {
+            for (const houseID of Object.keys(this.houses)) {
+                const house = this.houses[houseID]
+                if (
+                    !(
+                        (house.team === 'Human' && this.timeOfDay.dayOrNight === 'Day') ||
+                        (house.team === 'Zombie' && this.timeOfDay.dayOrNight === 'Night')
+                    )
+                ) {
+                    continue
+                }
+
+                const minionSpawner = house.minionSpawner
+                if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - (house.hp * 5)) {
+                    continue
+                }
+                const minion = minionSpawner.spawnNewMinion()
+                this.minions[minion.id] = minion
             }
 
-            const minionSpawner = house.minionSpawner
-            if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - (house.hp * 5)) {
-                continue
+            for (const baseId of Object.keys(this.bases)) {
+                const base = this.bases[baseId]
+                const minionSpawner = base.minionSpawner
+                if (Date.now() < minionSpawner.lastSpawn + 10000 - (base.hp * 10)) {
+                    continue
+                }
+                const minion = minionSpawner.spawnNewMinion()
+                this.minions[minion.id] = minion
             }
-            const minion = minionSpawner.spawnNewMinion()
-            this.minions[minion.id] = minion
-        }
-
-        for (const baseId of Object.keys(this.bases)) {
-            const base = this.bases[baseId]
-            const minionSpawner = base.minionSpawner
-            if (Date.now() < minionSpawner.lastSpawn + 10000 - (base.hp * 10)) {
-                continue
-            }
-            const minion = minionSpawner.spawnNewMinion()
-            this.minions[minion.id] = minion
         }
     }
 
