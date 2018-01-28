@@ -86,15 +86,6 @@ export default class Level extends AppState {
 
             const map = change.value as GameMap
             this.game.world.setBounds(0, 0, map.size.width, map.size.height)
-
-            // Load bases
-            // TODO: load base information (id, position) from map
-            var i: number
-            for (i = 0; i < 2; i++) {
-                const sprite = new BaseSprite(this.game, i * 800 + 800, 400, 1000)
-                this.baseSprites[i] = sprite
-                this.game.add.existing(sprite)
-            }
         })
 
         connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
@@ -186,6 +177,29 @@ export default class Level extends AppState {
                     if (sprite) {
                         sprite.destroy()
                         delete this.heroSprites[change.path.id]
+                    }
+                    break
+                }
+            }
+        })
+
+        connection.listen('bases/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    console.info(`Listen.bases<${change.path.id}> Added`)
+                    const base: Base = change.value
+                    const sprite = new BaseSprite(this.game, base.position.x, base.position.y, base.hp)
+                    this.baseSprites[base.id] = sprite
+                    this.game.add.existing(sprite)
+                    break
+                }
+                case 'remove': {
+                    console.info(`Listen.bases<${change.path.id}> Removed`)
+                    const base: Base = change.value
+                    const sprite = this.baseSprites[base.id]
+                    if (sprite) {
+                        sprite.destroy
+                        delete this.baseSprites[base.id]
                     }
                     break
                 }

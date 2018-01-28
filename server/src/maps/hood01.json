@@ -23,6 +23,7 @@
                 }
             ],
             "base": {
+                "id": "human_base",
                 "position": {
                     "x": 3540,
                     "y": 1080
@@ -63,6 +64,7 @@
                 }
             ],
             "base": {
+                "id": "zombie_base",
                 "position": {
                     "x": 300,
                     "y": 1080
