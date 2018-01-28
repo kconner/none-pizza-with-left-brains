@@ -12,6 +12,7 @@ export default class Preloader extends AppState {
         HeroSprite.loadAsset(this.game)
         LifeBarSprite.loadAsset(this.game)
         FogSprite.loadAsset(this.game)
+        BaseSprite.loadAsset(this.game)
     }
 
     create() {
