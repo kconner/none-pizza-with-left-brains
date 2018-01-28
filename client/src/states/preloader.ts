@@ -26,6 +26,7 @@ export default class Preloader extends AppState {
     preload() {
         this.game.load.baseURL = './assets/'
 
+        this.game.load.image('Title2', 'Title2.png')
         this.game.load.image('Pizza-Zombie-Game-Background', 'Pizza-Zombie-Game-Background.png')
 
         HeroSprite.loadAsset(this.game)
@@ -39,10 +40,7 @@ export default class Preloader extends AppState {
     }
 
     create() {
-        // TODO: We eventually want to start on the title screen.
-        // this.game.state.start('title')
-
-        this.game.state.start('level')
+        this.game.state.start('title')
     }
 
     loadSounds() {
