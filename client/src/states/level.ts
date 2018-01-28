@@ -157,6 +157,31 @@ export default class Level extends AppState {
             }
         })
 
+        connection.listen('minions/:id/position/:axis', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.showX(change.value)
+                    break
+                case 'y':
+                    sprite.showY(change.value)
+                    break
+            }
+        })
+
+        connection.listen('minions/:id/facingDirection', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showFacingDirection(change.value)
+        })
+
         connection.listen('heroes/:id/facingDirection', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
             if (!sprite) {
@@ -227,6 +252,8 @@ export default class Level extends AppState {
                 this.game.camera.shake(0.02, 100)
 
                 this.playSound(Sounds.MINION_DIES)
+                sprite.destroy()
+                delete this.minionSprites[change.path.id]
 
             } else if (change.value < 50) {
                 // Minion hit / respawning; little shake.
