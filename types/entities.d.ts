@@ -26,7 +26,7 @@ interface Hero {
     diedAt?: Date
 }
 
-interface House {
+interface TeamEntity {
     id: string
     position: {
         x: number
@@ -35,3 +35,7 @@ interface House {
     hp: number
     team: Team
 }
+
+interface House extends TeamEntity {}
+
+interface Base extends TeamEntity {}

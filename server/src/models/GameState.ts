@@ -2,16 +2,16 @@ import { EntityMap, nosync } from 'colyseus'
 
 import { Constants } from '../config'
 import { Hood01 } from '../maps'
-import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
+import { Base } from './Base'
+import { Hero } from './Hero'
 import { House } from './House'
-import { open } from 'fs'
-import { connect } from 'tls';
 
 export class GameState {
     map = Hood01
     heroes: EntityMap<Hero> = {}
     houses: EntityMap<House> = {}
+    bases: EntityMap<Base> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
 
@@ -19,8 +19,11 @@ export class GameState {
     @nosync zombieHeroCount = 0
 
     constructor() {
-        this.createHousesForTeam('Human')
-        this.createHousesForTeam('Zombie')
+        const teams: Team[] = ['Human', 'Zombie']
+        for (const team of teams) {
+            this.createBaseForTeam(team)
+            this.createHousesForTeam(team)
+        }
     }
 
     get totalHeroCount() {
@@ -66,6 +69,11 @@ export class GameState {
         } else {
             console.error(`Map is missing enough spawn points for defined team size (${this.map.maximumTeamSize}.`)
         }
+    }
+
+    private createBaseForTeam(team: Team) {
+        const mapBase = this.map.teams[team].base
+        this.bases[mapBase.id] = new Base(team, mapBase)
     }
 
     private createHousesForTeam(team: Team) {
@@ -120,8 +128,7 @@ export class GameState {
     }
 
     attackWithHero(id: string) {
-
-        console.log("Attack! " + id)
+        console.log('Attack! ' + id)
         const now = Date.now()
         var hero = this.heroes[id]
 
@@ -172,7 +179,7 @@ export class GameState {
 
         for (const houseId of Object.keys(this.houses)) {
             const opponentHouse = this.houses[houseId]
-            console.log("Checking house for attack: " + opponentHouse)
+            console.log('Checking house for attack: ' + opponentHouse)
             if (opponentHouse.hp <= 0) {
                 continue
             }
@@ -190,7 +197,7 @@ export class GameState {
                 continue
             }
 
-            console.log("Attacking house")
+            console.log('Attacking house')
             opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
     }

@@ -9,7 +9,9 @@ interface MapSpawnPoint extends MapPositionable {
     id: string
 }
 
-interface MapBase extends MapPositionable {}
+interface MapBase extends MapPositionable {
+    id: string
+}
 
 interface MapHouse extends MapPositionable {
     id: string
