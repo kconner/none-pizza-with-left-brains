@@ -19,12 +19,14 @@ export enum Sounds {
     MINION_DIES = 'minion_dies',
     ZOMBIE_HERO_GETS_HIT = 'zombie_hero_gets_hit',
     ZOMBIE_MINION_GETS_HIT = 'zombie_minion_gets_hit',
-    ZOMBIE_MINION_SPAWN = 'zombie_minion_spawn'
+    ZOMBIE_MINION_SPAWN = 'zombie_minion_spawn',
 }
 
 export default class Preloader extends AppState {
     preload() {
         this.game.load.baseURL = './assets/'
+
+        this.game.load.image('Pizza-Zombie-Game-Background', 'Pizza-Zombie-Game-Background.png')
 
         HeroSprite.loadAsset(this.game)
         LifeBarSprite.loadAsset(this.game)
@@ -59,6 +61,6 @@ export default class Preloader extends AppState {
     }
 
     loadSound(fileName: string) {
-        this.game.load.audio(fileName, ['sounds/' + fileName + '.mp3', 'sounds/' + fileName + '.ogg']);
+        this.game.load.audio(fileName, ['sounds/' + fileName + '.mp3', 'sounds/' + fileName + '.ogg'])
     }
 }
