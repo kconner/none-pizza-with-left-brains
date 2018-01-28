@@ -1,4 +1,6 @@
 export class Hero {
+
+    public static readonly RADIUS: number = 60
     position: {
         x: number
         y: number

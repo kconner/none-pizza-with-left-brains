@@ -4,10 +4,13 @@ import { Constants } from '../config'
 import { Hood01 } from '../maps'
 import { Hero } from './Hero'
 import { TimeOfDay } from './TimeOfDay'
+import { House } from './House'
+import { open } from 'fs';
 
 export class GameState {
     map = Hood01
     heroes: EntityMap<Hero> = {}
+    houses: EntityMap<House> = {}
 
     timeOfDay: TimeOfDay = new TimeOfDay()
 
@@ -57,6 +60,11 @@ export class GameState {
         } else {
             console.error(`Map is missing enough spawn points for defined team size (${this.map.maximumTeamSize}.`)
         }
+    }
+
+    createHouses(id: string) {
+        const team = Object.keys(this.houses).length % 2 === 0 ? 'Human' : 'Zombie'
+        this.houses[id] = new House(team)
     }
 
     removeHero(id: string) {
@@ -121,7 +129,7 @@ export class GameState {
         }
 
         // Hurt nearby heroes
-        const doubleHeroRadius = 60 * 2
+        const doubleHeroRadius = Hero.RADIUS * 2
         const doubleHeroRadiusSquared = doubleHeroRadius * doubleHeroRadius
         for (const heroID of Object.keys(this.heroes)) {
             if (heroID === id) {
@@ -150,6 +158,28 @@ export class GameState {
                 opponent.activity = 'Dead'
                 opponent.diedAt = now
             }
+        }
+
+        for (const houseId of Object.keys(this.houses)) {
+            const opponentHouse = this.houses[houseId]
+            if (opponentHouse.hp <= 0) {
+                continue
+            }
+
+            if (opponentHouse.team == hero.team) {
+                continue
+            }
+
+            const heroHouseRadius = Hero.RADIUS + House.RADIUS
+            const heroHouseRadiusSquared = heroHouseRadius * heroHouseRadius
+            const dx = opponentHouse.position.x - hero.position.x
+            const dy = opponentHouse.position.y - hero.position.y
+            const distanceSquared = dx * dx + dy * dy
+            if (heroHouseRadiusSquared < distanceSquared) {
+                continue
+            }
+
+            opponentHouse.hp = Math.max(0, opponentHouse.hp - 25)
         }
     }
 
