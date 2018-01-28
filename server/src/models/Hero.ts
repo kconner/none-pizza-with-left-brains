@@ -1,6 +1,8 @@
 export class Hero {
-    x: number = 0
-    y: number = 0
+    position: {
+        x: number
+        y: number
+    } = { x: 0, y: 0 }
 
     facingDirection: FacingDirection = 'Right'
     activity: Activity = 'Standing'
@@ -15,8 +17,9 @@ export class Hero {
     }
 
     respawn() {
-        this.x = Math.floor(Math.random() * 400)
-        this.y = Math.floor(Math.random() * 400)
+        // TODO: Spawn near your team's base instead
+        this.position.x = Math.floor(Math.random() * 400)
+        this.position.y = Math.floor(Math.random() * 400)
         this.activity = 'Standing'
         this.hp = 100
         this.facingDirection = this.team === 'Human' ? 'Left' : 'Right'

@@ -27,8 +27,6 @@ export default class Level extends AppState {
 
         this.animationLoader = new AnimationLoader()
         this.animationLoader.loadSprite(this.app())
-
-        this.game.world.setBounds(0, 0, 1920 * 3, 1280 * 3)
     }
 
     create() {
@@ -57,72 +55,67 @@ export default class Level extends AppState {
             this.game.world.setBounds(0, 0, change.value.width, change.value.height)
         })
 
-        connection.listen('heroes/:id/:attribute', (change: any) => {
-            switch (change.path.attribute) {
-                case 'facingDirection':
-                    console.log('direction changed ', change.value)
-                    break
-            }
-        })
-
         connection.listen('heroes/:id/attackedAt', (change: any) => {
             // TODO: Play attack animation, interrupting any other animation
             // If it ends, play standing animation
-            console.log(`Hero<${change.path.id}>.attackedAt`, change.value)
+            const sprite = this.spriteMap[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.animations.play('Attack')
+            sprite.animations.currentAnim.onComplete.addOnce(() => {
+                const gameState = this.app()
+                    .connection()
+                    .data()
+                if (!gameState || !gameState.heroes) {
+                    return
+                }
+
+                const hero = gameState.heroes[change.path.id]
+                if (!hero) {
+                    return
+                }
+
+                this.animateHeroForActivity(change.path.id, hero.activity)
+            })
         })
 
-        connection.listen('heroes/:id/:axis', (change: any) => {
+        connection.listen('heroes/:id/position/:axis', (change: any) => {
             const sprite = this.spriteMap[change.path.id]
 
             if (!sprite) {
                 return
             }
 
-            const gameState = connection.data()
-            if (!gameState || !gameState.heroes) {
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.position.x = change.value
+                    break
+                case 'y':
+                    sprite.position.y = change.value
+                    break
+            }
+        })
+
+        connection.listen('heroes/:id/facingDirection', (change: any) => {
+            const sprite = this.spriteMap[change.path.id]
+            if (!sprite) {
                 return
             }
-            const hero = gameState.heroes[change.path.id]
 
-            if (change.path.axis === 'x') {
-                sprite.position.x = change.value
-                if (hero != null) {
-                    if (hero.facingDirection == 'Left') {
-                        if (sprite.animations.currentAnim.complete) {
-                            sprite.animations.play(AnimationLoader.ANIM_LEFT_WALK)
-                            //sprite.animations.currentAnim.onUpdate
-                        }
-                    } else {
-                        if (sprite.animations.currentAnim.complete) {
-                            sprite.animations.play(AnimationLoader.ANIM_RIGHT_WALK)
-                        }
-                    }
-                }
-            } else {
-                sprite.animations.stop()
-                sprite.animations.frame = 18
-                sprite.position.y = change.value
+            switch (change.value) {
+                case 'Left':
+                    sprite.scale.x = -1
+                    break
+                case 'Right':
+                    sprite.scale.x = 1
+                    break
             }
         })
 
         connection.listen('heroes/:id/activity', (change: any) => {
-            const sprite = this.spriteMap[change.path.id]
-            if (!sprite) {
-                return
-            }
-
-            console.log(change.value)
-            switch (change.value) {
-                case 'Standing':
-                    // TODO: play stand animation
-                    break
-                case 'Walking':
-                    // TODO: play walk animation
-                    break
-                case 'Dead':
-                    // TODO: play die animation
-                    break
-            }
+            this.animateHeroForActivity(change.path.id, change.value)
         })
 
         connection.listen('heroes/:id/hp', (change: any) => {
@@ -154,6 +147,26 @@ export default class Level extends AppState {
                 }
             }
         })
+    }
+
+    private animateHeroForActivity(heroID: string, activity: Activity) {
+        const sprite = this.spriteMap[heroID]
+        if (!sprite) {
+            return
+        }
+
+        console.log(activity)
+        switch (activity) {
+            case 'Standing':
+                sprite.animations.play('Stand')
+                break
+            case 'Walking':
+                sprite.animations.play('Walk')
+                break
+            case 'Dead':
+                sprite.animations.play('Die')
+                break
+        }
     }
 
     update() {
