@@ -66,6 +66,8 @@ export default class Level extends AppState {
         })
 
         connection.listen('heroes/:id/attackedAt', (change: any) => {
+            // TODO: Play attack animation, interrupting any other animation
+            // If it ends, play standing animation
             console.log(`Hero<${change.path.id}>.attackedAt`, change.value)
         })
 

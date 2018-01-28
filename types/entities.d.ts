@@ -21,4 +21,5 @@ interface Hero {
     hp: number
     team: Team
     attackedAt?: Date
+    diedAt?: Date
 }

@@ -13,9 +13,8 @@ export class GameState {
     @nosync something = "This attribute won't be sent to the client-side"
 
     createHero(id: string) {
-        const hero = new Hero()
-        hero.team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
-        this.heroes[id] = hero
+        const team = Object.keys(this.heroes).length % 2 === 0 ? 'Human' : 'Zombie'
+        this.heroes[id] = new Hero(team)
     }
 
     removeHero(id: string) {
@@ -48,28 +47,6 @@ export class GameState {
         hero.x = Math.max(0, Math.min(this.world.width, hero.x + normalizedDx * 12))
         hero.y = Math.max(0, Math.min(this.world.height, hero.y + normalizedDy * 12))
         hero.activity = 'Walking'
-    }
-
-    advanceFrame() {
-        this.timeOfDay.currentFrameTimestamp = Date.now() / 1000
-        const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
-        this.timeOfDay.dayCountdownInSeconds -= frameDuration
-
-        if (this.timeOfDay.dayCountdownInSeconds <= 0) {
-            // Dusk! Start counting down to next dusk.
-            this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
-            this.timeOfDay.dayOrNight = 'Night'
-            // send message to client that it is nighttime
-        } else if (this.timeOfDay.dayCountdownInSeconds < TimeOfDay.lengthOfDayInSeconds / 2) {
-            // Dawn!
-            this.timeOfDay.dayOrNight = 'Day'
-            // send message to client that it is daytime
-        } else {
-            // no changes needed (yet)
-            // this will contain gradual change to lighting
-        }
-
-        this.timeOfDay.previousFrameTimestamp = this.timeOfDay.currentFrameTimestamp
     }
 
     attackWithHero(id: string) {
@@ -114,6 +91,55 @@ export class GameState {
             }
 
             opponent.hp = Math.max(0, opponent.hp - 25)
+
+            if (opponent.hp === 0) {
+                opponent.activity = 'Dead'
+                opponent.diedAt = now
+            }
+        }
+    }
+
+    advanceFrame() {
+        this.advanceTimeOfDay()
+        this.advanceRespawnTimers()
+    }
+
+    private advanceTimeOfDay() {
+        this.timeOfDay.currentFrameTimestamp = Date.now() / 1000
+        const frameDuration = this.timeOfDay.currentFrameTimestamp - this.timeOfDay.previousFrameTimestamp
+        this.timeOfDay.dayCountdownInSeconds -= frameDuration
+
+        if (this.timeOfDay.dayCountdownInSeconds <= 0) {
+            // Dusk! Start counting down to next dusk.
+            this.timeOfDay.dayCountdownInSeconds = TimeOfDay.lengthOfDayInSeconds
+            this.timeOfDay.dayOrNight = 'Night'
+            // send message to client that it is nighttime
+        } else if (this.timeOfDay.dayCountdownInSeconds < TimeOfDay.lengthOfDayInSeconds / 2) {
+            // Dawn!
+            this.timeOfDay.dayOrNight = 'Day'
+            // send message to client that it is daytime
+        } else {
+            // no changes needed (yet)
+            // this will contain gradual change to lighting
+        }
+
+        this.timeOfDay.previousFrameTimestamp = this.timeOfDay.currentFrameTimestamp
+    }
+
+    private advanceRespawnTimers() {
+        for (const heroID of Object.keys(this.heroes)) {
+            const hero = this.heroes[heroID]
+            if (hero.activity !== 'Dead') {
+                continue
+            }
+
+            // Don't respawn until they have been dead for three seconds
+            if (Date.now() < hero.diedAt + 3000) {
+                continue
+            }
+
+            console.log('respawning')
+            hero.respawn()
         }
     }
 }
