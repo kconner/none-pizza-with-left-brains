@@ -36,6 +36,7 @@ export default class Level extends AppState {
 
         this.heroSprites = {}
         this.baseSprites = {}
+        this.houseSprites = {}
     }
 
     create() {
@@ -80,7 +81,7 @@ export default class Level extends AppState {
             }
 
             var houseNum: number
-            for (houseNum = 0; i < 4; houseNum++) {
+            for (houseNum = 0; houseNum < 4; houseNum++) {
                 const sprite = new HouseSprite(this.game, houseNum * 800 + 800, 700, 1000)
                 this.houseSprites[houseNum] = sprite
                 this.game.add.existing(sprite)
