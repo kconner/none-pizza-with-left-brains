@@ -3,6 +3,10 @@ import AppState from './appState'
 import HeroSprite from '../sprites/heroSprite'
 import LifeBarSprite from '../sprites/lifeBarSprite'
 import FogSprite from '../sprites/fogSprite'
+import MiniMapSprite from '../sprites/miniMapSprite'
+import HeroMiniMapSprite from '../sprites/heroMiniMapSprite'
+import BaseMiniMapSprite from '../sprites/baseMiniMapSprite'
+import HouseMiniMapSprite from '../sprites/houseMiniMapSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
@@ -33,8 +37,11 @@ export default class Preloader extends AppState {
         HeroSprite.loadAsset(this.game)
         LifeBarSprite.loadAsset(this.game)
         FogSprite.loadAsset(this.game)
+        MiniMapSprite.loadAsset(this.game)
+        HeroMiniMapSprite.loadAsset(this.game)
         BaseSprite.loadAsset(this.game)
         HouseSprite.loadAsset(this.game)
+        BaseMiniMapSprite.loadAsset(this.game)
         FoodSprite.loadAssets(this.game)
         MinionSprite.loadAsset(this.game)
 

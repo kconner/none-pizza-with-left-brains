@@ -6,6 +6,10 @@ import { Actions } from '../models'
 import { DirectionalMotion } from '../controls'
 import HeroSprite from '../sprites/heroSprite'
 import FogSprite from '../sprites/fogSprite'
+import MiniMapSprite from '../sprites/miniMapSprite'
+import HeroMiniMapSprite from '../sprites/heroMiniMapSprite'
+import BaseMiniMapSprite from '../sprites/baseMiniMapSprite'
+import HouseMiniMapSprite from '../sprites/houseMiniMapSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
 import FoodSprite from '../sprites/foodSprite'
@@ -27,10 +31,15 @@ export default class Level extends AppState {
 
     private _fogSprite: FogSprite
 
+    private _miniMapSprite: MiniMapSprite
+
     private heroSprites: {
         [id: string]: HeroSprite
     }
 
+    private heroMiniMapSprites: {
+        [id: string]: HeroMiniMapSprite
+    }
     private minionSprites: {
         [id: string]: MinionSprite
     }
@@ -39,10 +48,17 @@ export default class Level extends AppState {
         [id: string]: BaseSprite
     }
 
+    private baseMiniMapSprites: {
+        [id: string]: BaseMiniMapSprite
+    }
+
     private houseSprites: {
         [id: string]: HouseSprite
     }
 
+    private houseMiniMapSprites: {
+        [id: string]: HouseMiniMapSprite
+    }
     private foodSprites: {
         [id: string]: FoodSprite
     }
@@ -59,6 +75,9 @@ export default class Level extends AppState {
         this.heroSprites = {}
         this.baseSprites = {}
         this.houseSprites = {}
+        this.heroMiniMapSprites = {}
+        this.baseMiniMapSprites = {}
+        this.houseMiniMapSprites = {}
         this.foodSprites = {}
         this.minionSprites = {}
     }
@@ -130,6 +149,7 @@ export default class Level extends AppState {
 
         connection.listen('heroes/:id/position/:axis', (change: Colyseus.DataChange) => {
             const sprite = this.heroSprites[change.path.id]
+            const miniSprite = this.heroMiniMapSprites[change.path.id]
             if (!sprite) {
                 return
             }
@@ -137,9 +157,11 @@ export default class Level extends AppState {
             switch (change.path.axis) {
                 case 'x':
                     sprite.showX(change.value)
+                    miniSprite.showX(change.value)
                     break
                 case 'y':
                     sprite.showY(change.value)
+                    miniSprite.showY(change.value)
                     break
             }
         })
@@ -270,6 +292,10 @@ export default class Level extends AppState {
                     this.heroSprites[change.path.id] = sprite
                     this.game.add.existing(sprite)
 
+                    const miniSprite = new HeroMiniMapSprite(this.game, change.path.id, change.value, 100)
+                    this.heroMiniMapSprites[change.path.id] = miniSprite
+                    this.game.add.existing(miniSprite)
+                  
                     if (change.path.id === this.clientHeroSpriteID()) {
                         const fogSprite = this.fogSprite()
                         fogSprite.setTeam(change.value.team)
@@ -278,6 +304,7 @@ export default class Level extends AppState {
                                 .connection()
                                 .data().timeOfDay.dayOrNight
                         )
+                        const miniMap = this.miniMapSprite()
                     }
                     break
                 }
@@ -321,15 +348,22 @@ export default class Level extends AppState {
         connection.listen('bases/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
-                    console.info(`Listen.bases<${change.path.id}> Added`)
                     const base: Base = change.value
                     const sprite = new BaseSprite(this.game, base.position.x, base.position.y, base.hp, base.team)
                     this.baseSprites[base.id] = sprite
                     this.game.add.existing(sprite)
+                    const miniSprite = new BaseMiniMapSprite(
+                        this.game,
+                        base.position.x,
+                        base.position.y,
+                        base.hp,
+                        base.team
+                    )
+                    this.baseMiniMapSprites[base.id] = miniSprite
+                    this.game.add.existing(miniSprite)
                     break
                 }
                 case 'remove': {
-                    console.info(`Listen.bases<${change.path.id}> Removed`)
                     const base: Base = change.value
                     const sprite = this.baseSprites[base.id]
                     if (sprite) {
@@ -344,15 +378,22 @@ export default class Level extends AppState {
         connection.listen('houses/:id', (change: Colyseus.DataChange) => {
             switch (change.operation) {
                 case 'add': {
-                    console.info(`Listen.houses<${change.path.id}> Added`)
                     const house: House = change.value
                     const sprite = new HouseSprite(this.game, house.position.x, house.position.y, house.hp, house.team)
                     this.houseSprites[house.id] = sprite
                     this.game.add.existing(sprite)
+                    const miniSprite = new HouseMiniMapSprite(
+                        this.game,
+                        house.position.x,
+                        house.position.y,
+                        house.hp,
+                        house.team
+                    )
+                    this.houseMiniMapSprites[house.id] = miniSprite
+                    this.game.add.existing(miniSprite)
                     break
                 }
                 case 'remove': {
-                    console.info(`Listen.houses<${change.path.id}> Removed`)
                     const house: House = change.value
                     const sprite = this.houseSprites[house.id]
                     if (sprite) {
@@ -393,6 +434,7 @@ export default class Level extends AppState {
             }
 
             sprite.showHP(change.value)
+            this.updateItemOnMinimap('house', change)
 
             if (change.value <= 0) {
                 // You're dead; big shake.
@@ -453,7 +495,56 @@ export default class Level extends AppState {
                 .send(Actions.attack())
         }
 
-        this.moveCameraAndFog()
+        this.moveCameraAndFog
+        this.updateMinimap()
+    }
+
+    private updateMinimap() {
+        const miniMap = this.miniMapSprite()
+
+        miniMap.bringToTop()
+
+        for (let item in this.baseMiniMapSprites) {
+            const baseSprite = this.baseMiniMapSprites[item]
+            baseSprite.bringToTop()
+        }
+        for (let item in this.houseMiniMapSprites) {
+            const houseSprite = this.houseMiniMapSprites[item]
+            houseSprite.bringToTop()
+        }
+
+        for (let item in this.heroMiniMapSprites) {
+            const heroSprite = this.heroMiniMapSprites[item]
+            heroSprite.bringToTop()
+        }
+    }
+
+    private updateItemOnMinimap(type: string, change: Colyseus.DataChange) {
+        const miniMap = this.miniMapSprite()
+
+        switch (type) {
+            case 'house':
+                break
+
+            case 'hero_move':
+                break
+
+            default:
+                break
+        }
+
+        //player =
+        this.updateMinimap()
+    }
+
+    private miniMapSprite(): MiniMapSprite {
+        /// generate the minimap sprite
+        if (!this._miniMapSprite) {
+            this._miniMapSprite = new MiniMapSprite(this.game, 0, 0)
+            this.game.add.existing(this._miniMapSprite)
+        }
+
+        return this._miniMapSprite
         this.orderSprites()
     }
 
