@@ -7,7 +7,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "webpack-dev-server --open",
         "build": "webpack",
-        "publish": "webpack && ghpages --path dist"
+        "publish": "ghpages --path dist"
     },
     "author": "",
     "license": "ISC",
