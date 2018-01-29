@@ -6,8 +6,14 @@ export default class Connection {
 
     constructor(serverURL: string, onDisconnect: () => void) {
         this.client = new Colyseus.Client(serverURL)
+        this.client.onError.add(() => {
+            console.error(`Connection.onError`, serverURL)
+            const anyClient = this.client as any
+            anyClient.connection.close()
+        })
         this.room = this.client.join('GameRoom')
         this.room.onLeave.addOnce(onDisconnect)
+        this.client.onClose.addOnce(onDisconnect)
     }
 
     id(): string {
@@ -19,7 +25,9 @@ export default class Connection {
     }
 
     send(message: any) {
-        this.room.send(message)
+        if (this.room.connection) {
+            this.room.send(message)
+        }
     }
 
     listen(segments: string, callback: (change: any) => void) {
@@ -28,6 +36,10 @@ export default class Connection {
 
     destroy() {
         this.room.leave()
+
+        const anyClient = this.client as any
+        anyClient.connection.close()
+
         this.room = null
         this.client = null
     }

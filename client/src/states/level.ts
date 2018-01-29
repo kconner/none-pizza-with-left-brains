@@ -12,12 +12,14 @@ import BaseMiniMapSprite from '../sprites/baseMiniMapSprite'
 import HouseMiniMapSprite from '../sprites/houseMiniMapSprite'
 import BaseSprite from '../sprites/baseSprite'
 import HouseSprite from '../sprites/houseSprite'
+import FoodSprite from '../sprites/foodSprite'
+import { Sounds } from './preloader'
+import MinionSprite from '../sprites/minionSprite'
 
 const daySong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
 const nightSong =
     '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330bd3gQd3gQd3gQd3gQd3gQd3gQd3gQd3gQ8y8y8y8y8y8p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0'
-// TODO: Play this when the game is over
 const outroSong =
     '5n31sbkbl00e03tdm2a7g0fj7i0r1w0111f2000d2111c5000h6060v2440o2140b4h404h4h4h0PcM0h4h4h44hk014h4h4g4h4h4h4h4h0p22YFK7Uiq8bh8QQExjjjiy7ddddddddddddddd8a8okxjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuNmcceOHVx0PlAgrcP2Jllwpd46baqkgFFFFVCCCCCCCCCCCCCCCA1j3w481cswNc5gcHa1i2I5ocHb1AUy3e3Mw19wPcA5EcHa1i2w58cDa1AVEcQ800'
 
@@ -25,6 +27,8 @@ const dayHexColor = 'd7dee8'
 const nightHexColor = '4a4b4c'
 
 export default class Level extends AppState {
+    private backgroundSprite: Phaser.Sprite
+
     private _fogSprite: FogSprite
 
     private _miniMapSprite: MiniMapSprite
@@ -35,6 +39,9 @@ export default class Level extends AppState {
 
     private heroMiniMapSprites: {
         [id: string]: HeroMiniMapSprite
+    }
+    private minionSprites: {
+        [id: string]: MinionSprite
     }
 
     private baseSprites: {
@@ -52,6 +59,13 @@ export default class Level extends AppState {
     private houseMiniMapSprites: {
         [id: string]: HouseMiniMapSprite
     }
+    private foodSprites: {
+        [id: string]: FoodSprite
+    }
+
+    private soundFx: {
+        [id: string]: Phaser.Sound
+    }
 
     private lastArrowMotion: DirectionalMotion | null = null
 
@@ -64,28 +78,41 @@ export default class Level extends AppState {
         this.heroMiniMapSprites = {}
         this.baseMiniMapSprites = {}
         this.houseMiniMapSprites = {}
+        this.foodSprites = {}
+        this.minionSprites = {}
     }
 
     create() {
         this.app().pauseSong()
 
-        this.app().connect('ws://127.0.0.1:2657', () => {
+        const anyWindow = window as any
+        const serverHost = anyWindow.queryParameters.serverhost || '127.0.0.1'
+        const serverURL = `ws://${serverHost}:2657`
+        this.app().connect(serverURL, () => {
             this.game.state.start('title')
         })
+
+        this.backgroundSprite = this.game.add.sprite(0, 0, 'Pizza-Zombie-Game-Background')
+        this.backgroundSprite.sendToBack()
 
         const connection = this.app().connection()
 
         connection.listen('timeOfDay/dayOrNight', (change: any) => {
             this.fogSprite().showPhase(change.value)
 
-            // TODO: Don't do anything with music based on time of day if the game is over already
-            switch (change.value) {
-                case 'Day':
-                    this.app().setSongAndPlay(daySong)
-                    break
-                case 'Night':
-                    this.app().setSongAndPlay(nightSong)
-                    break
+            if (
+                !this.app()
+                    .connection()
+                    .data().winningTeam
+            ) {
+                switch (change.value) {
+                    case 'Day':
+                        this.app().setSongAndPlay(daySong)
+                        break
+                    case 'Night':
+                        this.app().setSongAndPlay(nightSong)
+                        break
+                }
             }
 
             // TODO: Instead of setting the background color,
@@ -107,6 +134,8 @@ export default class Level extends AppState {
 
             const map = change.value as GameMap
             this.game.world.setBounds(0, 0, map.size.width, map.size.height)
+            this.backgroundSprite.width = map.size.width
+            this.backgroundSprite.height = map.size.height
         })
 
         connection.listen('heroes/:id/attackedAt', (change: Colyseus.DataChange) => {
@@ -135,6 +164,47 @@ export default class Level extends AppState {
                     miniSprite.showY(change.value)
                     break
             }
+        })
+
+        connection.listen('foods/:id/position/:axis', (change: Colyseus.DataChange) => {
+            const sprite = this.foodSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.showX(change.value)
+                    break
+                case 'y':
+                    sprite.showY(change.value)
+                    break
+            }
+        })
+
+        connection.listen('minions/:id/position/:axis', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            switch (change.path.axis) {
+                case 'x':
+                    sprite.showX(change.value)
+                    break
+                case 'y':
+                    sprite.showY(change.value)
+                    break
+            }
+        })
+
+        connection.listen('minions/:id/facingDirection', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showFacingDirection(change.value)
         })
 
         connection.listen('heroes/:id/facingDirection', (change: Colyseus.DataChange) => {
@@ -172,6 +242,47 @@ export default class Level extends AppState {
                     this.game.camera.shake(0.01, 100)
                 }
             }
+
+            if (change.value <= 0) {
+                // Death
+                this.playSound(Sounds.HERO_DIES)
+            } else {
+                // Hit
+                const heroes = this.app()
+                    .connection()
+                    .data().heroes
+                if (heroes) {
+                    const hero = heroes[change.path.id]
+                    if (hero) {
+                        if (hero.team === 'Human') {
+                            this.playSound(Sounds.HUMAN_HERO_GETS_HIT)
+                        } else {
+                            this.playSound(Sounds.ZOMBIE_HERO_GETS_HIT)
+                        }
+                    }
+                }
+            }
+        })
+
+        connection.listen('minions/:id/hp', (change: Colyseus.DataChange) => {
+            const sprite = this.minionSprites[change.path.id]
+            if (!sprite) {
+                return
+            }
+
+            sprite.showHP(change.value)
+
+            if (change.value <= 0) {
+                this.playSound(Sounds.MINION_DIES)
+                sprite.destroy()
+                delete this.minionSprites[change.path.id]
+            } else if (change.value < 50) {
+                if (change.value.team == 'Human') {
+                    this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
+                } else {
+                    this.playSound(Sounds.ZOMBIE_MINION_GETS_HIT)
+                }
+            }
         })
 
         connection.listen('heroes/:id', (change: Colyseus.DataChange) => {
@@ -184,7 +295,7 @@ export default class Level extends AppState {
                     const miniSprite = new HeroMiniMapSprite(this.game, change.path.id, change.value, 100)
                     this.heroMiniMapSprites[change.path.id] = miniSprite
                     this.game.add.existing(miniSprite)
-
+                  
                     if (change.path.id === this.clientHeroSpriteID()) {
                         const fogSprite = this.fogSprite()
                         fogSprite.setTeam(change.value.team)
@@ -202,6 +313,32 @@ export default class Level extends AppState {
                     if (sprite) {
                         sprite.destroy()
                         delete this.heroSprites[change.path.id]
+                    }
+                    break
+                }
+            }
+        })
+
+        connection.listen('minions/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    const sprite = new MinionSprite(this.game, change.path.id, change.value, 50)
+                    this.minionSprites[change.path.id] = sprite
+                    this.game.add.existing(sprite)
+
+                    if (change.value.team == 'human') {
+                        this.playSound(Sounds.HUMAN_MINION_SPAWN)
+                    } else {
+                        this.playSound(Sounds.ZOMBIE_MINION_SPAWN)
+                    }
+
+                    break
+                }
+                case 'remove': {
+                    const sprite = this.minionSprites[change.path.id]
+                    if (sprite) {
+                        sprite.destroy()
+                        delete this.minionSprites[change.path.id]
                     }
                     break
                 }
@@ -230,7 +367,7 @@ export default class Level extends AppState {
                     const base: Base = change.value
                     const sprite = this.baseSprites[base.id]
                     if (sprite) {
-                        sprite.destroy
+                        sprite.destroy()
                         delete this.baseSprites[base.id]
                     }
                     break
@@ -260,8 +397,30 @@ export default class Level extends AppState {
                     const house: House = change.value
                     const sprite = this.houseSprites[house.id]
                     if (sprite) {
-                        sprite.destroy
+                        sprite.destroy()
                         delete this.houseSprites[house.id]
+                    }
+                    break
+                }
+            }
+        })
+
+        connection.listen('foods/:id', (change: Colyseus.DataChange) => {
+            switch (change.operation) {
+                case 'add': {
+                    console.info(`Listen.foods<${change.path.id}> Added`)
+                    const food: Food = change.value
+                    const sprite = new FoodSprite(this.game, food)
+                    this.foodSprites[food.id] = sprite
+                    this.game.add.existing(sprite)
+                    break
+                }
+                case 'remove': {
+                    console.info(`Listen.foods<${change.path.id}> Removed`)
+                    const sprite = this.foodSprites[change.path.id]
+                    if (sprite) {
+                        sprite.destroy()
+                        delete this.foodSprites[change.path.id]
                     }
                     break
                 }
@@ -280,8 +439,9 @@ export default class Level extends AppState {
             if (change.value <= 0) {
                 // You're dead; big shake.
                 this.game.camera.shake(0.02, 300)
+                this.playSound(Sounds.HOUSE_DESTRYOYED)
             } else {
-                //TODO play attack sfx here
+                this.playSound(Sounds.HOUSE_GETS_HIT)
             }
         })
 
@@ -294,10 +454,16 @@ export default class Level extends AppState {
             sprite.showHP(change.value)
 
             if (change.value <= 0) {
-                // You're dead; big shake. Game over here?
                 this.game.camera.shake(0.02, 300)
+                this.playSound(Sounds.BASE_DESTROYED)
             } else {
-                //TODO play attack sfx here
+                this.playSound(Sounds.BASE_GETS_HIT)
+            }
+        })
+
+        connection.listen('winningTeam', (change: Colyseus.DataChange) => {
+            if (change.value) {
+                this.app().setSongAndPlay(outroSong)
             }
         })
     }
@@ -329,7 +495,7 @@ export default class Level extends AppState {
                 .send(Actions.attack())
         }
 
-        this.moveCameraAndFog()
+        this.moveCameraAndFog
         this.updateMinimap()
     }
 
@@ -379,6 +545,7 @@ export default class Level extends AppState {
         }
 
         return this._miniMapSprite
+        this.orderSprites()
     }
 
     private fogSprite(): FogSprite {
@@ -416,6 +583,20 @@ export default class Level extends AppState {
         const fogSprite = this.fogSprite()
         fogSprite.x = heroSprite.x
         fogSprite.y = heroSprite.y
-        fogSprite.bringToTop()
+    }
+
+    private orderSprites() {
+        for (const foodID of Object.keys(this.foodSprites)) {
+            const sprite = this.foodSprites[foodID]
+            sprite.bringToTop()
+        }
+
+        this.fogSprite().bringToTop()
+    }
+
+    private playSound(sound: Sounds) {
+        const sfx = this.game.add.audio(sound)
+        sfx.volume = 5
+        sfx.play()
     }
 }

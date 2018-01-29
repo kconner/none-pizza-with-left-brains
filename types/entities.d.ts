@@ -24,6 +24,15 @@ interface Hero {
     team: Team
     attackedAt?: Date
     diedAt?: Date
+    carriedFoodID?: string
+}
+
+interface Minion {
+    position: {
+        x: number
+        y: number
+    }
+    team: Team
 }
 
 interface TeamEntity {
@@ -38,4 +47,16 @@ interface TeamEntity {
 
 interface House extends TeamEntity {}
 
-interface Base extends TeamEntity {}
+interface Base extends TeamEntity {
+    spawnedFoodAt?: number
+}
+
+interface Food {
+    id: string
+    position: {
+        x: number
+        y: number
+    }
+    team: Team
+    spawnedAt: number
+}

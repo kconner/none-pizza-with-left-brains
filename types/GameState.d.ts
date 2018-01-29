@@ -4,4 +4,5 @@ interface GameState {
     heroes: {
         [id: string]: Hero
     }
+    winningTeam?: Team
 }

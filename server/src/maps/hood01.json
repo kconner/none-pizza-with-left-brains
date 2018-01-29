@@ -20,29 +20,53 @@
                         "x": 3140,
                         "y": 1560
                     }
+                },
+                {
+                    "id": "human_house_01_spawn",
+                    "position": {
+                        "x": 2655,
+                        "y": 588
+                    }
+                },
+                {
+                    "id": "human_house_02_spawn",
+                    "position": {
+                        "x": 1835,
+                        "y": 1811
+                    }
+                },
+                {
+                    "id": "human_food",
+                    "position": {
+                        "x": 3361,
+                        "y": 1200
+                    }
                 }
             ],
             "base": {
                 "id": "human_base",
                 "position": {
-                    "x": 3540,
-                    "y": 1080
-                }
+                    "x": 3481,
+                    "y": 1077
+                },
+                "foodSpawnPointID": "human_food"
             },
             "houses": [
                 {
                     "id": "human_house_01",
                     "position": {
-                        "x": 2840,
-                        "y": 400
-                    }
+                        "x": 2855,
+                        "y": 588
+                    },
+                    "spawnPointId": "human_house_01_spawn"
                 },
                 {
                     "id": "human_house_02",
                     "position": {
-                        "x": 2840,
-                        "y": 1760
-                    }
+                        "x": 2035,
+                        "y": 1811
+                    },
+                    "spawnPointId": "human_house_02_spawn"
                 }
             ]
         },
@@ -61,29 +85,53 @@
                         "x": 700,
                         "y": 1560
                     }
+                },
+                {
+                    "id": "zombie_house_01_spawn",
+                    "position": {
+                        "x": 2042,
+                        "y": 368
+                    }
+                },
+                {
+                    "id": "zombie_house_02_spawn",
+                    "position": {
+                        "x": 1298,
+                        "y": 1677
+                    }
+                },
+                {
+                    "id": "zombie_food",
+                    "position": {
+                        "x": 407,
+                        "y": 1200
+                    }
                 }
             ],
             "base": {
                 "id": "zombie_base",
                 "position": {
-                    "x": 300,
+                    "x": 287,
                     "y": 1080
-                }
+                },
+                "foodSpawnPointID": "zombie_food"
             },
             "houses": [
                 {
                     "id": "zombie_house_01",
                     "position": {
-                        "x": 1000,
-                        "y": 600
-                    }
+                        "x": 1842,
+                        "y": 368
+                    },
+                    "spawnPointId": "zombie_house_01_spawn"
                 },
                 {
                     "id": "zombie_house_02",
                     "position": {
-                        "x": 1000,
-                        "y": 1560
-                    }
+                        "x": 1098,
+                        "y": 1677
+                    },
+                    "spawnPointId": "zombie_house_02_spawn"
                 }
             ]
         }

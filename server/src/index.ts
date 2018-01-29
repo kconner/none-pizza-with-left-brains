@@ -19,4 +19,4 @@ gameServer.register('GameRoom', GameRoom, {
 
 gameServer.listen(port, host)
 
-console.log(`Listening on http://${host}:${port}`)
+console.info(`Listening on http://${host}:${port}`)

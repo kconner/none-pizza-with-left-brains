@@ -4,8 +4,6 @@ import { Hero, TimeOfDay, GameState } from '../models'
 
 export class GameRoom extends Room<GameState> {
     onInit(options) {
-        console.log('GameRoom.onInit', options)
-
         this.setState(new GameState())
         this.setSimulationInterval(() => {
             if (this.state.isGameEnded()) {
@@ -19,8 +17,6 @@ export class GameRoom extends Room<GameState> {
     }
 
     onJoin(client) {
-        console.log('add client: ', client.sessionId)
-
         this.state.createHero(client.sessionId)
     }
 
@@ -40,12 +36,12 @@ export class GameRoom extends Room<GameState> {
                 break
 
             default:
-                console.log('GameRoom.onMessage', client.sessionId, data)
+                console.info('GameRoom.onMessage', client.sessionId, data)
                 break
         }
     }
 
     onDispose() {
-        console.log('GameRoom.onDispose')
+        console.info('GameRoom.onDispose')
     }
 }

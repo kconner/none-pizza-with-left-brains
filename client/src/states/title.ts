@@ -12,11 +12,13 @@ export default class Title extends AppState {
 
     create() {
         this.app().setSongAndPlay(titleSong)
+
+        this.game.add.sprite(0, 0, 'Title2')
     }
 
     update() {
         const controls = this.app().controls()
-        if (controls.startButtonIsDown() || controls.attackButtonIsDown() || controls.dodgeButtonIsDown()) {
+        if (controls.startButtonIsDown() || controls.attackButtonIsDown()) {
             this.game.state.start('level')
         }
     }
