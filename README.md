@@ -1,6 +1,6 @@
 # None Pizza with Left Brains
 
-![None Pizza with Left Brains](/media/screenshot 1.png?raw=true)
+![None Pizza with Left Brains](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%201.png)
 
 ## How to set up a game
 
@@ -24,8 +24,8 @@ In the daytime:
 * Zombies can't see far in the light.
 * Zombie heroes can pick up brains at their base and carry them to their houses to repair them.
 
-![Humans in the daytime](/media/screenshot 2.png?raw=true?raw=true)
-![Zombies in the daytime](/media/screenshot 5.png?raw=true?raw=true)
+![Humans in the daytime](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%202.png)
+![Zombies in the daytime](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%205.png)
 
 During the night:
 
@@ -33,8 +33,8 @@ During the night:
 * Humans can't see far in the dark.
 * Human heroes can pick up pizzas at their base and carry them to their houses to repair them.
 
-![Humans at night](/media/screenshot 4.png?raw=true)
-![Zombies at night](/media/screenshot 3.png?raw=true)
+![Humans at night](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%204.png)
+![Zombies at night](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%203.png)
 
 Houses produce minions faster when they are undamaged, so it's important to keep your houses in good shape.
 
