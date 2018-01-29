@@ -125,7 +125,7 @@ export class GameState {
 
     removeMinion(id: string) {
         const minion = this.minions[id]
-        delete this.heroes[id]
+        delete this.minions[id]
     }
 
     moveMinion(id: string, movement: Movement) {
@@ -513,6 +513,7 @@ export class GameState {
     }
 
     private minionAttack(minionId: string): void {
+
         const minion = this.minions[minionId]
 
         const minionRadius = 60
