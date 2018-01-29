@@ -9,6 +9,7 @@ import { House } from './House'
 import { Minion } from './Minion'
 import { Food } from './Food'
 import * as Actions from '../models/Actions'
+import { NOTIMP } from 'dns';
 
 export class GameState {
     map = Hood01
@@ -133,22 +134,26 @@ export class GameState {
             return
         }
 
+
+
         var minion = this.minions[id]
-        if (movement.x < 0) {
-            minion.facingDirection = 'Left'
-        } else if (movement.x > 0) {
-            minion.facingDirection = 'Right'
+        if (minion != null) {
+            if (movement.x < 0) {
+                minion.facingDirection = 'Left'
+            } else if (movement.x > 0) {
+                minion.facingDirection = 'Right'
+            }
+            const dx: number = movement.x
+            const dy: number = movement.y
+            const length = Math.sqrt(dx * dx + dy * dy)
+            if (length === 0) {
+                return
+            }
+            const normalizedDx = dx / length
+            const normalizedDy = dy / length
+            minion.position.x = Math.max(0, Math.min(this.map.size.width, minion.position.x + normalizedDx * 12))
+            minion.position.y = Math.max(0, Math.min(this.map.size.height, minion.position.y + normalizedDy * 12))
         }
-        const dx: number = movement.x
-        const dy: number = movement.y
-        const length = Math.sqrt(dx * dx + dy * dy)
-        if (length === 0) {
-            return
-        }
-        const normalizedDx = dx / length
-        const normalizedDy = dy / length
-        minion.position.x = Math.max(0, Math.min(this.map.size.width, minion.position.x + normalizedDx * 12))
-        minion.position.y = Math.max(0, Math.min(this.map.size.height, minion.position.y + normalizedDy * 12))
     }
 
     moveHero(id: string, movement: Movement) {
@@ -520,6 +525,9 @@ export class GameState {
 
         const now = Date.now()
 
+        if (minion == null) {
+            return
+        }
         if (!minion.attackedAt) {
             minion.attackedAt = now
         } else if (now - minion.attackedAt >= Constants.Timeouts.heroAttack) {
@@ -629,4 +637,5 @@ export class GameState {
             }
         }
     }
+
 }
