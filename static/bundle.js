@@ -110195,12 +110195,7 @@ var Level = /** @class */ (function (_super) {
                 return;
             }
             sprite.showHP(change.value);
-            if (change.value <= 0) {
-                _this.playSound(preloader_1.Sounds.MINION_DIES);
-                sprite.destroy();
-                delete _this.minionSprites[change.path.id];
-            }
-            else if (change.value < 50) {
+            if (change.value < 50) {
                 if (change.value.team == 'Human') {
                     _this.playSound(preloader_1.Sounds.HUMAN_MINION_GETS_HIT);
                 }
@@ -110254,6 +110249,7 @@ var Level = /** @class */ (function (_super) {
                         sprite.destroy();
                         delete _this.minionSprites[change.path.id];
                     }
+                    _this.playSound(preloader_1.Sounds.MINION_DIES);
                     break;
                 }
             }
