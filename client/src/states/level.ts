@@ -250,11 +250,7 @@ export default class Level extends AppState {
 
             sprite.showHP(change.value)
 
-            if (change.value <= 0) {
-                this.playSound(Sounds.MINION_DIES)
-                sprite.destroy()
-                delete this.minionSprites[change.path.id]
-            } else if (change.value < 50) {
+            if (change.value < 50) {
                 if (change.value.team == 'Human') {
                     this.playSound(Sounds.HUMAN_MINION_GETS_HIT)
                 } else {
@@ -313,6 +309,8 @@ export default class Level extends AppState {
                         sprite.destroy()
                         delete this.minionSprites[change.path.id]
                     }
+
+                    this.playSound(Sounds.MINION_DIES)
                     break
                 }
             }
