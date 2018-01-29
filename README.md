@@ -1,6 +1,49 @@
 # None Pizza with Left Brains
 
-## Setup
+## How to set up a game
+
+* Read how to start a server below.
+* Go to the [site](http://none-pizza-with-left-brains.win).
+* In the server host box, type your hostname or IP address, then click Submit.
+* The page will reload. Copy the URL and send it to up to three friends.
+* Press Space, Return, or gamepad buttons to join!
+
+## How to play
+
+You are a hero on either the Zombie team or the Human team. You win by destroying your enemy's base.
+
+In addition to a base, each team has two houses and an army of minions.
+
+Heroes can attack enemy heroes, minions, houses, and bases. Minions will attack too.
+
+In the daytime:
+
+* Humans can see better than Zombies.
+* Human houses produce minions.
+* Zombie heroes can pick up brains at their base and carry them to their houses to repair them.
+
+During the night:
+
+* Zombies can see better than Humans.
+* Zombie houses produce minions.
+* Human heroes can pick up pizzas at their base and carry them to their houses to repair them.
+
+Houses produce minions faster when they are undamaged, so it's important to keep your houses in good shape.
+
+You can't repair your base.
+
+## Controls
+
+* Move: Arrow keys or a joystick.
+* Attack: Spacebar, Square/X, or R2/RT.
+
+(We saw the best gamepad behavior in Chrome. Safari seemed to mangle the button mappings.)
+
+## To run a server or develop the game:
+
+You need NPM 9.4.0.
+
+We installed it using [NVM](https://github.com/creationix/nvm):
 
 ```
 nvm install 9.4.0
@@ -8,131 +51,18 @@ nvm use 9.4.0
 nvm install-latest-npm
 ```
 
-### Client
+### Start a server
+
+```
+cd server
+npm install
+npm start
+```
+
+### Start a local client
 
 ```
 cd client
 npm install
+npm start
 ```
-
-#### Build
-
-```
-cd client
-npm run build
-```
-
-#### Publish to github.io
-
-```
-cd client
-npm run publish
-```
-
-## Road Map
-
-- Server [Colyseus](http://gamestd.io/colyseus/)
-	- /server folder
-	- Node
-	- TypeScript
-	- Game state
-	- Clients join and leave
-	- Clients get the game state when it changes
-	- Clients react to differences in the game state
-	- Clients react to successful action events
-
-- Client
-	- /client folder
-	- TypeScript -> WebPack -> flat file distribution
-	- GitHub.io deployment
-	- Text field for the server domain and port
-	- Default localhost:3000 for testing
-
-- Drawing (Phaser)
-	- Background
-	- Add and remove objects based on the game state
-	- Update objects based on object game state changes
-
-~~- Music (Beepbox)
-	- Play any song and loop it
-	- Put in a good song later
-	- Test separate beepboxes for sound effects~~
-
-~~- Player existence
-	- State: Position
-	- State: Facing direction
-	- State: Activity (standing)
-	- Animation or single frame
-	- Clients are assigned to a Player~~
-~~- Player walking
-	- Keyboard controls
-	- Action: Move
-	- Action: Stop moving
-	- State: Activity (walking)
-	- Animation
-	- Center the camera on the player
-	- Server stops you from leaving the game board~~
-~~- Player HP
-	- State: HP value
-	- State: Activity (dead)
-	- Draw a life bar?
-	- Animation or single frame for death~~
-~~- Player attacking
-	- Action: Attack
-	- State: Last attack time
-	- State: Activity (attacking)
-	- Animation~~
-- Player respawning
-	- State: Time of death
-	- Server action: Respawn (timed)
-	- Animation for respawning
-
-- Gamepad controls
-
-~~- Day and night time cycle
-	- 30 seconds (12 hours) day
-	- 30 seconds (12 hours) night~~
-~~- Low visibility
-	- Zombie low vis during day
-	- Pizza low vis during night~~
-	- Increment with time or hard switch? 
-
-~~- Bases
-	- Zombies at left~~
-- Win condition
-
-~~- Houses
-- House HP
-- House destruction
-- House health HUD~~
-
-- Bases produce pizza/brains during night/day
-- Pick up and carry pizza/brains
-- Deliver pizza/brains
-- House repair on delivery
-- Pizza/brains expire
-
-- Lanes
-- Minions spawn during day/night
-- Minions HP
-- Minions walk lanes
-- Minions attack automatically
-
-- Observer controls
-- Queue for next match
-- Side game for observers
-- Murderous Crows event
-
-- Hosted server distribution
-
-- Obstacles
-- Player dodging
-	- State: Activity (dodging)
-	- Animation
-- Player timed powers
-- Armored pizza truck / zombie tank
-- Campground
-- Music festival minigame
-- Countdown until respawn
-	- State: Future respawn time
-- Minimap
