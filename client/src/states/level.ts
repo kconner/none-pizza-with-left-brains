@@ -295,7 +295,7 @@ export default class Level extends AppState {
                     const miniSprite = new HeroMiniMapSprite(this.game, change.path.id, change.value, 100)
                     this.heroMiniMapSprites[change.path.id] = miniSprite
                     this.game.add.existing(miniSprite)
-                  
+
                     if (change.path.id === this.clientHeroSpriteID()) {
                         const fogSprite = this.fogSprite()
                         fogSprite.setTeam(change.value.team)
@@ -495,28 +495,8 @@ export default class Level extends AppState {
                 .send(Actions.attack())
         }
 
-        this.moveCameraAndFog
-        this.updateMinimap()
-    }
-
-    private updateMinimap() {
-        const miniMap = this.miniMapSprite()
-
-        miniMap.bringToTop()
-
-        for (let item in this.baseMiniMapSprites) {
-            const baseSprite = this.baseMiniMapSprites[item]
-            baseSprite.bringToTop()
-        }
-        for (let item in this.houseMiniMapSprites) {
-            const houseSprite = this.houseMiniMapSprites[item]
-            houseSprite.bringToTop()
-        }
-
-        for (let item in this.heroMiniMapSprites) {
-            const heroSprite = this.heroMiniMapSprites[item]
-            heroSprite.bringToTop()
-        }
+        this.moveCameraAndFog()
+        this.orderSprites()
     }
 
     private updateItemOnMinimap(type: string, change: Colyseus.DataChange) {
@@ -534,7 +514,7 @@ export default class Level extends AppState {
         }
 
         //player =
-        this.updateMinimap()
+        this.orderMinimapSprites()
     }
 
     private miniMapSprite(): MiniMapSprite {
@@ -545,7 +525,6 @@ export default class Level extends AppState {
         }
 
         return this._miniMapSprite
-        this.orderSprites()
     }
 
     private fogSprite(): FogSprite {
@@ -592,6 +571,28 @@ export default class Level extends AppState {
         }
 
         this.fogSprite().bringToTop()
+
+        this.orderMinimapSprites()
+    }
+
+    private orderMinimapSprites() {
+        const miniMap = this.miniMapSprite()
+
+        miniMap.bringToTop()
+
+        for (let item in this.baseMiniMapSprites) {
+            const baseSprite = this.baseMiniMapSprites[item]
+            baseSprite.bringToTop()
+        }
+        for (let item in this.houseMiniMapSprites) {
+            const houseSprite = this.houseMiniMapSprites[item]
+            houseSprite.bringToTop()
+        }
+
+        for (let item in this.heroMiniMapSprites) {
+            const heroSprite = this.heroMiniMapSprites[item]
+            heroSprite.bringToTop()
+        }
     }
 
     private playSound(sound: Sounds) {
