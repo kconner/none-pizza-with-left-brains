@@ -1,5 +1,7 @@
 # None Pizza with Left Brains
 
+![None Pizza with Left Brains](/media/screenshot 1.png?raw=true)
+
 ## How to set up a game
 
 * Read how to start a server below.
@@ -18,15 +20,21 @@ Heroes can attack enemy heroes, minions, houses, and bases. Minions will attack 
 
 In the daytime:
 
-* Humans can see better than Zombies.
 * Human houses produce minions.
+* Zombies can't see far in the light.
 * Zombie heroes can pick up brains at their base and carry them to their houses to repair them.
+
+![Humans in the daytime](/media/screenshot 2.png?raw=true?raw=true)
+![Zombies in the daytime](/media/screenshot 5.png?raw=true?raw=true)
 
 During the night:
 
-* Zombies can see better than Humans.
 * Zombie houses produce minions.
+* Humans can't see far in the dark.
 * Human heroes can pick up pizzas at their base and carry them to their houses to repair them.
+
+![Humans at night](/media/screenshot 4.png?raw=true)
+![Zombies at night](/media/screenshot 3.png?raw=true)
 
 Houses produce minions faster when they are undamaged, so it's important to keep your houses in good shape.
 
