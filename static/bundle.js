@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/static/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -393,8 +393,8 @@ exports.default = AppState;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports.encode = __webpack_require__(38);
-exports.decode = __webpack_require__(39);
+exports.encode = __webpack_require__(42);
+exports.decode = __webpack_require__(43);
 
 
 /***/ }),
@@ -404,7 +404,7 @@ exports.decode = __webpack_require__(39);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var SlotList_1 = __webpack_require__(18);
+var SlotList_1 = __webpack_require__(21);
 var Slot_1 = __webpack_require__(3);
 /**
  * Allows the valueClasses to be set in MXML, e.g.
@@ -603,10 +603,13 @@ var appState_1 = __webpack_require__(4);
 var heroSprite_1 = __webpack_require__(9);
 var lifeBarSprite_1 = __webpack_require__(1);
 var fogSprite_1 = __webpack_require__(10);
-var baseSprite_1 = __webpack_require__(11);
-var houseSprite_1 = __webpack_require__(12);
-var foodSprite_1 = __webpack_require__(13);
-var minionSprite_1 = __webpack_require__(14);
+var miniMapSprite_1 = __webpack_require__(11);
+var heroMiniMapSprite_1 = __webpack_require__(12);
+var baseMiniMapSprite_1 = __webpack_require__(13);
+var baseSprite_1 = __webpack_require__(14);
+var houseSprite_1 = __webpack_require__(15);
+var foodSprite_1 = __webpack_require__(16);
+var minionSprite_1 = __webpack_require__(17);
 var Sounds;
 (function (Sounds) {
     Sounds["BASE_DESTROYED"] = "base_destroyed";
@@ -634,8 +637,11 @@ var Preloader = /** @class */ (function (_super) {
         heroSprite_1.default.loadAsset(this.game);
         lifeBarSprite_1.default.loadAsset(this.game);
         fogSprite_1.default.loadAsset(this.game);
+        miniMapSprite_1.default.loadAsset(this.game);
+        heroMiniMapSprite_1.default.loadAsset(this.game);
         baseSprite_1.default.loadAsset(this.game);
         houseSprite_1.default.loadAsset(this.game);
+        baseMiniMapSprite_1.default.loadAsset(this.game);
         foodSprite_1.default.loadAssets(this.game);
         minionSprite_1.default.loadAsset(this.game);
         this.loadSounds();
@@ -866,6 +872,172 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var appSprite_1 = __webpack_require__(0);
+var MiniMapSprite = /** @class */ (function (_super) {
+    __extends(MiniMapSprite, _super);
+    function MiniMapSprite(game, x, y) {
+        var _this = _super.call(this, game, x, y, 'minimap') || this;
+        // use the bitmap data as the texture for the sprite
+        _this.position.x = game.canvas.width - MiniMapSprite.width;
+        _this.position.y = game.canvas.height - MiniMapSprite.height;
+        _this.alpha = 0.75;
+        _this.fixedToCamera = true;
+        return _this;
+    }
+    MiniMapSprite.loadAsset = function (game) {
+        game.load.spritesheet('minimap', 'minimap.png', MiniMapSprite.width, MiniMapSprite.height);
+    };
+    MiniMapSprite.prototype.update = function () {
+        _super.prototype.update.call(this);
+    };
+    MiniMapSprite.width = 320;
+    MiniMapSprite.height = 180;
+    return MiniMapSprite;
+}(appSprite_1.default));
+exports.default = MiniMapSprite;
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var appSprite_1 = __webpack_require__(0);
+var HeroMiniMapSprite = /** @class */ (function (_super) {
+    __extends(HeroMiniMapSprite, _super);
+    function HeroMiniMapSprite(game, id, hero, maxHp) {
+        var _this = _super.call(this, game, hero.position.x, hero.position.y, 'hero-mini') || this;
+        _this.destination = { x: 0, y: 0 };
+        var x = hero.position.x;
+        var y = hero.position.y;
+        x = x / 12;
+        y = y / 12;
+        x = game.canvas.width - 320 + x;
+        y = game.canvas.height - 180 + y;
+        _this.position.x = x;
+        _this.position.y = y;
+        _this.width = HeroMiniMapSprite.width;
+        _this.height = HeroMiniMapSprite.height;
+        _this.anchor.x = 0.5;
+        _this.anchor.y = 0.5;
+        _this.id = id;
+        _this.fixedToCamera = true;
+        console.log('start offset:' + _this.offsetX);
+        return _this;
+    }
+    HeroMiniMapSprite.loadAsset = function (game) {
+        game.load.spritesheet('hero-mini', 'hero-mini.png', 15, 24);
+    };
+    HeroMiniMapSprite.prototype.update = function () {
+        _super.prototype.update.call(this);
+        console.log('current x position:' + this.position.x);
+        this.cameraOffset.set(this.position.x, this.position.y);
+    };
+    HeroMiniMapSprite.prototype.showX = function (x) {
+        var newX = this.game.canvas.width - 320 + x / 12;
+        this.position.x = newX;
+    };
+    HeroMiniMapSprite.prototype.showY = function (y) {
+        var newY = this.game.canvas.height - 180 + y / 12;
+        this.position.y = newY;
+    };
+    HeroMiniMapSprite.width = 15;
+    HeroMiniMapSprite.height = 24;
+    return HeroMiniMapSprite;
+}(appSprite_1.default));
+exports.default = HeroMiniMapSprite;
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var appSprite_1 = __webpack_require__(0);
+var HouseBaseFrames;
+(function (HouseBaseFrames) {
+    HouseBaseFrames[HouseBaseFrames["HUMAN"] = 0] = "HUMAN";
+    HouseBaseFrames[HouseBaseFrames["ZOMBIE"] = 1] = "ZOMBIE";
+})(HouseBaseFrames || (HouseBaseFrames = {}));
+var BaseMiniMapSprite = /** @class */ (function (_super) {
+    __extends(BaseMiniMapSprite, _super);
+    function BaseMiniMapSprite(game, x, y, maxHp, team) {
+        var _this = _super.call(this, game, x, y, 'houseBaseMini') || this;
+        var xSize = 20;
+        var ySize = 20;
+        // mini-map-ify the proportions
+        x = x / 12;
+        y = y / 12;
+        x = game.canvas.width - 320 + x;
+        y = game.canvas.height - 180 + y;
+        _this.position.x = x;
+        _this.position.y = y;
+        _this.width = xSize;
+        _this.height = ySize;
+        if (team === 'Human') {
+            _this.frame = HouseBaseFrames.HUMAN;
+        }
+        else {
+            _this.frame = HouseBaseFrames.ZOMBIE;
+        }
+        _this.anchor.x = 0.5;
+        _this.anchor.y = 0.5;
+        _this.fixedToCamera = true;
+        return _this;
+    }
+    BaseMiniMapSprite.loadAsset = function (game) {
+        game.load.spritesheet('houseBaseMini', 'house-base-mini.png', 20, 20);
+    };
+    BaseMiniMapSprite.prototype.update = function () {
+        _super.prototype.update.call(this);
+    };
+    BaseMiniMapSprite.prototype.showHP = function (hp) { };
+    return BaseMiniMapSprite;
+}(appSprite_1.default));
+exports.default = BaseMiniMapSprite;
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var appSprite_1 = __webpack_require__(0);
 var lifeBarSprite_1 = __webpack_require__(1);
 var BaseFrames;
 (function (BaseFrames) {
@@ -915,7 +1087,7 @@ exports.default = BaseSprite;
 
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -981,7 +1153,7 @@ exports.default = HouseSprite;
 
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1037,7 +1209,7 @@ exports.default = FoodSprite;
 
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1114,42 +1286,42 @@ exports.default = MinionSprite;
 
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DeluxeSignal_1 = __webpack_require__(40);
+var DeluxeSignal_1 = __webpack_require__(44);
 exports.DeluxeSignal = DeluxeSignal_1.DeluxeSignal;
-var GenericEvent_1 = __webpack_require__(41);
+var GenericEvent_1 = __webpack_require__(45);
 exports.GenericEvent = GenericEvent_1.GenericEvent;
-var IOnceSignal_1 = __webpack_require__(42);
+var IOnceSignal_1 = __webpack_require__(46);
 exports.IOnceSignal = IOnceSignal_1.IOnceSignal;
-var IPrioritySignal_1 = __webpack_require__(43);
+var IPrioritySignal_1 = __webpack_require__(47);
 exports.IPrioritySignal = IPrioritySignal_1.IPrioritySignal;
-var ISignal_1 = __webpack_require__(44);
+var ISignal_1 = __webpack_require__(48);
 exports.ISignal = ISignal_1.ISignal;
-var ISlot_1 = __webpack_require__(45);
+var ISlot_1 = __webpack_require__(49);
 exports.ISlot = ISlot_1.ISlot;
-var MonoSignal_1 = __webpack_require__(46);
+var MonoSignal_1 = __webpack_require__(50);
 exports.MonoSignal = MonoSignal_1.MonoSignal;
 var OnceSignal_1 = __webpack_require__(6);
 exports.OnceSignal = OnceSignal_1.OnceSignal;
-var PrioritySignal_1 = __webpack_require__(16);
+var PrioritySignal_1 = __webpack_require__(19);
 exports.PrioritySignal = PrioritySignal_1.PrioritySignal;
-var Promise_1 = __webpack_require__(47);
+var Promise_1 = __webpack_require__(51);
 exports.Promise = Promise_1.Promise;
-var Signal_1 = __webpack_require__(17);
+var Signal_1 = __webpack_require__(20);
 exports.Signal = Signal_1.Signal;
 var Slot_1 = __webpack_require__(3);
 exports.Slot = Slot_1.Slot;
-var SlotList_1 = __webpack_require__(18);
+var SlotList_1 = __webpack_require__(21);
 exports.SlotList = SlotList_1.SlotList;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1165,7 +1337,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Signal_1 = __webpack_require__(17);
+var Signal_1 = __webpack_require__(20);
 var Slot_1 = __webpack_require__(3);
 var PrioritySignal = (function (_super) {
     __extends(PrioritySignal, _super);
@@ -1219,7 +1391,7 @@ exports.PrioritySignal = PrioritySignal;
 //# sourceMappingURL=PrioritySignal.js.map
 
 /***/ }),
-/* 17 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1289,7 +1461,7 @@ exports.Signal = Signal;
 //# sourceMappingURL=Signal.js.map
 
 /***/ }),
-/* 18 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1504,7 +1676,7 @@ exports.SlotList = SlotList;
 //# sourceMappingURL=SlotList.js.map
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1520,11 +1692,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var signals_js_1 = __webpack_require__(15);
-var Clock = __webpack_require__(52);
-var delta_listener_1 = __webpack_require__(53);
+var signals_js_1 = __webpack_require__(18);
+var Clock = __webpack_require__(56);
+var delta_listener_1 = __webpack_require__(57);
 var msgpack = __webpack_require__(5);
-var fossilDelta = __webpack_require__(56);
+var fossilDelta = __webpack_require__(60);
 var Protocol_1 = __webpack_require__(7);
 var Room = /** @class */ (function (_super) {
     __extends(Room, _super);
@@ -1626,16 +1798,16 @@ var Room = /** @class */ (function (_super) {
 }(delta_listener_1.DeltaContainer));
 exports.Room = Room;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(48).Buffer))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(52).Buffer))
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var listeners = __webpack_require__(60);
+var listeners = __webpack_require__(64);
 function initializeSync(room, synchable) {
     createBindings(room, synchable, synchable);
 }
@@ -1767,16 +1939,16 @@ exports.bindListeners = bindListeners;
 
 
 /***/ }),
-/* 21 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(22);
-__webpack_require__(24);
-__webpack_require__(26);
-var app_1 = __webpack_require__(29);
+__webpack_require__(25);
+__webpack_require__(27);
+__webpack_require__(29);
+var app_1 = __webpack_require__(32);
 var app;
 window.onload = function () {
     // There are a few more options you can set if needed, just take a look at Phaser.IGameConfig
@@ -1792,14 +1964,14 @@ window.onload = function () {
 
 
 /***/ }),
-/* 22 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["p2"] = __webpack_require__(23);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["p2"] = __webpack_require__(26);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var require;var require;/**
@@ -15426,14 +15598,14 @@ World.prototype.raycast = function(result, ray){
 
 
 /***/ }),
-/* 24 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["PIXI"] = __webpack_require__(25);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["PIXI"] = __webpack_require__(28);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 25 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -22997,14 +23169,14 @@ PIXI.TextureUvs = function()
 }).call(this);
 
 /***/ }),
-/* 26 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Phaser"] = __webpack_require__(27);
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Phaser"] = __webpack_require__(30);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 27 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {/**
@@ -109681,10 +109853,10 @@ PIXI.canUseNewCanvasBlendModes = function () {
 * "What matters in this life is not what we do but what we do for others, the legacy we leave and the imprint we make." - Eric Meyer
 */
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(28)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ }),
-/* 28 */
+/* 31 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -109874,7 +110046,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 29 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -109891,10 +110063,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var preloader_1 = __webpack_require__(8);
-var title_1 = __webpack_require__(30);
-var level_1 = __webpack_require__(31);
-var controls_1 = __webpack_require__(34);
-var connection_1 = __webpack_require__(35);
+var title_1 = __webpack_require__(33);
+var level_1 = __webpack_require__(34);
+var controls_1 = __webpack_require__(38);
+var connection_1 = __webpack_require__(39);
 var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App(config) {
@@ -109947,7 +110119,7 @@ exports.default = App;
 
 
 /***/ }),
-/* 30 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -109990,7 +110162,7 @@ exports.default = Title;
 
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -110007,14 +110179,18 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var appState_1 = __webpack_require__(4);
-var models_1 = __webpack_require__(32);
+var models_1 = __webpack_require__(35);
 var heroSprite_1 = __webpack_require__(9);
 var fogSprite_1 = __webpack_require__(10);
-var baseSprite_1 = __webpack_require__(11);
-var houseSprite_1 = __webpack_require__(12);
-var foodSprite_1 = __webpack_require__(13);
+var miniMapSprite_1 = __webpack_require__(11);
+var heroMiniMapSprite_1 = __webpack_require__(12);
+var baseMiniMapSprite_1 = __webpack_require__(13);
+var houseMiniMapSprite_1 = __webpack_require__(37);
+var baseSprite_1 = __webpack_require__(14);
+var houseSprite_1 = __webpack_require__(15);
+var foodSprite_1 = __webpack_require__(16);
 var preloader_1 = __webpack_require__(8);
-var minionSprite_1 = __webpack_require__(14);
+var minionSprite_1 = __webpack_require__(17);
 var daySong = '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330b4x8i4x8i4x8i4x8i4x8i4x8i4x8i4x8i4h4h4h4h4h4p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0';
 var nightSong = '5n31sbk4l00e0ftdm0a7g0fj7i0r1w1011f0000d2112c0000h0000v0443o2330bd3gQd3gQd3gQd3gQd3gQd3gQd3gQd3gQ8y8y8y8y8y8p236FFY3jf7OytctayyzoEQ39Au9zOYIDjbWyyzoTcCg2juNOd6NgQRtBp4bc3ntS6jwp3IdsTpmKXIz9LpW88eBV4bb79M510BW9GNx9FxAIzjjimFAqqqhiqC77QxFAHj96jPGWqqqqqitdddddddcD0RQQQQQQAWqqqqqqg1j4UdUr0INaEei6AdgqgR85yaqgH2ro0';
 var outroSong = '5n31sbkbl00e03tdm2a7g0fj7i0r1w0111f2000d2111c5000h6060v2440o2140b4h404h4h4h0PcM0h4h4h44hk014h4h4g4h4h4h4h4h0p22YFK7Uiq8bh8QQExjjjiy7ddddddddddddddd8a8okxjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjuNmcceOHVx0PlAgrcP2Jllwpd46baqkgFFFFVCCCCCCCCCCCCCCCA1j3w481cswNc5gcHa1i2I5ocHb1AUy3e3Mw19wPcA5EcHa1i2w58cDa1AVEcQ800';
@@ -110032,6 +110208,9 @@ var Level = /** @class */ (function (_super) {
         this.heroSprites = {};
         this.baseSprites = {};
         this.houseSprites = {};
+        this.heroMiniMapSprites = {};
+        this.baseMiniMapSprites = {};
+        this.houseMiniMapSprites = {};
         this.foodSprites = {};
         this.minionSprites = {};
     };
@@ -110090,15 +110269,18 @@ var Level = /** @class */ (function (_super) {
         });
         connection.listen('heroes/:id/position/:axis', function (change) {
             var sprite = _this.heroSprites[change.path.id];
+            var miniSprite = _this.heroMiniMapSprites[change.path.id];
             if (!sprite) {
                 return;
             }
             switch (change.path.axis) {
                 case 'x':
                     sprite.showX(change.value);
+                    miniSprite.showX(change.value);
                     break;
                 case 'y':
                     sprite.showY(change.value);
+                    miniSprite.showY(change.value);
                     break;
             }
         });
@@ -110215,12 +110397,16 @@ var Level = /** @class */ (function (_super) {
                     var sprite = new heroSprite_1.default(_this.game, change.path.id, change.value, 100);
                     _this.heroSprites[change.path.id] = sprite;
                     _this.game.add.existing(sprite);
+                    var miniSprite = new heroMiniMapSprite_1.default(_this.game, change.path.id, change.value, 100);
+                    _this.heroMiniMapSprites[change.path.id] = miniSprite;
+                    _this.game.add.existing(miniSprite);
                     if (change.path.id === _this.clientHeroSpriteID()) {
                         var fogSprite = _this.fogSprite();
                         fogSprite.setTeam(change.value.team);
                         fogSprite.showPhase(_this.app()
                             .connection()
                             .data().timeOfDay.dayOrNight);
+                        var miniMap = _this.miniMapSprite();
                     }
                     break;
                 }
@@ -110261,15 +110447,16 @@ var Level = /** @class */ (function (_super) {
         connection.listen('bases/:id', function (change) {
             switch (change.operation) {
                 case 'add': {
-                    console.info("Listen.bases<" + change.path.id + "> Added");
                     var base = change.value;
                     var sprite = new baseSprite_1.default(_this.game, base.position.x, base.position.y, base.hp, base.team);
                     _this.baseSprites[base.id] = sprite;
                     _this.game.add.existing(sprite);
+                    var miniSprite = new baseMiniMapSprite_1.default(_this.game, base.position.x, base.position.y, base.hp, base.team);
+                    _this.baseMiniMapSprites[base.id] = miniSprite;
+                    _this.game.add.existing(miniSprite);
                     break;
                 }
                 case 'remove': {
-                    console.info("Listen.bases<" + change.path.id + "> Removed");
                     var base = change.value;
                     var sprite = _this.baseSprites[base.id];
                     if (sprite) {
@@ -110283,15 +110470,16 @@ var Level = /** @class */ (function (_super) {
         connection.listen('houses/:id', function (change) {
             switch (change.operation) {
                 case 'add': {
-                    console.info("Listen.houses<" + change.path.id + "> Added");
                     var house = change.value;
                     var sprite = new houseSprite_1.default(_this.game, house.position.x, house.position.y, house.hp, house.team);
                     _this.houseSprites[house.id] = sprite;
                     _this.game.add.existing(sprite);
+                    var miniSprite = new houseMiniMapSprite_1.default(_this.game, house.position.x, house.position.y, house.hp, house.team);
+                    _this.houseMiniMapSprites[house.id] = miniSprite;
+                    _this.game.add.existing(miniSprite);
                     break;
                 }
                 case 'remove': {
-                    console.info("Listen.houses<" + change.path.id + "> Removed");
                     var house = change.value;
                     var sprite = _this.houseSprites[house.id];
                     if (sprite) {
@@ -110329,6 +110517,7 @@ var Level = /** @class */ (function (_super) {
                 return;
             }
             sprite.showHP(change.value);
+            _this.updateItemOnMinimap('house', change);
             if (change.value <= 0) {
                 // You're dead; big shake.
                 _this.game.camera.shake(0.02, 300);
@@ -110381,8 +110570,46 @@ var Level = /** @class */ (function (_super) {
                 .connection()
                 .send(models_1.Actions.attack());
         }
-        this.moveCameraAndFog();
+        this.moveCameraAndFog;
+        this.updateMinimap();
+    };
+    Level.prototype.updateMinimap = function () {
+        var miniMap = this.miniMapSprite();
+        miniMap.bringToTop();
+        for (var item in this.baseMiniMapSprites) {
+            var baseSprite = this.baseMiniMapSprites[item];
+            baseSprite.bringToTop();
+        }
+        for (var item in this.houseMiniMapSprites) {
+            var houseSprite = this.houseMiniMapSprites[item];
+            houseSprite.bringToTop();
+        }
+        for (var item in this.heroMiniMapSprites) {
+            var heroSprite = this.heroMiniMapSprites[item];
+            heroSprite.bringToTop();
+        }
+    };
+    Level.prototype.updateItemOnMinimap = function (type, change) {
+        var miniMap = this.miniMapSprite();
+        switch (type) {
+            case 'house':
+                break;
+            case 'hero_move':
+                break;
+            default:
+                break;
+        }
+        //player =
+        this.updateMinimap();
+    };
+    Level.prototype.miniMapSprite = function () {
+        /// generate the minimap sprite
+        if (!this._miniMapSprite) {
+            this._miniMapSprite = new miniMapSprite_1.default(this.game, 0, 0);
+            this.game.add.existing(this._miniMapSprite);
+        }
         this.orderSprites();
+        return this._miniMapSprite;
     };
     Level.prototype.fogSprite = function () {
         if (!this._fogSprite) {
@@ -110433,18 +110660,18 @@ exports.default = Level;
 
 
 /***/ }),
-/* 32 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Actions = __webpack_require__(33);
+var Actions = __webpack_require__(36);
 exports.Actions = Actions;
 
 
 /***/ }),
-/* 33 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -110465,7 +110692,71 @@ exports.attack = function () {
 
 
 /***/ }),
-/* 34 */
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var appSprite_1 = __webpack_require__(0);
+var HouseBaseFrames;
+(function (HouseBaseFrames) {
+    HouseBaseFrames[HouseBaseFrames["HUMAN"] = 0] = "HUMAN";
+    HouseBaseFrames[HouseBaseFrames["ZOMBIE"] = 1] = "ZOMBIE";
+})(HouseBaseFrames || (HouseBaseFrames = {}));
+var BaseMiniMapSprite = /** @class */ (function (_super) {
+    __extends(BaseMiniMapSprite, _super);
+    function BaseMiniMapSprite(game, x, y, maxHp, team) {
+        var _this = _super.call(this, game, x, y, 'houseBaseMini') || this;
+        _this.wantedAlpha = 0;
+        var xSize = 20;
+        var ySize = 20;
+        // mini-map-ify the proportions
+        x = x / 12;
+        y = y / 12;
+        x = game.canvas.width - 320 + x;
+        y = game.canvas.height - 180 + y;
+        _this.position.x = x;
+        _this.position.y = y;
+        _this.width = xSize;
+        _this.height = ySize;
+        _this.scale.setTo(0.5, 0.5);
+        if (team === 'Human') {
+            _this.frame = HouseBaseFrames.HUMAN;
+        }
+        else {
+            _this.frame = HouseBaseFrames.ZOMBIE;
+        }
+        _this.anchor.x = 0.5;
+        _this.anchor.y = 0.5;
+        _this.fixedToCamera = true;
+        console.log('House Mini Map Offset X: ' + _this.cameraOffset.x);
+        console.log('House Mini Map Offset X: ' + _this.offsetX);
+        console.log('House Mini Map Offset Y: ' + _this.cameraOffset.y);
+        console.log('House Mini Map Offset Y: ' + _this.offsetY);
+        return _this;
+    }
+    BaseMiniMapSprite.prototype.update = function () {
+        _super.prototype.update.call(this);
+    };
+    BaseMiniMapSprite.prototype.showHP = function (hp) { };
+    return BaseMiniMapSprite;
+}(appSprite_1.default));
+exports.default = BaseMiniMapSprite;
+
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -110521,13 +110812,13 @@ exports.default = Controls;
 
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Colyseus = __webpack_require__(36);
+var Colyseus = __webpack_require__(40);
 var Connection = /** @class */ (function () {
     function Connection(serverURL, onDisconnect) {
         var _this = this;
@@ -110568,20 +110859,20 @@ exports.default = Connection;
 
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Client_1 = __webpack_require__(37);
+var Client_1 = __webpack_require__(41);
 exports.Client = Client_1.Client;
 var Protocol_1 = __webpack_require__(7);
 exports.Protocol = Protocol_1.Protocol;
-var Room_1 = __webpack_require__(19);
+var Room_1 = __webpack_require__(22);
 exports.Room = Room_1.Room;
 // Sync tools
-var helpers_1 = __webpack_require__(20);
+var helpers_1 = __webpack_require__(23);
 exports.initializeSync = helpers_1.initializeSync;
 exports.sync = helpers_1.sync;
 exports.syncMap = helpers_1.syncMap;
@@ -110594,17 +110885,17 @@ exports.listen = helpers_1.listen;
 
 
 /***/ }),
-/* 37 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var msgpack = __webpack_require__(5);
-var signals_js_1 = __webpack_require__(15);
+var signals_js_1 = __webpack_require__(18);
 var Protocol_1 = __webpack_require__(7);
-var Room_1 = __webpack_require__(19);
-var Connection_1 = __webpack_require__(57);
+var Room_1 = __webpack_require__(22);
+var Connection_1 = __webpack_require__(61);
 var Client = /** @class */ (function () {
     function Client(url) {
         var _this = this;
@@ -110694,7 +110985,7 @@ exports.Client = Client;
 
 
 /***/ }),
-/* 38 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111006,7 +111297,7 @@ module.exports = encode;
 
 
 /***/ }),
-/* 39 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111294,7 +111585,7 @@ module.exports = decode;
 
 
 /***/ }),
-/* 40 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111310,7 +111601,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var PrioritySignal_1 = __webpack_require__(16);
+var PrioritySignal_1 = __webpack_require__(19);
 /**
  * Allows the valueClasses to be set in MXML, e.g.
  * <signals:Signal id="nameChanged">{[String, uint]}</signals:Signal>
@@ -111435,7 +111726,7 @@ exports.DeluxeSignal = DeluxeSignal;
 //# sourceMappingURL=DeluxeSignal.js.map
 
 /***/ }),
-/* 41 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111505,7 +111796,7 @@ exports.GenericEvent = GenericEvent;
 //# sourceMappingURL=GenericEvent.js.map
 
 /***/ }),
-/* 42 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111518,7 +111809,7 @@ exports.IOnceSignal = Symbol("IOnceSignal");
 //# sourceMappingURL=IOnceSignal.js.map
 
 /***/ }),
-/* 43 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111531,7 +111822,7 @@ exports.IPrioritySignal = Symbol("IPrioritySignal");
 //# sourceMappingURL=IPrioritySignal.js.map
 
 /***/ }),
-/* 44 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111544,7 +111835,7 @@ exports.ISignal = Symbol("ISignal");
 //# sourceMappingURL=ISignal.js.map
 
 /***/ }),
-/* 45 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111561,7 +111852,7 @@ exports.ISlot = Symbol("ISlot");
 //# sourceMappingURL=ISlot.js.map
 
 /***/ }),
-/* 46 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111705,7 +111996,7 @@ exports.MonoSignal = MonoSignal;
 //# sourceMappingURL=MonoSignal.js.map
 
 /***/ }),
-/* 47 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111762,7 +112053,7 @@ exports.Promise = Promise;
 //# sourceMappingURL=Promise.js.map
 
 /***/ }),
-/* 48 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -111776,9 +112067,9 @@ exports.Promise = Promise;
 
 
 
-var base64 = __webpack_require__(49)
-var ieee754 = __webpack_require__(50)
-var isArray = __webpack_require__(51)
+var base64 = __webpack_require__(53)
+var ieee754 = __webpack_require__(54)
+var isArray = __webpack_require__(55)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -113559,7 +113850,7 @@ function isnan (val) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ }),
-/* 49 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -113680,7 +113971,7 @@ function fromByteArray (uint8) {
 
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -113770,7 +114061,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -113781,7 +114072,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 52 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -113822,24 +114113,24 @@ module.exports = Clock;
 
 
 /***/ }),
-/* 53 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var DeltaContainer_1 = __webpack_require__(54);
+var DeltaContainer_1 = __webpack_require__(58);
 exports.DeltaContainer = DeltaContainer_1.DeltaContainer;
 
 
 /***/ }),
-/* 54 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var compare_1 = __webpack_require__(55);
+var compare_1 = __webpack_require__(59);
 var DeltaContainer = /** @class */ (function () {
     function DeltaContainer(data) {
         this.listeners = [];
@@ -113956,7 +114247,7 @@ exports.DeltaContainer = DeltaContainer;
 
 
 /***/ }),
-/* 55 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -114038,7 +114329,7 @@ function generate(mirror, obj, patches, path) {
 
 
 /***/ }),
-/* 56 */
+/* 60 */
 /***/ (function(module, exports) {
 
 // Fossil SCM delta compression algorithm
@@ -114494,7 +114785,7 @@ return fossilDelta;
 
 
 /***/ }),
-/* 57 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -114510,7 +114801,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var websocket_1 = __webpack_require__(58);
+var websocket_1 = __webpack_require__(62);
 var msgpack = __webpack_require__(5);
 var Connection = /** @class */ (function (_super) {
     __extends(Connection, _super);
@@ -114547,11 +114838,11 @@ exports.Connection = Connection;
 
 
 /***/ }),
-/* 58 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var createBackoff=__webpack_require__(59).createBackoff;var WebSocketClient=function(){/**
+Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var createBackoff=__webpack_require__(63).createBackoff;var WebSocketClient=function(){/**
    * @param url DOMString The URL to which to connect; this should be the URL to which the WebSocket server will respond.
    * @param protocols DOMString|DOMString[] Either a single protocol string or an array of protocol strings. These strings are used to indicate sub-protocols, so that a single server can implement multiple WebSocket sub-protocols (for example, you might want one server to be able to handle different types of interactions depending on the specified protocol). If you don't specify a protocol string, an empty string is assumed.
    */function WebSocketClient(url,protocols){var options=arguments.length>2&&arguments[2]!==undefined?arguments[2]:{};_classCallCheck(this,WebSocketClient);this.url=url;this.protocols=protocols;this.reconnectEnabled=true;this.listeners={};this.backoff=createBackoff(options.backoff||'exponential',options);this.backoff.onReady=this.onBackoffReady.bind(this);this.open();}_createClass(WebSocketClient,[{key:'open',value:function open(){var reconnect=arguments.length>0&&arguments[0]!==undefined?arguments[0]:false;this.isReconnect=reconnect;// keep binaryType used on previous WebSocket connection
@@ -114629,20 +114920,20 @@ this.open(true);}/**
  */WebSocketClient.CLOSED=WebSocket.CLOSED;exports.default=WebSocketClient;
 
 /***/ }),
-/* 59 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(exports,"__esModule",{value:true});exports.createBackoff=createBackoff;var backoff={exponential:function exponential(attempt,delay){return Math.floor(Math.random()*Math.pow(2,attempt)*delay);},fibonacci:function fibonacci(attempt,delay){var current=1;if(attempt>current){var prev=1,current=2;for(var index=2;index<attempt;index++){var next=prev+current;prev=current;current=next;}}return Math.floor(Math.random()*current*delay);}};function createBackoff(type,options){return new Backoff(backoff[type],options);}function Backoff(func,options){this.func=func;this.attempts=0;this.delay=typeof options.initialDelay!=="undefined"?options.initialDelay:100;}Backoff.prototype.backoff=function(){setTimeout(this.onReady,this.func(++this.attempts,this.delay));};
 
 /***/ }),
-/* 60 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var helpers_1 = __webpack_require__(20);
+var helpers_1 = __webpack_require__(23);
 function assign(instance, property, propName, value, key) {
     if (property.holderType === "var") {
         instance[propName] = value;
