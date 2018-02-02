@@ -2,6 +2,22 @@
 
 ![None Pizza with Left Brains](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%201.png)
 
+A [Global Game Jam 2018](https://globalgamejam.org) project.
+
+## Contributors
+
+Server: Joel Garrett, Konrad Winkler
+
+Client: Kevin Conner, Chris Estes, Sean Conrad
+
+Sprites and titles: Lauren Renaux
+
+Backgrounds: Steve Gordon
+
+Music: John Migliorisi
+
+Jam site organization: Leroy Anderson
+
 ## How to set up a game
 
 * Read how to start a server below.
