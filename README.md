@@ -6,7 +6,7 @@
 
 * Read how to start a server below.
 * Go to the [site](http://none-pizza-with-left-brains.win).
-* In the server host box, type your hostname or IP address, then click Submit.
+* In the server host box, type your hostname or IP address, then click Go.
 * The page will reload. Copy the URL and send it to up to three friends.
 * Press Space, Return, or gamepad buttons to join!
 

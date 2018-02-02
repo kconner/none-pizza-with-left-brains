@@ -12,7 +12,7 @@ window.onload = () => {
         width: 1280,
         height: 720,
         renderer: Phaser.AUTO,
-        parent: '',
+        parent: 'game-container',
         resolution: 1,
     }
 
