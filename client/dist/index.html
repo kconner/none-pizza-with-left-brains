@@ -4,9 +4,67 @@
 <head>
     <meta charset="UTF-8" />
     <title>None Pizza with Left Brains</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #060b23;
+            color: white;
+            font-family: system-ui, sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        div.page {
+            margin: auto;
+            width: 1280px;
+        }
+
+        div.page div {
+            margin: 35px 0;
+        }
+
+        #server-host-form-container {
+            height: 25px;
+        }
+
+        span.left {
+            float: left;
+        }
+
+        span.right {
+            float: right;
+        }
+
+        input {
+            font-size: 13px;
+        }
+
+        a {
+            color: #d54a30;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="page">
+        <div id="game-container"></div>
+
+        <div id="server-host-form-container">
+            <form action="/">
+                <span class="left">
+                    Server:
+                    <input type="text" name="serverhost" id="serverhost" placeholder="localhost" />
+                    <input type="submit" value="Go">
+                </span>
+
+                <span class="right">
+                    <a href="https://github.com/kconner/none-pizza-with-left-brains.git">Instructions on GitHub</a>
+                </span>
+            </form>
+        </div>
+    </div>
+
     <script>
         window.queryParameters = ((search) => {
             if (!search) {
@@ -24,16 +82,11 @@
             }
             return query;
         })(window.location.search.substr(1).split('&'));
+
+        document.getElementById('serverhost').value = window.queryParameters['serverhost'] || '';
     </script>
     <script src="https://www.beepbox.co/beepbox_synth.js"></script>
     <script src="./static/bundle.js"></script>
-    <div id='server-host-form-continer'>
-        <form action="/">
-            Server Host:
-            <input type="text" name="serverhost" id="serverhost" />
-            <input type="submit" value="Submit">
-        </form>
-    </div>
 </body>
 
 </html>

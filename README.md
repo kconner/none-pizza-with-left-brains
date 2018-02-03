@@ -2,11 +2,27 @@
 
 ![None Pizza with Left Brains](https://raw.githubusercontent.com/kconner/none-pizza-with-left-brains/master/media/screenshot%201.png)
 
+A [Global Game Jam 2018](https://globalgamejam.org) project.
+
+## Contributors
+
+Server: Joel Garrett, Konrad Winkler
+
+Client: Kevin Conner, Chris Estes, Sean Conrad
+
+Sprites and titles: Lauren Renaux
+
+Backgrounds: Steve Gordon
+
+Music: John Migliorisi
+
+Jam site organization: Leroy Anderson
+
 ## How to set up a game
 
 * Read how to start a server below.
 * Go to the [site](http://none-pizza-with-left-brains.win).
-* In the server host box, type your hostname or IP address, then click Submit.
+* In the server host box, type your hostname or IP address, then click Go.
 * The page will reload. Copy the URL and send it to up to three friends.
 * Press Space, Return, or gamepad buttons to join!
 
