@@ -10,6 +10,8 @@ Server: Joel Garrett, Konrad Winkler
 
 Client: Kevin Conner, Chris Estes, Sean Conrad
 
+Producer: Sam Clifford
+
 Sprites and titles: Lauren Renaux
 
 Backgrounds: Steve Gordon
