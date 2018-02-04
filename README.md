@@ -6,19 +6,19 @@ A [Global Game Jam 2018](https://globalgamejam.org) project.
 
 ## Contributors
 
+Jam site organizer: Leroy Anderson
+
+Producer: Sam Clifford
+
 Server: Joel Garrett, Konrad Winkler
 
 Client: Kevin Conner, Chris Estes, Sean Conrad
-
-Producer: Sam Clifford
 
 Sprites and titles: Lauren Renaux
 
 Backgrounds: Steve Gordon
 
 Music: John Migliorisi
-
-Jam site organization: Leroy Anderson
 
 ## How to set up a game
 
