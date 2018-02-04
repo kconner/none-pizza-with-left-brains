@@ -92,3 +92,9 @@ cd client
 npm install
 npm start
 ```
+
+## License
+
+None Pizza with Left Brains is [licensed](https://rawgit.com/kconner/none-pizza-with-left-brains/master/LICENSE.html) under [Creative Commons Attribution-NonCommercial 4.0 International Public License](http://creativecommons.org/licenses/by-nc/4.0/).
+
+[![Creative Commons License](https://i.creativecommons.org/l/by-nc/4.0/88x31.png)](http://creativecommons.org/licenses/by-nc/4.0/)
