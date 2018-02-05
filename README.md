@@ -65,6 +65,13 @@ You can't repair your base.
 
 (We saw the best gamepad behavior in Chrome. Safari seemed to mangle the button mappings.)
 
+## To run a server with Docker:
+
+```
+cd server
+./start-docker-server.sh
+```
+
 ## To run a server or develop the game:
 
 You need NPM 9.4.0.
