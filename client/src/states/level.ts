@@ -64,6 +64,9 @@ export default class Level extends AppState {
     }
 
     create() {
+        this._fogSprite = null
+        this.lastArrowMotion = null
+
         this.app().pauseSong()
 
         const anyWindow = window as any
