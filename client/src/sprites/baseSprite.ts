@@ -9,10 +9,10 @@ enum BaseFrames {
 }
 
 export default class BaseSprite extends AppSprite {
-    public static readonly RADIUS: number = 240
+    private static readonly SIZE = 240
 
     static loadAsset(game: Phaser.Game): void {
-        game.load.spritesheet('base', 'bases.png', BaseSprite.RADIUS, BaseSprite.RADIUS)
+        game.load.spritesheet('base', 'bases.png', BaseSprite.SIZE, BaseSprite.SIZE)
     }
 
     private readonly lifeBar: LifeBarSprite = null
@@ -20,13 +20,13 @@ export default class BaseSprite extends AppSprite {
     constructor(game: Phaser.Game, x: number, y: number, maxHp: number, team: Team) {
         super(game, x, y, 'base')
 
-        this.width = BaseSprite.RADIUS
-        this.height = BaseSprite.RADIUS
+        this.width = BaseSprite.SIZE
+        this.height = BaseSprite.SIZE
 
         this.anchor.x = 0.5
         this.anchor.y = 0.5
 
-        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, maxHp)
+        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 10, maxHp, BaseSprite.SIZE)
         this.addChild(this.lifeBar)
         this.showHP(maxHp)
 
