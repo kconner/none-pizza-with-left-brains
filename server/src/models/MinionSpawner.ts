@@ -17,9 +17,6 @@ export class MinionSpawner {
 
     spawnNewMinion() {
         this.lastSpawn = Date.now()
-        const minion = new Minion(this.team, this.position.x, this.position.y)
-        console.info('spawn new ' + this.team + ' minion ', minion.id)
-
-        return minion
+        return new Minion(this.team, this.position.x, this.position.y)
     }
 }
