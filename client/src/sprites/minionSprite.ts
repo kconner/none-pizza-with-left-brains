@@ -21,7 +21,7 @@ export default class MinionSprite extends AppSprite {
 
         this.animations.play('walk')
 
-        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 20, maxHp)
+        this.lifeBar = new LifeBarSprite(this.game, 0, -this.height / 2 - 20, maxHp, 60)
         this.addChild(this.lifeBar)
 
         this.id = id

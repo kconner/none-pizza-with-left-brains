@@ -9,7 +9,7 @@ export class Base implements MapPositionable {
         y: 0,
     }
 
-    hp: number = 500
+    hp: number = 1500
     team: Team = 'Human'
     spawnedFoodAt?: number = null
     foodSpawnPoint: MapSpawnPoint
