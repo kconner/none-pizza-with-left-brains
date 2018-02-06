@@ -9,7 +9,7 @@ import { House } from './House'
 import { Minion } from './Minion'
 import { Food } from './Food'
 import * as Actions from '../models/Actions'
-import { NOTIMP } from 'dns';
+import { NOTIMP } from 'dns'
 
 export class GameState {
     map = Hood01
@@ -110,6 +110,9 @@ export class GameState {
 
     removeHero(id: string) {
         const hero = this.heroes[id]
+        if (!hero) {
+            return
+        }
 
         switch (hero.team) {
             case 'Human':
@@ -133,8 +136,6 @@ export class GameState {
         if (this.gameEndedAt) {
             return
         }
-
-
 
         var minion = this.minions[id]
         if (minion != null) {
@@ -162,6 +163,9 @@ export class GameState {
         }
 
         var hero = this.heroes[id]
+        if (!hero) {
+            return
+        }
 
         if (hero.activity === 'Dead') {
             return
@@ -249,7 +253,11 @@ export class GameState {
         }
 
         const now = Date.now()
+
         var hero = this.heroes[id]
+        if (!hero) {
+            return
+        }
 
         if (hero.activity === 'Dead') {
             return
@@ -484,7 +492,7 @@ export class GameState {
                 }
 
                 const minionSpawner = house.minionSpawner
-                if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - (house.hp * 5)) {
+                if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - house.hp * 5) {
                     continue
                 }
                 const minion = minionSpawner.spawnNewMinion()
@@ -494,7 +502,7 @@ export class GameState {
             for (const baseId of Object.keys(this.bases)) {
                 const base = this.bases[baseId]
                 const minionSpawner = base.minionSpawner
-                if (Date.now() < minionSpawner.lastSpawn + 10000 - (base.hp * 10)) {
+                if (Date.now() < minionSpawner.lastSpawn + 10000 - base.hp * 10) {
                     continue
                 }
                 const minion = minionSpawner.spawnNewMinion()
@@ -518,7 +526,6 @@ export class GameState {
     }
 
     private minionAttack(minionId: string): void {
-
         const minion = this.minions[minionId]
 
         const minionRadius = 60
@@ -637,5 +644,4 @@ export class GameState {
             }
         }
     }
-
 }
