@@ -25,7 +25,9 @@ export class GameState {
     gameEndedAt?: number = null
 
     @nosync humanHeroCount = 0
+    @nosync humanMinionCount = 0
     @nosync zombieHeroCount = 0
+    @nosync zombieMinionCount = 0
 
     constructor() {
         const teams: Team[] = ['Human', 'Zombie']
@@ -127,8 +129,36 @@ export class GameState {
         delete this.heroes[id]
     }
 
+    addMinion(minion: Minion) {
+        if (this.minions[minion.id]) {
+            return
+        }
+
+        this.minions[minion.id] = minion
+        switch (minion.team) {
+            case 'Human':
+                this.humanMinionCount += 1
+                break
+            case 'Zombie':
+                this.zombieMinionCount += 1
+                break
+        }
+    }
+
     removeMinion(id: string) {
         const minion = this.minions[id]
+        if (!minion) {
+            return
+        }
+
+        switch (minion.team) {
+            case 'Human':
+                this.humanMinionCount -= 1
+                break
+            case 'Zombie':
+                this.zombieMinionCount -= 1
+                break
+        }
         delete this.minions[id]
     }
 
@@ -194,6 +224,10 @@ export class GameState {
         if (!hero.carriedFoodID) {
             for (const foodID of Object.keys(this.foods)) {
                 const food = this.foods[foodID]
+                if (!food) {
+                    continue
+                }
+
                 if (food.team !== hero.team) {
                     continue
                 }
@@ -214,6 +248,10 @@ export class GameState {
 
         if (hero.carriedFoodID) {
             const food = this.foods[hero.carriedFoodID]
+            if (!food) {
+                return
+            }
+
             food.position.x = hero.position.x
             food.position.y = hero.position.y - 110
 
@@ -478,36 +516,71 @@ export class GameState {
         }
     }
 
+    private canSpawnMinionForTeam(team: Team): boolean {
+        let validTimeOfDay = true
+        let belowMinionLimit = false
+
+        switch (team) {
+            case 'Human':
+                validTimeOfDay = this.timeOfDay.dayOrNight === 'Day'
+                belowMinionLimit = this.humanMinionCount < this.map.maximumTeamMinions
+                break
+
+            case 'Zombie':
+                validTimeOfDay = this.timeOfDay.dayOrNight === 'Night'
+                belowMinionLimit = this.zombieMinionCount < this.map.maximumTeamMinions
+                break
+        }
+
+        return validTimeOfDay && belowMinionLimit
+    }
+
     private advanceMinionSpawners() {
-        if (Object.keys(this.minions).length < 40) {
-            for (const houseID of Object.keys(this.houses)) {
-                const house = this.houses[houseID]
-                if (
-                    !(
-                        (house.team === 'Human' && this.timeOfDay.dayOrNight === 'Day') ||
-                        (house.team === 'Zombie' && this.timeOfDay.dayOrNight === 'Night')
-                    )
-                ) {
-                    continue
-                }
-
-                const minionSpawner = house.minionSpawner
-                if (Date.now() < minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds - house.hp * 5) {
-                    continue
-                }
-                const minion = minionSpawner.spawnNewMinion()
-                this.minions[minion.id] = minion
+        for (const houseID of Object.keys(this.houses)) {
+            const house = this.houses[houseID]
+            if (house.hp <= 0) {
+                continue
             }
 
-            for (const baseId of Object.keys(this.bases)) {
-                const base = this.bases[baseId]
-                const minionSpawner = base.minionSpawner
-                if (Date.now() < minionSpawner.lastSpawn + 10000 - base.hp * 10) {
+            if (!this.canSpawnMinionForTeam(house.team)) {
+                continue
+            }
+
+            const minionSpawner = house.minionSpawner
+            if (minionSpawner.lastSpawn) {
+                // Add 5 milliseconds for each HP missing
+                const delay = (house.maximumHP - house.hp) * 5
+                const nextInterval = minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds + delay
+                if (Date.now() < nextInterval) {
                     continue
                 }
-                const minion = minionSpawner.spawnNewMinion()
-                this.minions[minion.id] = minion
             }
+            const minion = minionSpawner.spawnNewMinion()
+            this.addMinion(minion)
+        }
+
+        for (const baseId of Object.keys(this.bases)) {
+            const base = this.bases[baseId]
+            if (base.hp <= 0) {
+                continue
+            }
+
+            if (!this.canSpawnMinionForTeam(base.team)) {
+                continue
+            }
+
+            const minionSpawner = base.minionSpawner
+            if (minionSpawner.lastSpawn) {
+                // Add 10 milliseconds for each HP missing
+                const delay = (base.maximumHP - base.hp) * 10
+                const nextInterval = minionSpawner.lastSpawn + minionSpawner.spawnIntervalInMilliseconds
+                if (Date.now() < nextInterval) {
+                    continue
+                }
+            }
+
+            const minion = minionSpawner.spawnNewMinion()
+            this.addMinion(minion)
         }
     }
 

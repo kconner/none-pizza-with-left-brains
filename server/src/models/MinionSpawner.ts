@@ -1,7 +1,7 @@
 import { Minion } from './Minion'
 
 export class MinionSpawner {
-    spawnIntervalInMilliseconds: number = 5000
+    spawnIntervalInMilliseconds: number = 10000
     lastSpawn?: number
     position = {
         x: 0,
@@ -15,7 +15,7 @@ export class MinionSpawner {
         this.position.y = spawnPoint.position.y
     }
 
-    spawnNewMinion() {
+    spawnNewMinion(): Minion {
         this.lastSpawn = Date.now()
         return new Minion(this.team, this.position.x, this.position.y)
     }
