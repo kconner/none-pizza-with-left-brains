@@ -30,5 +30,6 @@ interface GameMap {
         height: number
     }
     maximumTeamSize: number
+    maximumTeamMinions: number
     teams: { [id: string]: MapTeam }
 }

@@ -4,6 +4,7 @@
         "height": 2160
     },
     "maximumTeamSize": 2,
+    "maximumTeamMinions": 15,
     "teams": {
         "Human": {
             "spawnPoints": [

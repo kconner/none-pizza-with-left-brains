@@ -9,6 +9,7 @@ export class House implements MapPositionable {
         y: 0,
     }
 
+    maximumHP: number = 500
     hp: number = 500
     team: Team = 'Human'
     minionSpawner: MinionSpawner
