@@ -113,22 +113,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var appSprite_1 = __webpack_require__(0);
 var LifeBarSprite = /** @class */ (function (_super) {
     __extends(LifeBarSprite, _super);
-    function LifeBarSprite(game, x, y, maximum) {
+    function LifeBarSprite(game, x, y, maximumHP, widthWhenFull) {
         var _this = _super.call(this, game, x, y, 'lifeBar') || this;
-        _this.width = maximum;
+        _this.width = widthWhenFull;
         _this.height = 4;
         _this.anchor.x = 0.5;
         _this.anchor.y = 0;
-        _this.maximum = maximum;
-        _this.showHP(maximum);
+        _this.maximumHP = maximumHP;
+        _this.widthWhenFull = widthWhenFull;
+        _this.showHP(maximumHP);
         return _this;
     }
     LifeBarSprite.loadAsset = function (game) {
         game.load.image('lifeBar', 'lifeBar.png');
     };
     LifeBarSprite.prototype.showHP = function (hp) {
-        this.width = hp * 0.5;
-        var fraction = hp / this.maximum;
+        this.width = hp / this.maximumHP * this.widthWhenFull;
+        var fraction = hp / this.maximumHP;
         if (fraction < 0.333) {
             this.tint = 0xff4400;
         }
@@ -703,7 +704,7 @@ var HeroSprite = /** @class */ (function (_super) {
         _this.animations.add(HeroAnimation.walk, [4, 5, 6, 7, 8, 9, 10, 11], 15, true);
         _this.animations.add(HeroAnimation.attack, [12, 13, 14, 15], 15, false);
         _this.animations.add(HeroAnimation.die, [16, 17, 18, 19, 20], 10, false);
-        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp);
+        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp, 120);
         _this.addChild(_this.lifeBar);
         _this.id = id;
         _this.showX(hero.position.x);
@@ -879,11 +880,11 @@ var BaseSprite = /** @class */ (function (_super) {
     function BaseSprite(game, x, y, maxHp, team) {
         var _this = _super.call(this, game, x, y, 'base') || this;
         _this.lifeBar = null;
-        _this.width = BaseSprite.RADIUS;
-        _this.height = BaseSprite.RADIUS;
+        _this.width = BaseSprite.SIZE;
+        _this.height = BaseSprite.SIZE;
         _this.anchor.x = 0.5;
         _this.anchor.y = 0.5;
-        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp);
+        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp, BaseSprite.SIZE);
         _this.addChild(_this.lifeBar);
         _this.showHP(maxHp);
         if (team === 'Human') {
@@ -895,7 +896,7 @@ var BaseSprite = /** @class */ (function (_super) {
         return _this;
     }
     BaseSprite.loadAsset = function (game) {
-        game.load.spritesheet('base', 'bases.png', BaseSprite.RADIUS, BaseSprite.RADIUS);
+        game.load.spritesheet('base', 'bases.png', BaseSprite.SIZE, BaseSprite.SIZE);
     };
     BaseSprite.prototype.showHP = function (hp) {
         this.lifeBar.showHP(hp);
@@ -908,7 +909,7 @@ var BaseSprite = /** @class */ (function (_super) {
             }
         }
     };
-    BaseSprite.RADIUS = 240;
+    BaseSprite.SIZE = 240;
     return BaseSprite;
 }(appSprite_1.default));
 exports.default = BaseSprite;
@@ -945,11 +946,11 @@ var HouseSprite = /** @class */ (function (_super) {
     function HouseSprite(game, x, y, maxHp, team) {
         var _this = _super.call(this, game, x, y, 'house') || this;
         _this.lifeBar = null;
-        _this.width = HouseSprite.RADIUS;
-        _this.height = HouseSprite.RADIUS;
+        _this.width = HouseSprite.SIZE;
+        _this.height = HouseSprite.SIZE;
         _this.anchor.x = 0.5;
         _this.anchor.y = 0.5;
-        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp);
+        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 10, maxHp, HouseSprite.SIZE);
         _this.addChild(_this.lifeBar);
         _this.showHP(maxHp);
         if (team === 'Human') {
@@ -961,7 +962,7 @@ var HouseSprite = /** @class */ (function (_super) {
         return _this;
     }
     HouseSprite.loadAsset = function (game) {
-        game.load.spritesheet('house', 'houses.png', HouseSprite.RADIUS, HouseSprite.RADIUS);
+        game.load.spritesheet('house', 'houses.png', HouseSprite.SIZE, HouseSprite.SIZE);
     };
     HouseSprite.prototype.showHP = function (hp) {
         this.lifeBar.showHP(hp);
@@ -974,7 +975,7 @@ var HouseSprite = /** @class */ (function (_super) {
             }
         }
     };
-    HouseSprite.RADIUS = 240;
+    HouseSprite.SIZE = 240;
     return HouseSprite;
 }(appSprite_1.default));
 exports.default = HouseSprite;
@@ -1065,7 +1066,7 @@ var MinionSprite = /** @class */ (function (_super) {
         _this.anchor.y = 0.5;
         _this.animations.add('walk', [0, 1, 2, 3, 4, 5, 6, 7], 15, true);
         _this.animations.play('walk');
-        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 20, maxHp);
+        _this.lifeBar = new lifeBarSprite_1.default(_this.game, 0, -_this.height / 2 - 20, maxHp, 60);
         _this.addChild(_this.lifeBar);
         _this.id = id;
         _this.scale.setTo(0.7, 0.7);
@@ -110037,6 +110038,8 @@ var Level = /** @class */ (function (_super) {
     };
     Level.prototype.create = function () {
         var _this = this;
+        this._fogSprite = null;
+        this.lastArrowMotion = null;
         this.app().pauseSong();
         var anyWindow = window;
         var serverHost = anyWindow.queryParameters.serverhost || '127.0.0.1';
